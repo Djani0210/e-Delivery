@@ -88,6 +88,8 @@ builder.Services.AddTransient<ICategoryService, CategoryService>();
 builder.Services.AddTransient<IFileService, e_Delivery.Services.Services.FileService>();
 builder.Services.AddTransient<ILocationService, LocationService>();
 builder.Services.AddTransient<IFoodItemPicturesService, FoodItemPicturesService>();
+builder.Services.AddTransient<ISideDishService, SideDishService>();
+builder.Services.AddTransient<IFoodItemService, FoodItemService>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 

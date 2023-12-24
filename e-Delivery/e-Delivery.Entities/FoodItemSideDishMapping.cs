@@ -10,11 +10,13 @@ namespace e_Delivery.Entities
     public class FoodItemSideDishMapping
     {
         public int FoodItemId { get; set; }
+        public FoodItem FoodItem { get; set; }
 
         public int SideDishId { get; set; }
-        
-    //    var sideDishesForFoodItem = dbContext.SideDishes
-    //.Where(sd => sd.FoodItemId == myFoodItem.ID)
-    //.ToList();
+        public SideDish SideDish { get; set; }
+
+        //    var sideDishesForFoodItem = dbContext.SideDishes
+        //.Where(sd => sd.FoodItemId == myFoodItem.ID)
+        //.ToList();
     }
 }

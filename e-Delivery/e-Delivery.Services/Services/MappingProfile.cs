@@ -2,9 +2,11 @@
 using e_Delivery.Entities;
 using e_Delivery.Model.Category;
 using e_Delivery.Model.City;
+using e_Delivery.Model.FoodItem;
 using e_Delivery.Model.Images;
 using e_Delivery.Model.Location;
 using e_Delivery.Model.Role;
+using e_Delivery.Model.SideDish;
 using e_Delivery.Model.User;
 using e_Delivery.Model.Verification;
 using System;
@@ -56,6 +58,17 @@ namespace e_Delivery.Services.Services
             CreateMap<LocationUpdateVM, Location>();
             CreateMap<Location, LocationGetVM>();
             //========================================
+
+            //================SIDEDISHES===============
+            CreateMap<CreateSideDishVM, SideDish>();
+            CreateMap<UpdateSideDishVM, SideDish>();
+            CreateMap<SideDish, GetSideDishVM>();
+            //========================================
+
+            //================FOODITEMS===============
+            CreateMap<CreateFoodItemVM, FoodItem>();
+            CreateMap<UpdateFoodItemVM, FoodItem>();
+            CreateMap<FoodItem, FoodItemGetVM>();
         }
     }
 }

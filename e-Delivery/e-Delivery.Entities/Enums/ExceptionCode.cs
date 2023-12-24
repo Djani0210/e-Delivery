@@ -9,6 +9,7 @@ namespace e_Delivery.Entities.Enums
     public enum ExceptionCode
     {
         Success = 200,
+        Created = 201,
         Unauthorized = 401,
         Forbidden = 403,
         NotFound = 404,

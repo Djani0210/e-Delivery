@@ -17,8 +17,8 @@ namespace e_Delivery.Entities
         public List<FoodItemPictures> FoodItemPictures { get; set; }
 
 
-        public List<FoodItemSideDishMapping> FoodItemSideDishMappings { get; } = new();
-        public List<SideDish>? SideDishes { get; } = new();
+        public List<FoodItemSideDishMapping> FoodItemSideDishMappings { get; } = new List<FoodItemSideDishMapping>();
+        public List<SideDish>? SideDishes { get; } = new List<SideDish>();
 
         [ForeignKey(nameof(CategoryId))]
         public Category Category { get; set; }
