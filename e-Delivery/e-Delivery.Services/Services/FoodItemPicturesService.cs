@@ -74,7 +74,7 @@ namespace e_Delivery.Services.Services
                 {
                     IsValid = false,
                     Info = "Entitet nije pronađen.",
-                    Status = ExceptionCode.NotFound
+                    Status = ExceptionCode.NoContent
                 };
             }
             _dbContext.Remove(entity);

@@ -72,7 +72,7 @@ namespace e_Delivery.Services.Services
                 {
                     IsValid = true,
                     Info = "Successfully deleted location",
-                    Status = ExceptionCode.Success,
+                    Status = ExceptionCode.NoContent,
                 };
             }
             catch (Exception ex)

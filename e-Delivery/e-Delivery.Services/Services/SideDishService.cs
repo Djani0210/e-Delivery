@@ -73,7 +73,7 @@ namespace e_Delivery.Services.Services
                 {
                     IsValid = true,
                     Info = "Successfully deleted SideDish",
-                    Status = ExceptionCode.NotFound,
+                    Status = ExceptionCode.NoContent,
                 };
             }
             catch (Exception ex)

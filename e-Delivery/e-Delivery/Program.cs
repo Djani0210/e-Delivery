@@ -90,6 +90,7 @@ builder.Services.AddTransient<ILocationService, LocationService>();
 builder.Services.AddTransient<IFoodItemPicturesService, FoodItemPicturesService>();
 builder.Services.AddTransient<ISideDishService, SideDishService>();
 builder.Services.AddTransient<IFoodItemService, FoodItemService>();
+builder.Services.AddTransient<IRestaurantService, RestaurantService>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 

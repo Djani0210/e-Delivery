@@ -40,9 +40,4 @@
     <ProjectReference Include="..\e-Delivery.Services\e-Delivery.Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Uploads\Images\" />
-    <Folder Include="wwwroot\FoodItem_images\" />
-  </ItemGroup>
-
 </Project>

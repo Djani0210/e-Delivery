@@ -3,6 +3,7 @@ using e_Delivery.Database;
 using e_Delivery.Entities;
 using e_Delivery.Entities.Enums;
 using e_Delivery.Model.FoodItem;
+using e_Delivery.Model.SideDish;
 using e_Delivery.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -111,24 +112,275 @@ namespace e_Delivery.Services.Services
 
         }
 
+        //public async Task<Message> GetFoodItemsAsMessageAsync(CancellationToken cancellationToken)
+        //{
+        //    try
+        //    {
+        //        var loggedUser = await authContext.GetLoggedUser();
+        //        var restaurant = await _dbContext.Restaurants.Where(x => x.Id == loggedUser.RestaurantId).FirstOrDefaultAsync();
+
+        //        var foodItems = await _dbContext.FoodItems
+        //            .Include(fi => fi.FoodItemSideDishMappings)
+        //            .Where(fi => fi.RestaurantId == restaurant.Id)
+        //            .ToListAsync();
+
+        //        var getFoodItemsVM = Mapper.Map<List<FoodItemGetVM>>(foodItems);
+
+        //        return new Message
+        //        {
+        //            IsValid = true,
+        //            Info = "Successfully retrieved FoodItems for the restaurant.",
+        //            Status = ExceptionCode.Success,
+        //            Data = getFoodItemsVM
+        //        };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new Message
+        //        {
+        //            IsValid = false,
+        //            Info = ex.Message,
+        //            Status = ExceptionCode.BadRequest,
+        //        };
+        //    }
+        //}
         public async Task<Message> GetFoodItemsAsMessageAsync(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var loggedUser = await authContext.GetLoggedUser();
+                var restaurant = await _dbContext.Restaurants.Where(x => x.Id == loggedUser.RestaurantId).FirstOrDefaultAsync();
+
+                var foodItems = await _dbContext.FoodItems
+                    .Where(fi => fi.RestaurantId == restaurant.Id)
+                    .Select(fi => new
+                    {
+                        FoodItem = fi,
+                        SideDishes = fi.FoodItemSideDishMappings.Select(mapping => mapping.SideDish).ToList()
+                    })
+                    .ToListAsync();
+
+                var getFoodItemsVM = foodItems.Select(item => new FoodItemGetVM
+                {
+                    Id = item.FoodItem.Id,
+                    Name = item.FoodItem.Name,
+                    Description = item.FoodItem.Description,
+                    Price = item.FoodItem.Price,
+                    IsAvailable = item.FoodItem.IsAvailable,
+                    SideDishes = Mapper.Map<List<GetSideDishVM>>(item.SideDishes)
+                    // Add other properties as needed
+                }).ToList();
+
+                return new Message
+                {
+                    IsValid = true,
+                    Info = "Successfully retrieved FoodItems for the restaurant.",
+                    Status = ExceptionCode.Success,
+                    Data = getFoodItemsVM
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Message
+                {
+                    IsValid = false,
+                    Info = ex.Message,
+                    Status = ExceptionCode.BadRequest,
+                };
+            }
         }
 
-        public async Task<Message> GetFoodItemByIdAsMessageAsync(int id, CancellationToken cancellationToken)
+        //public async Task<Message> GetFoodItemByIdAsMessageAsync(int foodItemId, CancellationToken cancellationToken)
+        //{
+        //    try
+        //    {
+        //        var loggedUser = await authContext.GetLoggedUser();
+        //        var restaurant = await _dbContext.Restaurants.Where(x => x.Id == loggedUser.RestaurantId).FirstOrDefaultAsync();
+
+        //        var foodItem = await _dbContext.FoodItems
+        //            .Include(fi => fi.FoodItemSideDishMappings)
+        //            .SingleOrDefaultAsync(fi => fi.Id == foodItemId && fi.RestaurantId == restaurant.Id);
+
+        //        if (foodItem == null)
+        //        {
+        //            return new Message
+        //            {
+        //                IsValid = false,
+        //                Info = "FoodItem not found or does not belong to the restaurant.",
+        //                Status = ExceptionCode.NotFound,
+        //            };
+        //        }
+
+        //        var getFoodItemVM = Mapper.Map<FoodItemGetVM>(foodItem);
+
+        //        return new Message
+        //        {
+        //            IsValid = true,
+        //            Info = "Successfully retrieved FoodItem.",
+        //            Status = ExceptionCode.Success,
+        //            Data = getFoodItemVM
+        //        };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return new Message
+        //        {
+        //            IsValid = false,
+        //            Info = ex.Message,
+        //            Status = ExceptionCode.BadRequest,
+        //        };
+        //    }
+        //}
+
+        public async Task<Message> GetFoodItemByIdAsMessageAsync(int foodItemId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var loggedUser = await authContext.GetLoggedUser();
+                var restaurant = await _dbContext.Restaurants.Where(x => x.Id == loggedUser.RestaurantId).FirstOrDefaultAsync();
+
+                var foodItem = await _dbContext.FoodItems
+                    .Where(fi => fi.Id == foodItemId && fi.RestaurantId == restaurant.Id)
+                    .Select(fi => new
+                    {
+                        FoodItem = fi,
+                        SideDishes = fi.FoodItemSideDishMappings.Select(mapping => mapping.SideDish).ToList()
+                    })
+                    .SingleOrDefaultAsync();
+
+                if (foodItem == null)
+                {
+                    return new Message
+                    {
+                        IsValid = false,
+                        Info = "FoodItem not found or does not belong to the restaurant.",
+                        Status = ExceptionCode.NotFound,
+                    };
+                }
+
+                var getFoodItemVM = new FoodItemGetVM
+                {
+                    Id = foodItem.FoodItem.Id,
+                    Name = foodItem.FoodItem.Name,
+                    Description = foodItem.FoodItem.Description,
+                    Price = foodItem.FoodItem.Price,
+                    IsAvailable = foodItem.FoodItem.IsAvailable,
+                    SideDishes = Mapper.Map<List<GetSideDishVM>>(foodItem.SideDishes)
+                    // Add other properties as needed
+                };
+
+                return new Message
+                {
+                    IsValid = true,
+                    Info = "Successfully retrieved FoodItem.",
+                    Status = ExceptionCode.Success,
+                    Data = getFoodItemVM
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Message
+                {
+                    IsValid = false,
+                    Info = ex.Message,
+                    Status = ExceptionCode.BadRequest,
+                };
+            }
         }
 
-        public async Task<Message> UpdateFoodItemAsMessageAsync(int id, UpdateFoodItemVM updateFoodItemVM, CancellationToken cancellationToken)
+
+        public async Task<Message> UpdateFoodItemAsMessageAsync(int foodItemId, UpdateFoodItemVM updateFoodItemVM, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var loggedUser = await authContext.GetLoggedUser();
+                var restaurant = await _dbContext.Restaurants.Where(x => x.Id == loggedUser.RestaurantId).FirstOrDefaultAsync();
+
+                var existingFoodItem = await _dbContext.FoodItems
+                    .Include(fi => fi.FoodItemSideDishMappings)
+                    .SingleOrDefaultAsync(fi => fi.Id == foodItemId && fi.RestaurantId == restaurant.Id);
+
+                if (existingFoodItem == null)
+                {
+                    return new Message
+                    {
+                        IsValid = false,
+                        Info = "FoodItem not found or does not belong to the restaurant.",
+                        Status = ExceptionCode.NotFound,
+                    };
+                }
+
+                // Update properties
+                Mapper.Map(updateFoodItemVM, existingFoodItem);
+
+                // Update side dishes
+                existingFoodItem.FoodItemSideDishMappings.Clear(); // Remove existing side dish mappings
+                if (updateFoodItemVM.SideDishIds != null && updateFoodItemVM.SideDishIds.Any())
+                {
+                    existingFoodItem.FoodItemSideDishMappings.AddRange(updateFoodItemVM.SideDishIds
+                        .Select(sideDishId => new FoodItemSideDishMapping { SideDishId = sideDishId }));
+                }
+
+                await _dbContext.SaveChangesAsync();
+
+                return new Message
+                {
+                    IsValid = true,
+                    Info = "Successfully updated FoodItem.",
+                    Status = ExceptionCode.Success,
+                    Data = existingFoodItem
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Message
+                {
+                    IsValid = false,
+                    Info = ex.Message,
+                    Status = ExceptionCode.BadRequest,
+                };
+            }
+        }
+        public async Task<Message> DeleteFoodItemAsMessageAsync(int foodItemId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var loggedUser = await authContext.GetLoggedUser();
+                var restaurant = await _dbContext.Restaurants.Where(x => x.Id == loggedUser.RestaurantId).FirstOrDefaultAsync();
+
+                var existingFoodItem = await _dbContext.FoodItems
+                    .SingleOrDefaultAsync(fi => fi.Id == foodItemId && fi.RestaurantId == restaurant.Id);
+
+                if (existingFoodItem == null)
+                {
+                    return new Message
+                    {
+                        IsValid = false,
+                        Info = "FoodItem not found or does not belong to the restaurant.",
+                        Status = ExceptionCode.NotFound,
+                    };
+                }
+
+                _dbContext.FoodItems.Remove(existingFoodItem);
+                await _dbContext.SaveChangesAsync();
+
+                return new Message
+                {
+                    IsValid = true,
+                    Info = "Successfully deleted FoodItem.",
+                    Status = ExceptionCode.Success,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Message
+                {
+                    IsValid = false,
+                    Info = ex.Message,
+                    Status = ExceptionCode.BadRequest,
+                };
+            }
         }
 
-        public async Task<Message> DeleteFoodItemAsMessageAsync(int id, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
