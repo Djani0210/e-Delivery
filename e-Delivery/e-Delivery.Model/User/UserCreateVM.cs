@@ -16,11 +16,11 @@ namespace e_Delivery.Model.User
         public string Email { get; set; }
         public string Password { get; set; }
         public Gender Gender { get; set; }
-        // public bool? IsAvailable { get; set; }
-        //public TimeSpan? WorkFrom { get; set; }
-        //public TimeSpan? WorkUntil { get; set; }
-        //public int? RestaurantId { get; set; }
-        //public int? CityId { get; set; }
+         public bool? IsAvailable { get; set; }
+        public string? WorkFrom { get; set; }
+        public string? WorkUntil { get; set; }
+        public int? RestaurantId { get; set; }
+        public int? CityId { get; set; }
         public List<Guid> UserRoles { get; set; }
     }
 }

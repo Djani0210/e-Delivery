@@ -11,7 +11,7 @@ namespace e_Delivery.Model.SideDish
         public string Name { get; set; }
         public double Price { get; set; }
         public bool IsAvailable { get; set; }
-        public int RestaurantId { get; set; }
+        //public int RestaurantId { get; set; }
        
     }
 }

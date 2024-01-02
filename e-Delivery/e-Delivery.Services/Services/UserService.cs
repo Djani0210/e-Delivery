@@ -2,6 +2,8 @@
 using e_Delivery.Database;
 using e_Delivery.Entities;
 using e_Delivery.Entities.Enums;
+using e_Delivery.Model.Images;
+using e_Delivery.Model.Restaurant;
 using e_Delivery.Model.Role;
 using e_Delivery.Model.User;
 using e_Delivery.Model.Verification;
@@ -10,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
@@ -91,11 +94,11 @@ namespace e_Delivery.Services.Services
                     user.Gender = userCreateVM.Gender;
                     user.CreatedDate = DateTime.Now;
                     user.IsDeleted = false;
-                    //user.CityId = userCreateVM.CityId;
-                    //user.RestaurantId= userCreateVM.RestaurantId;
-                    //user.IsAvailable = userCreateVM.IsAvailable;
-                    //user.WorkFrom = userCreateVM.WorkFrom;
-                    //user.WorkUntil= userCreateVM.WorkUntil;
+                    user.CityId = userCreateVM.CityId;
+                    user.RestaurantId= userCreateVM.RestaurantId;
+                    user.IsAvailable = userCreateVM.IsAvailable;
+                    user.WorkFrom = TimeSpan.ParseExact(userCreateVM.WorkFrom, "hh\\:mm", CultureInfo.InvariantCulture); 
+                    user.WorkUntil= TimeSpan.ParseExact(userCreateVM.WorkUntil, "hh\\:mm", CultureInfo.InvariantCulture); 
 
                     await UserManager.CreateAsync(user, userCreateVM.Password);
                     var roles = await _dbContext.Roles
@@ -103,9 +106,20 @@ namespace e_Delivery.Services.Services
                            .ToListAsync(cancellationToken);
 
                     await UserManager.AddToRolesAsync(user, roles.Select(x => x.NormalizedName));
+                    var file = new ImageCreateVM
+                    {
+                        Path = "/Uploads/Images/00caa4b0-1903-41b5-a8d0-e7a293e48283.jpg",
+                        IsDeleted = false,
+                        CreatedDate = DateTime.Now,
+                        CreatedByUserId = user.Id,
+                        ModifiedByUserId = user.Id,
+                        UserProfilePictureId = user.Id
+                    };
+                    var obj = Mapper.Map<Image>(file);
+                    await _dbContext.Images.AddAsync(obj);
 
                     await _dbContext.SaveChangesAsync(cancellationToken);
-
+                    
                     await transaction.CommitAsync(cancellationToken);
 
 

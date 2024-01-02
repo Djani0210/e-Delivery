@@ -5,6 +5,7 @@ using e_Delivery.Entities.Enums;
 using e_Delivery.Model.Location;
 using e_Delivery.Model.Restaurant;
 using e_Delivery.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Stripe.Terminal;
 using System;
@@ -25,52 +26,98 @@ namespace e_Delivery.Services.Services
         public IFileService _fileService { get; set; }
         public ILocationService _locationService { get; set; }
         public IAuthContext _authContext { get; set; }
+        private UserManager<User> _userManager { get; set; }
 
         public RestaurantService(eDeliveryDBContext dbContext, IMapper mapper,
-            IFileService fileService, ILocationService locationService, IAuthContext authContext)
+            IFileService fileService, ILocationService locationService, IAuthContext authContext, UserManager<User> userManager)
         {
             _dbContext = dbContext;
             Mapper = mapper;
             _fileService = fileService;
             _locationService = locationService;
             _authContext = authContext;
+            _userManager = userManager;
         }
         public async Task<Message> CreateRestaurantAsMessage(RestaurantCreateVM restaurantCreateVM, CancellationToken cancellationToken)
         {
             try
             {
-                var locationCreateVM = new LocationCreateVM
-                {
-                    CityId = restaurantCreateVM.CityId,
-                    Latitude = restaurantCreateVM.Latitude,
-                    Longitude = restaurantCreateVM.Longitude
-                };
-                var message = await _locationService.CreateLocationAsMessageAsync(locationCreateVM, cancellationToken);
+                var loggedUser = await _authContext.GetLoggedUser();
 
-                if (message == null || !message.IsValid)
+                if (loggedUser.RestaurantId == null)
+                {
+                    using var transaction = await _dbContext.Database.BeginTransactionAsync();
+
+                    try
+                    {
+                        // Your existing code to create a location
+                        var locationCreateVM = new LocationCreateVM
+                        {
+                            CityId = restaurantCreateVM.CityId,
+                            Latitude = restaurantCreateVM.Latitude,
+                            Longitude = restaurantCreateVM.Longitude
+                        };
+                        var locationMessage = await _locationService.CreateLocationAsMessageAsync(locationCreateVM, cancellationToken);
+
+                        if (locationMessage == null || !locationMessage.IsValid)
+                        {
+                            transaction.Rollback();
+                            return new Message
+                            {
+                                IsValid = false,
+                                Info = "Error during uploading a location!",
+                                Status = ExceptionCode.BadRequest
+                            };
+                        }
+
+                        var obj = Mapper.Map<Restaurant>(restaurantCreateVM);
+                        obj.CreatedByUserId = loggedUser.Id;
+                        obj.ModifiedByUserId = loggedUser.Id;
+                        obj.CreatedDate = DateTime.Now;
+                        obj.LocationId = ((LocationGetVM)locationMessage.Data).Id;
+                        obj.OpeningTime = TimeSpan.ParseExact(restaurantCreateVM.OpeningTime, "hh\\:mm", CultureInfo.InvariantCulture);
+                        obj.ClosingTime = TimeSpan.ParseExact(restaurantCreateVM.ClosingTime, "hh\\:mm", CultureInfo.InvariantCulture);
+
+                        await _dbContext.AddAsync(obj);
+                        await _dbContext.SaveChangesAsync();
+
+                        // Update user's RestaurantId
+                        var userEntity = await _userManager.FindByIdAsync(loggedUser.Id.ToString());
+                        userEntity.RestaurantId = obj.Id; // Assuming obj.Id is the generated Id for the newly created restaurant
+                        await _userManager.UpdateAsync(userEntity);
+
+                        transaction.Commit();
+                        var restaurantGetVM = Mapper.Map<RestaurantGetVM>(obj);
+
+                        return new Message
+                        {
+                            IsValid = true,
+                            Info = "Successfully added restaurant",
+                            Status = ExceptionCode.Success,
+                            Data = restaurantGetVM
+                        };
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+
+                        return new Message
+                        {
+                            IsValid = false,
+                            Info = ex.Message,
+                            Status = ExceptionCode.BadRequest
+                        };
+                    }
+                }
+                else
                 {
                     return new Message
                     {
                         IsValid = false,
-                        Info = "Error during uploading a location!",
+                        Info = "This user has already got a restaurant",
                         Status = ExceptionCode.BadRequest
                     };
                 }
-                var obj = Mapper.Map<Restaurant>(restaurantCreateVM);
-                obj.CreatedDate = DateTime.Now;
-                obj.LocationId = ((LocationGetVM)message.Data).Id;
-                obj.OpeningTime = TimeSpan.ParseExact(restaurantCreateVM.OpeningTime, "hh\\:mm", CultureInfo.InvariantCulture);
-                obj.ClosingTime = TimeSpan.ParseExact(restaurantCreateVM.ClosingTime, "hh\\:mm", CultureInfo.InvariantCulture);
-
-                await _dbContext.AddAsync(obj);
-                await _dbContext.SaveChangesAsync();
-                return new Message
-                {
-                    IsValid = true,
-                    Info = "Successfully added restaurant",
-                    Status = ExceptionCode.Success,
-                    Data = obj
-                };
             }
             catch (Exception ex)
             {
@@ -83,10 +130,93 @@ namespace e_Delivery.Services.Services
             }
         }
 
-        public Task<Message> DeleteRestaurantAsMessage(int RestaurantId, CancellationToken cancellationToken)
+
+
+        public async Task<Message> DeleteRestaurantAndRelatedEntitiesAsync(int restaurantId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            using var transaction = await _dbContext.Database.BeginTransactionAsync();
+
+            try
+            {
+                // Retrieve the logged-in user
+                var loggedUser = await _authContext.GetLoggedUser();
+
+                // Ensure that the logged-in user is the owner of the restaurant
+                if (loggedUser.RestaurantId != restaurantId)
+                {
+                    return new Message
+                    {
+                        IsValid = false,
+                        Info = "You do not have permission to delete this restaurant.",
+                        Status = ExceptionCode.Forbidden,
+                    };
+                }
+
+                // Delete related entries in FoodItemPictures table
+                var foodItemPicturesToDelete = await _dbContext.FoodItemPictures
+                    .Where(fip => fip.FoodItem.RestaurantId == restaurantId)
+                    .ToListAsync(cancellationToken);
+
+                  _dbContext.FoodItemPictures.RemoveRange(foodItemPicturesToDelete);
+
+                // Delete related entries in FoodItem and SideDish tables
+                var foodItemsToDelete = await _dbContext.FoodItems
+                    .Include(fi => fi.SideDishes)
+                    .Where(fi => fi.RestaurantId == restaurantId)
+                    .ToListAsync(cancellationToken);
+
+                foreach (var foodItem in foodItemsToDelete)
+                {
+                    _dbContext.SideDishes.RemoveRange(foodItem.SideDishes);
+                }
+
+                 _dbContext.FoodItems.RemoveRange(foodItemsToDelete);
+
+               
+
+                // Set the RestaurantId of the logged-in user to null
+
+                var userEntity = await _userManager.FindByIdAsync(loggedUser.Id.ToString());
+                userEntity.RestaurantId = null; 
+                await _userManager.UpdateAsync(userEntity);
+
+
+                 // Delete the actual Restaurant entity
+                var restaurantToDelete = await _dbContext.Restaurants.FindAsync(restaurantId);
+                _dbContext.Restaurants.Remove(restaurantToDelete);
+
+                // Commit the transaction
+                await _dbContext.SaveChangesAsync(cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
+
+                return new Message
+                {
+                    IsValid = true,
+                    Info = "Successfully deleted restaurant and related entities.",
+                    Status = ExceptionCode.NoContent,
+                };
+            }
+            catch (Exception ex)
+            {
+                var innerException = ex.InnerException;
+                while (innerException != null)
+                {
+                    // Log or inspect inner exception details
+                    innerException = innerException.InnerException;
+                    Console.WriteLine(innerException);
+                }
+                // Rollback the transaction in case of an exception
+                await transaction.RollbackAsync(cancellationToken);
+
+                return new Message
+                {
+                    IsValid = false,
+                    Info = ex.Message,
+                    Status = ExceptionCode.BadRequest,
+                };
+            }
         }
+
 
         public async Task<Message> GetRestaurantByIdAsMessage(int RestaurantId, CancellationToken cancellationToken)
         {
@@ -99,7 +229,7 @@ namespace e_Delivery.Services.Services
                 return new Message
                 {
                     IsValid = true,
-                    Info = "Successfully got company",
+                    Info = "Successfully got restaurant",
                     Status = ExceptionCode.Success,
                     Data = obj
                 };
@@ -151,9 +281,12 @@ namespace e_Delivery.Services.Services
         {
             try
             {
+                var loggedUser = await _authContext.GetLoggedUser();
+
                 var restaurant = await _dbContext.Restaurants.Include(x => x.Location)
                     .Include(x => x.Location.City).Where(x => x.Id == RestaurantId).FirstOrDefaultAsync(cancellationToken);
                 Mapper.Map(restaurantUpdateVM, restaurant);
+                restaurant.ModifiedByUserId = loggedUser.Id;
                 restaurant.OpeningTime = TimeSpan.ParseExact(restaurantUpdateVM.OpeningTime, "hh\\:mm", CultureInfo.InvariantCulture);
                 restaurant.ClosingTime = TimeSpan.ParseExact(restaurantUpdateVM.ClosingTime, "hh\\:mm", CultureInfo.InvariantCulture);
 
@@ -180,7 +313,7 @@ namespace e_Delivery.Services.Services
                 return new Message
                 {
                     IsValid = true,
-                    Info = "Successfully updated company",
+                    Info = "Successfully updated restaurant",
                     Status = ExceptionCode.Success,
                     Data = restaurant
                 };

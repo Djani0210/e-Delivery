@@ -11,7 +11,7 @@ namespace e_Delivery.Services.Interfaces
     {
         Task<Message> CreateRestaurantAsMessage(RestaurantCreateVM restaurantCreateVM, CancellationToken cancellationToken);
         Task<Message> UpdateRestaurantAsMessage(int RestaurantId, RestaurantUpdateVM restaurantUpdateVM, CancellationToken cancellationToken);
-        Task<Message> DeleteRestaurantAsMessage(int RestaurantId,  CancellationToken cancellationToken);
+        Task<Message> DeleteRestaurantAndRelatedEntitiesAsync(int restaurantId,  CancellationToken cancellationToken);
         Task<Message> GetRestaurantsAsMessage(int cityId, CancellationToken cancellationToken);
         Task<Message> GetRestaurantByIdAsMessage(int RestaurantId, CancellationToken cancellationToken);
 

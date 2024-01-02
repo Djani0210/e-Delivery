@@ -18,6 +18,7 @@ namespace e_Delivery.Model.Restaurant
         public TimeSpan ClosingTime { get; set; }
         public string ContactNumber { get; set; }
         public double DeliveryCharge { get; set; }
+        public int DeliveryTime { get; set; }
         public LocationGetVM Location { get; set; }
         public ImageGetVM Image { get; set; }
     }

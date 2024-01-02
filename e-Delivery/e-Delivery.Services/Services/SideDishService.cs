@@ -40,10 +40,12 @@ namespace e_Delivery.Services.Services
                 await _dbContext.AddAsync(obj);
                 await _dbContext.SaveChangesAsync(cancellationToken);
 
+                var sideDishGetVM = Mapper.Map<GetSideDishVM>(obj);
+
                 return new Message
                 {
-                    Data = obj,
-                    Info = "Successfully created object",
+                    Data = sideDishGetVM,
+                    Info = "Successfully created side dish",
                     Status = ExceptionCode.Created,
                     IsValid = true
                 };
@@ -66,8 +68,13 @@ namespace e_Delivery.Services.Services
             try
             {
                 var sideDish = await _dbContext.SideDishes.FindAsync(id);
+
+                var sideDishMappings = _dbContext.FoodItemSideDishMappings
+                .Where(mapping => mapping.SideDishId == sideDish.Id);
+
+                _dbContext.FoodItemSideDishMappings.RemoveRange(sideDishMappings);
                 _dbContext.Remove(sideDish);
-                _dbContext.SaveChangesAsync(cancellationToken);
+                await _dbContext.SaveChangesAsync(cancellationToken);
 
                 return new Message
                 {
@@ -130,7 +137,7 @@ namespace e_Delivery.Services.Services
                 return new Message
                 {
                     IsValid = true,
-                    Info = "Successfully updated location",
+                    Info = "Successfully updated side dish",
                     Status = ExceptionCode.Success,
                 };
             }

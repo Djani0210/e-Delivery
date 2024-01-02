@@ -75,7 +75,7 @@ namespace e_Delivery.Controllers
         [HttpDelete("delete-Restaurant"), Authorize(Roles = "Desktop")]
         public async Task<IActionResult> DeleteRestaurant(int id, CancellationToken cancellationToken)
         {
-            var message = await _restaurantService.DeleteRestaurantAsMessage(id,cancellationToken);
+            var message = await _restaurantService.DeleteRestaurantAndRelatedEntitiesAsync(id,cancellationToken);
             if (!message.IsValid)
             {
                 return BadRequest(message);

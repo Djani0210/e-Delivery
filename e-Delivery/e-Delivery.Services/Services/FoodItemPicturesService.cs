@@ -91,7 +91,7 @@ namespace e_Delivery.Services.Services
 
         public async Task<Message> GetAllAsMessageAsync(int id)
         {
-            var entity = _dbContext.FoodItemPictures.Where(x=> x.FoodItemId == id).ToListAsync();
+            var entity =  await _dbContext.FoodItemPictures.Where(x=> x.FoodItemId == id).ToListAsync();
             if (entity is null)
             {
                 return new Message

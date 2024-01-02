@@ -13,7 +13,6 @@ namespace e_Delivery.Model.FoodItem
         public double Price { get; set; }
         public bool IsAvailable { get; set; }
         public int CategoryId { get; set; }
-        public int RestaurantId { get; set; }
         public List<int> SideDishIds { get; set; }
     }
 }

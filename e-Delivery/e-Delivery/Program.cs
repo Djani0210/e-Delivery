@@ -96,7 +96,10 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 
 builder.Services.AddControllers()
-                .AddNewtonsoftJson()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                })
                 .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase)
                 .AddFluentValidation();
 

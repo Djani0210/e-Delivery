@@ -30,7 +30,7 @@ namespace e_Delivery.Database
         public DbSet<SideDish> SideDishes { get; set; }
         public DbSet<Verification> Verifications { get; set; }
 
-        
+
 
 
         public eDeliveryDBContext(DbContextOptions<eDeliveryDBContext> options) : base(options)
@@ -44,6 +44,22 @@ namespace e_Delivery.Database
             .HasMany(e => e.SideDishes)
             .WithMany(e => e.FoodItems)
             .UsingEntity<FoodItemSideDishMapping>();
+
+            
+
+
+            modelBuilder.Entity<Restaurant>()
+            .HasOne(r => r.CreatedByUser)
+            .WithMany()
+            .HasForeignKey(r => r.CreatedByUserId);
+
+            modelBuilder.Entity<Restaurant>()
+            .HasOne(r => r.ModifiedByUser)
+            .WithMany()
+            .HasForeignKey(r => r.ModifiedByUserId);
+
+
+
 
             //modelBuilder.Ignore<BaseEntity>();
 

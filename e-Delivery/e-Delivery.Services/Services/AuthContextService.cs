@@ -41,6 +41,7 @@ namespace e_Delivery.Services.Services
                 CityId = user.CityId,
                 RestaurantId = user.RestaurantId,
             };
+
         }
     }
 }

@@ -41,13 +41,18 @@ namespace e_Delivery.Services.Services
                     foodItem.FoodItemSideDishMappings.AddRange(createFoodItemVM.SideDishIds
                     .Select(sideDishId => new FoodItemSideDishMapping { SideDishId = sideDishId }));
                 }
+
+                await _dbContext.AddAsync(foodItem);
+                await _dbContext.SaveChangesAsync(cancellationToken);
+                var foodItemGetVM = Mapper.Map<FoodItemGetVM>(foodItem);
                 return new Message
                 {
                     IsValid = true,
                     Info = "Successfully added FoodItem",
                     Status = ExceptionCode.Created,
-                    Data = foodItem
+                    Data = foodItemGetVM
                 };
+
             }
             catch (Exception ex)
             {
@@ -360,6 +365,10 @@ namespace e_Delivery.Services.Services
                         Status = ExceptionCode.NotFound,
                     };
                 }
+                var sideDishMappings = _dbContext.FoodItemSideDishMappings
+                .Where(mapping => mapping.FoodItemId == existingFoodItem.Id);
+
+                _dbContext.FoodItemSideDishMappings.RemoveRange(sideDishMappings);
 
                 _dbContext.FoodItems.Remove(existingFoodItem);
                 await _dbContext.SaveChangesAsync();
