@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Stripe;
 using System;
 
-namespace ITShop.API.Controllers
+namespace e_Delivery.Controllers
 {
     [ApiController]
     [Route("api/payment")]
