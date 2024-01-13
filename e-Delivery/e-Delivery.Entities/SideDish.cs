@@ -19,7 +19,6 @@ namespace e_Delivery.Entities
         public List<FoodItemSideDishMapping> FoodItemSideDishMappings { get; set; }
         public List<FoodItem> FoodItems { get; } = new();
 
-
         [ForeignKey(nameof(RestaurantId))]
         public Restaurant Restaurant { get; set; }
         public int RestaurantId { get; set; }

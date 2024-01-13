@@ -14,11 +14,10 @@ namespace e_Delivery.Entities
         [Key]
         public Guid Id { get; set; }
 
-        public bool IsDeleted { get; set; }
+        public bool IsDeleted { get; set; } = false;
         public DateTime CreatedDate { get; set; }
         public bool IsPaid { get; set; }
-        public string? Payment_intent_id { get; set; }
-        public string? Receipt_url { get; set; }
+    
 
         public PaymentMethod PaymentMethod { get; set; }
         public double TotalCost { get; set; }

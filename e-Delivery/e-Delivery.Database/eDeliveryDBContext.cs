@@ -45,8 +45,18 @@ namespace e_Delivery.Database
             .WithMany(e => e.FoodItems)
             .UsingEntity<FoodItemSideDishMapping>();
 
-            
 
+            modelBuilder.Entity<OrderItem>()
+            .HasKey(o => o.Id);  // Define the Id property as the primary key
+
+            modelBuilder.Entity<OrderItem>()
+                .Property(o => o.SideDishIds)
+                .HasConversion(
+                    v => string.Join(',', v),            // Convert List<int> to a string
+                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList()  // Convert back to List<int>
+                );
+
+          
 
             modelBuilder.Entity<Restaurant>()
             .HasOne(r => r.CreatedByUser)

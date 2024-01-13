@@ -79,7 +79,7 @@ namespace e_Delivery.Services.Services
                         obj.ClosingTime = TimeSpan.ParseExact(restaurantCreateVM.ClosingTime, "hh\\:mm", CultureInfo.InvariantCulture);
 
                         await _dbContext.AddAsync(obj);
-                        await _dbContext.SaveChangesAsync();
+                        await _dbContext.SaveChangesAsync(cancellationToken);
 
                         // Update user's RestaurantId
                         var userEntity = await _userManager.FindByIdAsync(loggedUser.Id.ToString());
@@ -222,7 +222,7 @@ namespace e_Delivery.Services.Services
         {
             try
             {
-                var restaurant = await _dbContext.Restaurants.Include(x => x.Logo).Include(x => x.Location).Include(x => x.Location.City).AsNoTracking().Where(x => x.Id == RestaurantId).FirstOrDefaultAsync(cancellationToken);
+                var restaurant = await _dbContext.Restaurants.Include(x => x.Logo).Include(x => x.Location).Include(x => x.Location.City).Include(x => x.Reviews).AsNoTracking().Where(x => x.Id == RestaurantId).FirstOrDefaultAsync(cancellationToken);
 
 
                 var obj = Mapper.Map<RestaurantGetVM>(restaurant);

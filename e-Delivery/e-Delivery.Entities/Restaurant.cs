@@ -43,6 +43,7 @@ namespace e_Delivery.Entities
         public User ModifiedByUser { get; set; }
         public Guid ModifiedByUserId { get; set; }
 
+        public List<Entities.Review> Reviews { get; set; }
 
     }
 }

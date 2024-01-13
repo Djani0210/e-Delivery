@@ -1,5 +1,6 @@
 ﻿using e_Delivery.Model.Images;
 using e_Delivery.Model.Location;
+using e_Delivery.Model.Review;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,5 +22,6 @@ namespace e_Delivery.Model.Restaurant
         public int DeliveryTime { get; set; }
         public LocationGetVM Location { get; set; }
         public ImageGetVM Image { get; set; }
+        public List<GetReviewVM>? Reviews { get; set; }
     }
 }

@@ -5,7 +5,9 @@ using e_Delivery.Model.City;
 using e_Delivery.Model.FoodItem;
 using e_Delivery.Model.Images;
 using e_Delivery.Model.Location;
+using e_Delivery.Model.Order;
 using e_Delivery.Model.Restaurant;
+using e_Delivery.Model.Review;
 using e_Delivery.Model.Role;
 using e_Delivery.Model.SideDish;
 using e_Delivery.Model.User;
@@ -75,6 +77,19 @@ namespace e_Delivery.Services.Services
             CreateMap<RestaurantCreateVM, Restaurant>();
             CreateMap<RestaurantUpdateVM, Restaurant>();
             CreateMap<Restaurant, RestaurantGetVM>();
+
+            //================ORDERS===============
+            CreateMap<CreateOrderVM, Order>();
+            CreateMap<UpdateOrderVM, Order>();
+            CreateMap<Order, GetOrderVM>();
+            CreateMap<OrderItem, GetOrderItemVM>();
+            CreateMap<OrderItemVM, OrderItem>()
+             .ForMember(dest => dest.SideDishIds, opt => opt.MapFrom(src => src.SideDishIds));
+
+            //================REVIEWS===============
+            CreateMap<CreateOrUpdateReviewVM, Review>();
+            CreateMap<Review, GetReviewVM>();
+            
         }
     }
 }

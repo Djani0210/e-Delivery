@@ -91,6 +91,8 @@ builder.Services.AddTransient<IFoodItemPicturesService, FoodItemPicturesService>
 builder.Services.AddTransient<ISideDishService, SideDishService>();
 builder.Services.AddTransient<IFoodItemService, FoodItemService>();
 builder.Services.AddTransient<IRestaurantService, RestaurantService>();
+builder.Services.AddTransient<IOrderService, OrderService>();
+builder.Services.AddTransient<IReviewService, e_Delivery.Services.Services.ReviewService>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 

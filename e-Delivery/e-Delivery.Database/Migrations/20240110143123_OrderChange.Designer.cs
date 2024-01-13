@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using e_Delivery.Database;
 
@@ -11,9 +12,11 @@ using e_Delivery.Database;
 namespace e_Delivery.Database.Migrations
 {
     [DbContext(typeof(eDeliveryDBContext))]
-    partial class eDeliveryDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240110143123_OrderChange")]
+    partial class OrderChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -537,6 +540,9 @@ namespace e_Delivery.Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("OrderItemId")
+                        .HasColumnType("int");
+
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
@@ -544,6 +550,8 @@ namespace e_Delivery.Database.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderItemId");
 
                     b.HasIndex("RestaurantId");
 
@@ -978,6 +986,10 @@ namespace e_Delivery.Database.Migrations
 
             modelBuilder.Entity("e_Delivery.Entities.SideDish", b =>
                 {
+                    b.HasOne("e_Delivery.Entities.OrderItem", null)
+                        .WithMany("SideDishes")
+                        .HasForeignKey("OrderItemId");
+
                     b.HasOne("e_Delivery.Entities.Restaurant", "Restaurant")
                         .WithMany()
                         .HasForeignKey("RestaurantId")
@@ -1078,7 +1090,7 @@ namespace e_Delivery.Database.Migrations
                         .HasForeignKey("ModifiedByUserId");
 
                     b.HasOne("e_Delivery.Entities.Restaurant", "Restaurant")
-                        .WithMany("Reviews")
+                        .WithMany()
                         .HasForeignKey("RestaurantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1100,9 +1112,9 @@ namespace e_Delivery.Database.Migrations
                     b.Navigation("OrderItems");
                 });
 
-            modelBuilder.Entity("e_Delivery.Entities.Restaurant", b =>
+            modelBuilder.Entity("e_Delivery.Entities.OrderItem", b =>
                 {
-                    b.Navigation("Reviews");
+                    b.Navigation("SideDishes");
                 });
 
             modelBuilder.Entity("e_Delivery.Entities.SideDish", b =>
