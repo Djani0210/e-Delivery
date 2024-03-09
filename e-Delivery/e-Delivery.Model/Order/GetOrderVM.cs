@@ -10,6 +10,7 @@ namespace e_Delivery.Model.Order
 {
     public class GetOrderVM
     {
+        public Guid Id { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public double TotalCost { get; set; }
         public string Allergies { get; set; }

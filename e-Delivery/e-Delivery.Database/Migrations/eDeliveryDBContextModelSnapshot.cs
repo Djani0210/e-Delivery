@@ -537,6 +537,9 @@ namespace e_Delivery.Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("OrderItemId")
+                        .HasColumnType("int");
+
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
@@ -544,6 +547,8 @@ namespace e_Delivery.Database.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderItemId");
 
                     b.HasIndex("RestaurantId");
 
@@ -978,6 +983,10 @@ namespace e_Delivery.Database.Migrations
 
             modelBuilder.Entity("e_Delivery.Entities.SideDish", b =>
                 {
+                    b.HasOne("e_Delivery.Entities.OrderItem", null)
+                        .WithMany("SideDishes")
+                        .HasForeignKey("OrderItemId");
+
                     b.HasOne("e_Delivery.Entities.Restaurant", "Restaurant")
                         .WithMany()
                         .HasForeignKey("RestaurantId")
@@ -1098,6 +1107,11 @@ namespace e_Delivery.Database.Migrations
             modelBuilder.Entity("e_Delivery.Entities.Order", b =>
                 {
                     b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("e_Delivery.Entities.OrderItem", b =>
+                {
+                    b.Navigation("SideDishes");
                 });
 
             modelBuilder.Entity("e_Delivery.Entities.Restaurant", b =>

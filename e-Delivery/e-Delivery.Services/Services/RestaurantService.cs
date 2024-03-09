@@ -93,7 +93,7 @@ namespace e_Delivery.Services.Services
                         {
                             IsValid = true,
                             Info = "Successfully added restaurant",
-                            Status = ExceptionCode.Success,
+                            Status = ExceptionCode.Created,
                             Data = restaurantGetVM
                         };
                     }

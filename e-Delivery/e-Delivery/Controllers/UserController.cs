@@ -67,5 +67,13 @@ namespace ITShop.API.Controllers
                 return BadRequest(message);
             return Ok(message);
         }
+        [HttpGet("get-user-from-email")]
+        public async Task<IActionResult> GetUserFromEmailAsMessageAsync(string email, CancellationToken cancellationToken)
+        {
+            var message = await _userService.GetUserFromEmailAsMessageAsync(email, cancellationToken);
+            if (message.IsValid == false)
+                return BadRequest(message);
+            return Ok(message);
+        }
     }
 }

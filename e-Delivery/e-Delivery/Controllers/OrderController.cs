@@ -1,4 +1,5 @@
-﻿using e_Delivery.Model.City;
+﻿using e_Delivery.Database;
+using e_Delivery.Model.City;
 using e_Delivery.Model.FoodItem;
 using e_Delivery.Model.Order;
 using e_Delivery.Model.Restaurant;
@@ -6,6 +7,7 @@ using e_Delivery.Model.SideDish;
 using e_Delivery.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace e_Delivery.Controllers
 {
@@ -15,9 +17,13 @@ namespace e_Delivery.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _orderService;
-        public OrderController(IOrderService orderService)
+        private readonly eDeliveryDBContext _dbContext;
+        public IAuthContext _authContext { get; set; }
+        public OrderController(eDeliveryDBContext dbContext,IOrderService orderService,IAuthContext authContext)
         {
             _orderService = orderService;
+            _dbContext = dbContext;
+            _authContext = authContext;
         }
 
         [HttpPost("create-Order"), Authorize(Roles = "MobileClient")]
@@ -62,6 +68,30 @@ namespace e_Delivery.Controllers
             }
             return Ok(message);
         }
+
+        [HttpGet("get-Orders-For-Restaurant"), Authorize(Roles ="Desktop")]
+        public async Task<IActionResult> GetOrderForRestaurant(CancellationToken cancellationToken)
+        {
+            var message = await _orderService.GetOrderByRestaurantAsMessageAsync (cancellationToken);
+            if (!message.IsValid)
+            {
+                return BadRequest(message);
+            }
+            return Ok(message);
+        }
+
+        [HttpGet("monthly-count"), Authorize(Roles ="Desktop")]
+        public async Task<ActionResult<int>> GetMonthlyOrderCount()
+        {
+            var loggedUser = await _authContext.GetLoggedUser();
+            var now = DateTime.UtcNow;
+            var count = await _dbContext.Orders
+                .Where(o => o.CreatedDate.Year == now.Year && o.CreatedDate.Month == now.Month && !o.IsDeleted && o.RestaurantId == loggedUser.RestaurantId)
+                .CountAsync();
+            return Ok(count);
+        }
+
+        
 
         [HttpGet("get-Orders-For-DeliveryPerson"), Authorize()]
         public async Task<IActionResult> GetOrdersForDeliveryPerson( CancellationToken cancellationToken)

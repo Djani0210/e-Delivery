@@ -120,13 +120,14 @@ namespace e_Delivery.Services.Services
                 .Select(x => new
                 {
                     UserId = x.Id,
+                    x.UserName,
                     x.FirstName,
                     x.LastName,
                     RestaurantId = x.RestaurantId,
                     CityId = x.CityId,
                     PhoneNumber = x.PhoneNumber,
                     Email = x.Email,
-                    Gender = x.Gender
+                    Gender = x.Gender,
                 })
                 .FirstOrDefaultAsync(x => x.UserId == userId, cancellationToken);
 
@@ -136,6 +137,7 @@ namespace e_Delivery.Services.Services
             var session = new SessionVM()
             {
                 UserId = userId,
+                Username = websiteUser.UserName,
                 FirstName = websiteUser?.FirstName,
                 LastName = websiteUser?.LastName,
                 Token = accessToken,

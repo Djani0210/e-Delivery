@@ -16,5 +16,6 @@ namespace e_Delivery.Services.Interfaces
         Task<Message> ForgotPasswordAsMessageAsync(VerificationCreateVM verificationCreateDto, CancellationToken cancellationToken);
         Task<Message> CheckCodeAsMessageAsync(VerificationCodeVM verificationCodeDto, CancellationToken cancellationToken);
         Task<Message> NewPasswordAsMessageAsync(NewPasswordVM newPasswordDto, CancellationToken cancellationToken);
+        Task<Message> GetUserFromEmailAsMessageAsync(string email, CancellationToken cancellationToken);
     }
 }

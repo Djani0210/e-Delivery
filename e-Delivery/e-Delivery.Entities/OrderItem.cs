@@ -19,7 +19,7 @@ namespace e_Delivery.Entities
         public int FoodItemId { get; set; }
 
         public List<int>? SideDishIds { get; set; }
-        [NotMapped]
+        
         public List<SideDish>? SideDishes { get; set; }
 
         public int Quantity { get; set; }

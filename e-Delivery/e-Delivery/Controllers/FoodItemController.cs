@@ -1,9 +1,14 @@
-﻿using e_Delivery.Model.City;
+﻿using e_Delivery.Database;
+using e_Delivery.Database.Migrations;
+using e_Delivery.Entities;
+using e_Delivery.Model.City;
 using e_Delivery.Model.FoodItem;
 using e_Delivery.Model.SideDish;
 using e_Delivery.Services.Interfaces;
+using FluentValidation.Internal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace e_Delivery.Controllers
 {
@@ -13,9 +18,13 @@ namespace e_Delivery.Controllers
     public class FoodItemController : ControllerBase
     {
         private readonly IFoodItemService _foodItemService;
-        public FoodItemController(IFoodItemService foodItemService)
+        private readonly eDeliveryDBContext _dbContext;
+        public IAuthContext _authContext { get; set; }
+        public FoodItemController(eDeliveryDBContext dbContext, IFoodItemService foodItemService,IAuthContext authContext)
         {
             _foodItemService = foodItemService;
+            _dbContext = dbContext;
+            _authContext = authContext;
         }
 
         [HttpPost("add-FoodItem"), Authorize(Roles = "Desktop")]
@@ -28,6 +37,29 @@ namespace e_Delivery.Controllers
             }
             return Ok(message);
         }
+        [HttpGet("get-Most-Frequent"), Authorize(Roles = "Desktop")]
+        public async Task<ActionResult<FoodItem>> GetMostFrequentlyOrderedFoodItem()
+        {
+            var loggedUser = await _authContext.GetLoggedUser();
+            var restaurantId = loggedUser.RestaurantId;
+
+            var mostFrequentItem = await _dbContext.OrderItems
+                .Where(oi => oi.FoodItem.RestaurantId == restaurantId) // Ensure the FoodItem belongs to the same restaurant
+                .Include(oi => oi.FoodItem)
+                .GroupBy(oi => oi.FoodItemId)
+                .OrderByDescending(g => g.Count())
+                .Select(g => g.First().FoodItem) // Use First() instead of FirstOrDefault() to avoid potential null issues in grouping
+                .FirstOrDefaultAsync();
+
+            if (mostFrequentItem == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(mostFrequentItem);
+        }
+
+
         [HttpPatch("{foodItemId}/removesidedishes"), Authorize(Roles = "Desktop")]
         public async Task<IActionResult> RemoveSideDishesFromFoodItem(int foodItemId,[FromBody] List<int> sideDishIds)
         {

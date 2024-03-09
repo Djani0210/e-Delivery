@@ -10,6 +10,7 @@ namespace e_Delivery.Model.Auth
     public class SessionVM
     {
         public Guid UserId { get; set; }
+        public string Username { get; set; }
         public int? RestaurantId { get; set; }
         public int? CityId { get; set; }
         public string FirstName { get; set; }

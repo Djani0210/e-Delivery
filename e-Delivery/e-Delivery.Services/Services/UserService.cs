@@ -2,6 +2,7 @@
 using e_Delivery.Database;
 using e_Delivery.Entities;
 using e_Delivery.Entities.Enums;
+using e_Delivery.Model.Auth;
 using e_Delivery.Model.Images;
 using e_Delivery.Model.Restaurant;
 using e_Delivery.Model.Role;
@@ -308,6 +309,36 @@ namespace e_Delivery.Services.Services
         {
             return await _dbContext.Users.
                 AnyAsync(x => x.UserName == userCreateVM.UserName, cancellationToken);
+        }
+
+        public async Task<Message> GetUserFromEmailAsMessageAsync(string email, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var user = await _dbContext.Users.Where(x => x.Email == email).FirstOrDefaultAsync();
+                if (user == null)
+                {
+                    return new Message
+                    {
+                        Info="User not found",
+                        IsValid = false,
+                        Status = ExceptionCode.NotFound
+                    };
+                }
+
+                var obj = Mapper.Map<UserGetVM>(user);
+                return new Message { Data = obj, Info = "Successfully retrieved user", IsValid=true, Status=ExceptionCode.Success };
+            }
+            catch (Exception ex)
+            {
+
+                return new Message
+                {
+                    Info = "Error",
+                    IsValid = false,
+                    Status = ExceptionCode.BadRequest
+                };
+            }
         }
     }
 }

@@ -42,6 +42,5 @@ namespace e_Delivery.Entities
 
         public List<OrderItem> OrderItems { get; set; }
 
-
     }
 }

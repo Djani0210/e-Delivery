@@ -7,6 +7,7 @@ using e_Delivery.Model.Order;
 using e_Delivery.Model.Restaurant;
 using e_Delivery.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
 using System;
@@ -125,6 +126,7 @@ namespace e_Delivery.Services.Services
             }
         }
 
+        
         public async Task<Message> DeleteOrderAsMessageAsync(Guid orderId, CancellationToken cancellationToken)
         {
             try
@@ -192,6 +194,41 @@ namespace e_Delivery.Services.Services
                     Status = ExceptionCode.Success,
                     Data = getOrderVM,
                     Info = "Successfully retrieved Order"
+                };
+            }
+            catch (Exception ex)
+            {
+
+                return new Message
+                {
+                    IsValid = false,
+                    Status = ExceptionCode.NotFound,
+                    Info = ex.Message
+                };
+            }
+        }
+
+        public async Task<Message> GetOrderByRestaurantAsMessageAsync( CancellationToken cancellationToken)
+        {
+            try
+            {
+                var loggedUser = await _authContext.GetLoggedUser();
+                var order = await _dbContext.Orders
+                    .Include(order => order.Location).ThenInclude(o => o.City)
+                    .Include(o => o.OrderItems).ThenInclude(oi => oi.FoodItem).ThenInclude(fi => fi.FoodItemPictures)
+
+                    .Include(o => o.OrderItems).ThenInclude(oi => oi.SideDishes)
+                    .Where(order => order.RestaurantId == loggedUser.RestaurantId).AsNoTracking()
+                    .ToListAsync();
+
+                var getOrdersVM = Mapper.Map<List<GetOrderVM>>(order);
+
+                return new Message
+                {
+                    IsValid = true,
+                    Status = ExceptionCode.Success,
+                    Data = getOrdersVM,
+                    Info = "Successfully retrieved Orders"
                 };
             }
             catch (Exception ex)
