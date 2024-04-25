@@ -18,9 +18,9 @@ namespace e_Delivery.Entities
         public FoodItem FoodItem { get; set; }
         public int FoodItemId { get; set; }
 
-        public List<int>? SideDishIds { get; set; }
-        
-        public List<SideDish>? SideDishes { get; set; }
+        public List<int>? SideDishIds { get; set; } = new List<int>();
+
+        public List<SideDish>? SideDishes { get; set; } = new List<SideDish>();
 
         public int Quantity { get; set; }
         public double Cost { get; set; }

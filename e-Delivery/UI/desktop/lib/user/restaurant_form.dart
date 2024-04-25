@@ -5,7 +5,7 @@ import 'package:desktop/restaurant/restaurant_dashboard.dart';
 import 'package:desktop/user/map_selection.dart';
 import 'package:flutter/material.dart';
 
-import 'package:desktop/restaurant/restaurant_service.dart';
+import 'package:desktop/restaurant/api_calls/restaurant_service.dart';
 import 'package:desktop/user/user_page.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
@@ -39,6 +39,9 @@ class _RestaurantFormState extends State<RestaurantForm> {
   String _latitude = '';
   String _longitude = '';
 
+  bool _isLoading = false;
+  String _message = '';
+
   Future<void> _fetchLocationAndAddress() async {
     Position position = await DeterminePosition();
     String address =
@@ -48,6 +51,99 @@ class _RestaurantFormState extends State<RestaurantForm> {
       _longitude = position.longitude.toString();
       _address = address;
     });
+  }
+
+  Future<void> _submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      setState(() {
+        _isLoading = true;
+        _message = '';
+      });
+
+      try {
+        // Perform form submission logic here
+        final Map<String, dynamic>? response =
+            await _restaurantService.CreateRestaurant(
+          _name,
+          _address,
+          _isOpen,
+          _openingTime,
+          _closingTime,
+          _contactNumber,
+          _deliveryCharge,
+          _deliveryTime,
+          _cityId,
+          _latitude,
+          _longitude,
+          null,
+        );
+
+        if (response != null &&
+            (response['status'] == 201 || response['status'] == 200)) {
+          // Successfully registered restaurant
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Successfully registered restaurant',
+                style: TextStyle(color: Colors.green),
+              ),
+              duration: Duration(milliseconds: 2000),
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24)),
+              margin: EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
+            ),
+          );
+          // Redirect to MyApp after a delay
+          Future.delayed(Duration(seconds: 2), () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => MyApp()),
+            );
+          });
+        } else {
+          // Show an error message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              duration: Duration(milliseconds: 2000),
+              content: Center(
+                child: Text(
+                  'Failed to register restaurant',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24)),
+              margin: EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
+            ),
+          );
+        }
+      } catch (e) {
+        // Handle any exceptions that occur during the request
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            duration: Duration(milliseconds: 2000),
+            content: Center(
+              child: Text(
+                'An error occurred: $e',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+            behavior: SnackBarBehavior.floating,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+            margin: EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
+          ),
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -113,6 +209,12 @@ class _RestaurantFormState extends State<RestaurantForm> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter the opening time';
                       }
+                      // Validate the opening time format (HH:mm)
+                      final RegExp timePattern =
+                          RegExp(r'^([01]\d|2[0-3]):([0-5]\d)$');
+                      if (!timePattern.hasMatch(value)) {
+                        return 'Please enter a valid opening time (HH:mm)';
+                      }
                       return null;
                     },
                     onSaved: (value) => _openingTime = value!,
@@ -137,6 +239,17 @@ class _RestaurantFormState extends State<RestaurantForm> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter the closing time';
+                      }
+                      // Validate the closing time format (HH:mm)
+                      final RegExp timePattern =
+                          RegExp(r'^([01]\d|2[0-3]):([0-5]\d)$');
+                      if (!timePattern.hasMatch(value)) {
+                        return 'Please enter a valid closing time (HH:mm)';
+                      }
+                      // Validate that closing time is later than opening time
+                      if (_openingTime.isNotEmpty &&
+                          value.compareTo(_openingTime) <= 0) {
+                        return 'Closing time must be later than opening time';
                       }
                       return null;
                     },
@@ -191,11 +304,17 @@ class _RestaurantFormState extends State<RestaurantForm> {
                   child: TextFormField(
                     decoration: InputDecoration(
                       hintText: 'Delivery Charge (KM)',
-                      contentPadding: EdgeInsets.all(12.0), // Add padding
+                      contentPadding: EdgeInsets.all(12.0),
+                      suffixText: 'KM', // Add padding
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter the delivery charge';
+                      }
+                      // Validate that delivery charge is a non-negative number
+                      final double? charge = double.tryParse(value);
+                      if (charge == null || charge < 0) {
+                        return 'Please enter a valid non-negative delivery charge';
                       }
                       return null;
                     },
@@ -215,12 +334,18 @@ class _RestaurantFormState extends State<RestaurantForm> {
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   child: TextFormField(
                     decoration: InputDecoration(
-                      hintText: 'Delivery Time (minutes)',
-                      contentPadding: EdgeInsets.all(12.0), // Add padding
-                    ),
+                        hintText: 'Delivery Time (minutes)',
+                        contentPadding: EdgeInsets.all(12.0),
+                        suffixText: 'min' // Add padding
+                        ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter the delivery time';
+                      }
+                      // Validate that delivery time is a non-negative integer
+                      final int? time = int.tryParse(value);
+                      if (time == null || time < 0) {
+                        return 'Please enter a valid non-negative delivery time';
                       }
                       return null;
                     },
@@ -351,83 +476,17 @@ class _RestaurantFormState extends State<RestaurantForm> {
                   ),
                 ),
               ),
-              /* ElevatedButton(
-                onPressed: _fetchLocationAndAddress,
-                child: Text('Get Current Location'),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.blue,
-                  onPrimary: Colors.white,
-                ),
-              ), */
               SizedBox(
                 height: 16,
               ),
-              FloatingActionButton(
-                isExtended: true,
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    _formKey.currentState!.save();
-                    // Call the service to create the restaurant
-                    final Map<String, dynamic>? response =
-                        await _restaurantService.CreateRestaurant(
-                      _name,
-                      _address,
-                      _isOpen,
-                      _openingTime,
-                      _closingTime,
-                      _contactNumber,
-                      _deliveryCharge,
-                      _deliveryTime,
-                      _cityId,
-                      _latitude,
-                      _longitude,
-                      null,
-                    );
-                    if (response != null && response['status'] == 201 ||
-                        response?['status'] == 200) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'Successfully registered restaurant',
-                            style: TextStyle(color: Colors.green),
-                          ),
-                          duration: Duration(milliseconds: 2000),
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24)),
-                          margin: EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
-                        ),
-                      );
-                      Future.delayed(Duration(seconds: 2), () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => MyApp()),
-                        );
-                      });
-                    } else {
-                      // Show an error message
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          duration: Duration(milliseconds: 2000),
-                          content: Center(
-                              child: Text(
-                            'Failed to register restaurant',
-                            style: TextStyle(color: Colors.red),
-                          )),
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24)),
-                          margin: EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
-                        ),
-                      );
-                    }
-                  }
-                },
-                child: Icon(
-                  Icons.check,
-                  color: Colors.green,
-                ),
+              ElevatedButton(
+                onPressed: _isLoading ? null : _submitForm,
+                child: _isLoading
+                    ? CircularProgressIndicator()
+                    : Text('Create Restaurant'),
               ),
+
+              SizedBox(height: 16.0),
             ],
           ),
         ),

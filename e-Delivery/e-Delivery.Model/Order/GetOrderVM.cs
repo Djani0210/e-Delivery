@@ -16,8 +16,14 @@ namespace e_Delivery.Model.Order
         public string Allergies { get; set; }
         public int RestaurantId { get; set; }
         public DateTime CreatedDate { get; set; }
+        public OrderState OrderState { get; set; }
         public LocationGetVM Location { get; set; }
         public List<GetOrderItemVM> OrderItems { get; set; }
+        public string UserName { get; set; }
+        public string Address { get; set; }
+        public Guid? DeliveryPersonId { get; set; }
+        public string? DeliveryPersonAssigned { get; set; }
+        public double DeliveryCost { get; set; }
 
     }
 }

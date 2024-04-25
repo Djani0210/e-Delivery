@@ -17,6 +17,7 @@ namespace e_Delivery.Model.Order
         public int CityId { get; set; }
         public string Latitude { get; set; }
         public string Longitude { get; set; }
+        public string Address { get; set; }
         public List<OrderItemVM> OrderItems { get; set; }
     }
 }

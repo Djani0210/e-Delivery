@@ -1,6 +1,40 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
-class OrderDetailsPage extends StatelessWidget {
+import 'package:desktop/restaurant/api_calls/employee_api_calls.dart';
+import 'package:desktop/restaurant/api_calls/order_api_calls.dart';
+import 'package:desktop/restaurant/viewmodels/employees_get_VM.dart';
+import 'package:desktop/restaurant/viewmodels/orders_get_VM.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+class OrderDetailsPage extends StatefulWidget {
+  final String id;
+
+  OrderDetailsPage({Key? key, required this.id}) : super(key: key);
+  @override
+  _OrderDetailsPageState createState() => _OrderDetailsPageState();
+}
+
+class _OrderDetailsPageState extends State<OrderDetailsPage> {
+  late Future<OrderViewModel> orderDetailsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    orderDetailsFuture = fetchOrderDetails();
+  }
+
+  Future<OrderViewModel> fetchOrderDetails() async {
+    final OrderApiService apiService = OrderApiService();
+    final response = await apiService.getOrderById(widget.id);
+    if (response != null && response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      return OrderViewModel.fromJson(json);
+    } else {
+      throw Exception('Failed to load order details');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,39 +52,62 @@ class OrderDetailsPage extends StatelessWidget {
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
-                children: [
-                  OrderInfoHeaderSection(),
-                  SizedBox(height: 20),
-                  Text(
-                    "Sadržaj narudžbe:",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.0,
-                    ),
-                  ),
-                  SizedBox(height: 30),
-                  OrderItemsLabelSection(),
-                  OrderItemsSection(),
-                ],
-              ),
+      body: FutureBuilder<OrderViewModel>(
+        future: orderDetailsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text("Error: ${snapshot.error}"));
+          } else if (snapshot.hasData) {
+            return OrderDetailsContent(order: snapshot.data!);
+          } else {
+            return Center(child: Text("Unknown error occurred"));
+          }
+        },
+      ),
+    );
+  }
+}
+
+class OrderDetailsContent extends StatelessWidget {
+  final OrderViewModel order;
+
+  OrderDetailsContent({required this.order});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              children: [
+                OrderInfoHeaderSection(order: order),
+                SizedBox(height: 20),
+                Text("Sadržaj narudžbe:",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0)),
+                SizedBox(height: 30),
+                OrderItemsLabelSection(),
+                OrderItemsSection(orderItems: order.orderItems),
+              ],
             ),
-            SizedBox(width: 20), // Adds space between the sections
-            OrderSummarySection(), // This will take the size as per its content
-          ],
-        ),
+          ),
+          SizedBox(width: 20),
+          OrderSummarySection(order: order),
+        ],
       ),
     );
   }
 }
 
 class OrderInfoHeaderSection extends StatelessWidget {
+  final OrderViewModel order;
+
+  OrderInfoHeaderSection({required this.order});
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -63,9 +120,10 @@ class OrderInfoHeaderSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Broj narudžbe: #1999',
+            Text('Broj narudžbe: ${order.id}',
                 style: Theme.of(context).textTheme.headline6),
-            Text('Datum narudžbe: 10.18.2023. 17:23',
+            Text(
+                'Datum narudžbe: ${DateFormat('dd.MM.yyyy. HH:mm').format(order.createdDate)}',
                 style: TextStyle(color: Colors.grey[700])),
           ],
         ),
@@ -80,13 +138,32 @@ class OrderItemsLabelSection extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Text('Slika', style: TextStyle(fontWeight: FontWeight.bold)),
-          Text('Naziv jela', style: TextStyle(fontWeight: FontWeight.bold)),
-          Text('Kategorija', style: TextStyle(fontWeight: FontWeight.bold)),
-          Text('Cijena', style: TextStyle(fontWeight: FontWeight.bold)),
-          Text('Količina', style: TextStyle(fontWeight: FontWeight.bold)),
+          Expanded(
+              child: Text('Slika',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center)),
+          Expanded(
+              child: Text('Naziv jela',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center)),
+          Expanded(
+              child: Text('Kategorija',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center)),
+          Expanded(
+              child: Text('Cijena',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center)),
+          Expanded(
+              child: Text('Količina',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center)),
+          Expanded(
+              child: Text('Prilozi',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center)),
         ],
       ),
     );
@@ -94,20 +171,12 @@ class OrderItemsLabelSection extends StatelessWidget {
 }
 
 class OrderItemsSection extends StatelessWidget {
+  final List<OrderItemViewModel> orderItems;
+
+  OrderItemsSection({required this.orderItems});
+
   @override
   Widget build(BuildContext context) {
-    // This list can be generated dynamically based on the order details
-    final List<Map<String, dynamic>> orderItems = [
-      {
-        'imagePath': 'assets/images/1.jpg',
-        'name': 'Hamburger',
-        'category': 'Burgeri',
-        'price': '7 KM',
-        'quantity': '3',
-      },
-      // Add more items here
-    ];
-
     return Card(
       elevation: 4.0,
       child: Container(
@@ -115,7 +184,15 @@ class OrderItemsSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (var item in orderItems) OrderItemWidget(item: item),
+            SizedBox(height: 10),
+            ListView.separated(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: orderItems.length,
+              separatorBuilder: (context, index) => Divider(),
+              itemBuilder: (context, index) =>
+                  OrderItemWidget(orderItem: orderItems[index]),
+            ),
           ],
         ),
       ),
@@ -124,29 +201,246 @@ class OrderItemsSection extends StatelessWidget {
 }
 
 class OrderItemWidget extends StatelessWidget {
-  final Map<String, dynamic> item;
+  final OrderItemViewModel orderItem;
 
-  OrderItemWidget({required this.item});
+  OrderItemWidget({required this.orderItem});
 
   @override
   Widget build(BuildContext context) {
+    final int foodItemId = orderItem.foodItem.id;
+
+    final OrderApiService apiService = OrderApiService();
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          Image.asset(item['imagePath'], width: 50, height: 50),
-          Text(item['name']),
-          Text(item['category']),
-          Text(item['price']),
-          Text('Količina: ${item['quantity']}'),
+          Expanded(
+            child: FutureBuilder<String>(
+              future: apiService.fetchImageUrl(foodItemId),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  print('Error fetching image: ${snapshot.error}');
+                  return Column(
+                    children: [
+                      Icon(Icons.error),
+                      Text('Error: ${snapshot.error}'),
+                    ],
+                  );
+                } else {
+                  print("Fetched Image URL: ${snapshot.data}");
+                  return Image.network(
+                    snapshot.data!,
+                    width: 80,
+                    height: 80,
+                    fit: BoxFit.contain,
+                  );
+                }
+              },
+            ),
+          ),
+          Expanded(
+              child:
+                  Text(orderItem.foodItem.name, textAlign: TextAlign.center)),
+          Expanded(
+              child: Text(orderItem.foodItem.category.name,
+                  textAlign: TextAlign.center)),
+          Expanded(
+              child: Text('${orderItem.cost.toStringAsFixed(2)} KM',
+                  textAlign: TextAlign.center)),
+          Expanded(
+              child:
+                  Text(' ${orderItem.quantity}', textAlign: TextAlign.center)),
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () =>
+                  _showSideDishesDialog(context, orderItem.sideDishes),
+              child: Text('Prilozi'),
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-class OrderSummarySection extends StatelessWidget {
+void _showSideDishesDialog(
+    BuildContext context, List<SideDishViewModel> sideDishes) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Prilozi"),
+        content: SingleChildScrollView(
+          // Added for better scrolling behavior
+          child: Container(
+            // Reducing the width and ensuring the dialog is not too wide
+            width: 300, // Example: 50% of screen width
+            child: Table(
+              // Adding border to create gridlines
+              border: TableBorder.all(color: Colors.grey),
+              columnWidths: const {
+                0: FlexColumnWidth(
+                    3), // Adjust the width ratio between name and price
+                1: FlexColumnWidth(1),
+              },
+              children: sideDishes.map((sideDish) {
+                return TableRow(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(sideDish.name),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('${sideDish.price} KM'),
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: Text("Zatvori"),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+class OrderSummarySection extends StatefulWidget {
+  final OrderViewModel order;
+
+  OrderSummarySection({required this.order});
+
+  @override
+  _OrderSummarySectionState createState() => _OrderSummarySectionState();
+}
+
+class _OrderSummarySectionState extends State<OrderSummarySection> {
+  late OrderViewModel order;
+
+  @override
+  void initState() {
+    super.initState();
+    order = widget.order;
+  }
+
+  void showAssignDeliveryPersonDialog(
+      BuildContext context, String orderId) async {
+    final response =
+        await EmployeeApiService().getRestaurantEmployees(isAvailable: true);
+    if (response != null && response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final employees = (data['data']['employees'] as List)
+          .map((e) => EmployeeViewModel.fromJson(e))
+          .toList();
+
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text("Odaberite dostavljača"),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            content: Container(
+              width: 250,
+              height: 300,
+              child: employees.isNotEmpty
+                  ? ListView.builder(
+                      itemCount: employees.length,
+                      itemBuilder: (context, index) {
+                        final employee = employees[index];
+                        return ListTile(
+                          title: Text(
+                              '${employee.firstName} ${employee.lastName}'),
+                          trailing: ElevatedButton(
+                            onPressed: () async {
+                              await assignDeliveryPerson(order.id, employee.id);
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('Dodaj'),
+                          ),
+                        );
+                      },
+                    )
+                  : Center(child: Text("Dostavljači nisu pronađeni.")),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text("Cancel"),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      print("Error fetching employees");
+    }
+  }
+
+  Future<void> fetchOrderDetails() async {
+    final OrderApiService apiService = OrderApiService();
+    final response = await apiService.getOrderById(order.id);
+    if (response != null && response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      setState(() {
+        order = OrderViewModel.fromJson(json);
+      });
+    } else {
+      throw Exception('Failed to load order details');
+    }
+  }
+
+  Future<void> updateOrderState(String orderId, {int newState = 2}) async {
+    final OrderApiService apiService = OrderApiService();
+    final response =
+        await apiService.updateOrderState(orderId, newState: newState);
+
+    if (response != null && response.statusCode == 200) {
+      // Update successful, fetch updated order details
+      await fetchOrderDetails();
+    } else {
+      // Update failed, show an error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Greška pri ažuriranju narudžbe'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> assignDeliveryPerson(String orderId, String employeeId) async {
+    try {
+      final success = await OrderApiService()
+          .assignDeliveryPersonToOrder(orderId, employeeId);
+      if (success) {
+        print('Delivery person assigned successfully');
+        await fetchOrderDetails();
+
+        // Close the dialog after state update
+      } else {
+        print('Failed to assign delivery person');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Greška')),
+        );
+      }
+    } catch (e) {
+      print('Error assigning delivery person: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Greška')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -171,7 +465,8 @@ class OrderSummarySection extends StatelessWidget {
                   Text('Plaćanje:',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  Text('gotovina', style: TextStyle(fontSize: 16)),
+                  Text('${order.paymentMethodText}',
+                      style: TextStyle(fontSize: 16)),
                 ],
               ),
               SizedBox(height: 16.0), // Spacing between the rows
@@ -181,7 +476,8 @@ class OrderSummarySection extends StatelessWidget {
                   Text('Status:',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  Text('dostavljeno', style: TextStyle(fontSize: 16)),
+                  Text('${order.orderStateText}',
+                      style: TextStyle(fontSize: 16)),
                 ],
               ),
               SizedBox(height: 16.0),
@@ -191,7 +487,7 @@ class OrderSummarySection extends StatelessWidget {
                   Text('Ime kupca:',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  Text('Majstor', style: TextStyle(fontSize: 16)),
+                  Text('${order.userName}', style: TextStyle(fontSize: 16)),
                 ],
               ),
               SizedBox(height: 16.0),
@@ -201,7 +497,7 @@ class OrderSummarySection extends StatelessWidget {
                   Text('Adresa kupca:',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  Text('Musala BB', style: TextStyle(fontSize: 16)),
+                  Text('${order.address}', style: TextStyle(fontSize: 16)),
                 ],
               ),
               SizedBox(height: 16.0),
@@ -211,7 +507,7 @@ class OrderSummarySection extends StatelessWidget {
                   Text('Alergije:',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  Text('Nema', style: TextStyle(fontSize: 16)),
+                  Text('${order.allergies}', style: TextStyle(fontSize: 16)),
                 ],
               ),
               SizedBox(height: 16.0),
@@ -221,23 +517,86 @@ class OrderSummarySection extends StatelessWidget {
                   Text('Dostavljač:',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  Text('Dino Dinić', style: TextStyle(fontSize: 16)),
+                  order.deliveryPersonId == null
+                      ? ElevatedButton.icon(
+                          onPressed: () =>
+                              showAssignDeliveryPersonDialog(context, order.id),
+
+                          icon: Icon(Icons.person_2_outlined), // Employee icon
+                          label: Text('Dodaj dostavljača'),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.blue, // Button background color
+
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                        )
+                      : Text('${order.deliveryPersonName}',
+                          style: TextStyle(fontSize: 16)),
                 ],
               ),
               SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {},
-                child: Text('Dodaj dostavljača'),
-                style: ElevatedButton.styleFrom(
-                  primary:
-                      Theme.of(context).primaryColor, // Button background color
-                  padding:
-                      EdgeInsets.symmetric(vertical: 16.0), // Button padding
-                  textStyle: TextStyle(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Akcija',
+                    style: TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.bold), // Button text style
-                ),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  if (order.orderState == 1)
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Potvrdi akciju'),
+                              content: Text(
+                                  'Da li ste sigurni da želite označiti narudžbu "Na dostavi?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () async {
+                                    await updateOrderState(order.id,
+                                        newState: 2);
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Da'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Otkaži'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      icon: Icon(Icons.delivery_dining),
+                      label: Text('Označi u dostavi'),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.green,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                    )
+                  else
+                    Text(
+                      'Već izvršena akcija',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                ],
               ),
+              SizedBox(height: 16.0),
               Divider(color: Colors.grey[400]),
               Padding(
                 padding: const EdgeInsets.only(bottom: 16.0, top: 16.0),
@@ -251,7 +610,8 @@ class OrderSummarySection extends StatelessWidget {
                   Text('Cijena narudžbe:',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  Text('21 KM', style: TextStyle(fontSize: 16)),
+                  Text('${order.totalCost - order.deliveryCost} KM',
+                      style: TextStyle(fontSize: 16)),
                 ],
               ),
               SizedBox(height: 16.0),
@@ -261,7 +621,8 @@ class OrderSummarySection extends StatelessWidget {
                   Text('Trošak dostave:',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  Text('2 KM', style: TextStyle(fontSize: 16)),
+                  Text('${order.deliveryCost} KM',
+                      style: TextStyle(fontSize: 16)),
                 ],
               ),
               SizedBox(height: 16.0),
@@ -271,7 +632,7 @@ class OrderSummarySection extends StatelessWidget {
                   Text('Ukupna cijena:',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  Text('23 KM', style: TextStyle(fontSize: 16)),
+                  Text('${order.totalCost} KM', style: TextStyle(fontSize: 16)),
                 ],
               ),
               SizedBox(height: 16.0),

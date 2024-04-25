@@ -153,5 +153,36 @@ namespace e_Delivery.Services.Services
             }
             
         }
+
+        public async Task<Message> GetSideDishByIdAsMessageAsync(int id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var loggedUser = await authContext.GetLoggedUser();
+                var restaurant = await _dbContext.Restaurants.Where(x => x.Id == loggedUser.RestaurantId).FirstOrDefaultAsync();
+
+                var sideDish = await _dbContext.SideDishes.Where(x => x.RestaurantId == restaurant.Id && x.Id == id).FirstOrDefaultAsync();
+
+                var obj = Mapper.Map<GetSideDishVM>(sideDish);
+
+                return new Message
+                {
+                    Data = obj,
+                    IsValid = true,
+                    Info = "Successfully retrieved side dish",
+                    Status = ExceptionCode.Success
+                };
+            }
+            catch (Exception ex)
+            {
+
+                return new Message
+                {
+                    IsValid = false,
+                    Info = ex.Message,
+                    Status = ExceptionCode.BadRequest
+                };
+            }
+        }
     }
 }

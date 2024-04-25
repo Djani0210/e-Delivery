@@ -347,6 +347,9 @@ namespace e_Delivery.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Allergies")
                         .HasColumnType("nvarchar(max)");
 

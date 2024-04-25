@@ -50,6 +50,17 @@ namespace e_Delivery.Controllers
             return Ok(message);
         }
 
+        [HttpGet("get-SideDish-By-Id"), Authorize(Roles = "Desktop")]
+        public async Task<IActionResult> GetSideDishById(int id, CancellationToken cancellationToken)
+        {
+            var message = await _sideDishService.GetSideDishByIdAsMessageAsync(id,cancellationToken);
+            if (!message.IsValid)
+            {
+                return BadRequest(message);
+            }
+            return Ok(message);
+        }
+
         [HttpDelete("delete-SideDish"), Authorize(Roles = "Desktop")]
         public async Task<IActionResult> DeleteSideDish(int id, CancellationToken cancellationToken)
         {

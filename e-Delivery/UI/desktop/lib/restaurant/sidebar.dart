@@ -5,10 +5,12 @@ class Sidebar extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onTap;
   final RestaurantViewModel? restaurantData;
+  final Future<void> Function() onLogout;
   Sidebar(
       {required this.onTap,
       required this.selectedIndex,
-      required this.restaurantData});
+      required this.restaurantData,
+      required this.onLogout});
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +42,14 @@ class Sidebar extends StatelessWidget {
           _createDrawerItem(
               icon: Icons.person_2, text: "Dostavljači", index: 3),
           _createDrawerItem(
-              icon: Icons.settings, text: "Uredi profil", index: 4)
-          // ... more drawer items
+              icon: Icons.settings, text: "Uredi profil", index: 4),
+          Divider(),
+          // Logout option
+          ListTile(
+            leading: Icon(Icons.logout),
+            title: Text('Odjavi se'),
+            onTap: () => onLogout(), // Call the logout function
+          ),
         ],
       ),
     );

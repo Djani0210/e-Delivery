@@ -1,8 +1,13 @@
+import 'dart:convert';
+import 'package:intl/intl.dart';
+
+import 'package:desktop/restaurant/api_calls/order_api_calls.dart';
 import 'package:desktop/restaurant/order_details_page.dart';
+import 'package:desktop/restaurant/viewmodels/orders_get_VM.dart';
 import 'package:flutter/material.dart';
 
 class OrdersPage extends StatefulWidget {
-  final VoidCallback onNavigateToDetails;
+  final Function(String) onNavigateToDetails;
 
   const OrdersPage({super.key, required this.onNavigateToDetails});
   @override
@@ -10,31 +15,56 @@ class OrdersPage extends StatefulWidget {
 }
 
 class _OrdersPageState extends State<OrdersPage> {
-  // Dummy orders data
-  final List<Map<String, dynamic>> _orders = [
-    {
-      'id': '#1999',
-      'name': 'Majstor',
-      'address': 'Musala 22',
-      'date': '10.18.2023',
-      'price': '23KM',
-      'status': 'Na dostavi',
-    },
-    {
-      'id': '#1999',
-      'name': 'Džonko',
-      'address': 'Potoci BB',
-      'date': '10.18.2023',
-      'price': '12KM',
-      'status': 'Dostavljeno',
-    },
-    // Add more hardcoded orders here...
-  ];
-
-  // Current filter status
+  final OrderApiService _orderApiService = OrderApiService();
+  List<OrderViewModel> _orders = [];
+  int _currentPage = 0;
+  final int _perPage = 4;
+  int _totalPages = 0;
   String _currentStatus = 'Sve';
   DateTime? _selectedFromDate;
   DateTime? _selectedToDate;
+  int? _currentOrderState;
+  int _totalOrdersCount = 0;
+  @override
+  void initState() {
+    super.initState();
+    _fetchOrders();
+  }
+
+  void _fetchOrders({
+    int pageNumber = 1,
+    DateTime? startDate,
+    DateTime? endDate,
+    int? orderState,
+  }) async {
+    final response = await _orderApiService.getOrdersForRestaurant(
+        pageNumber: pageNumber,
+        itemsPerPage: _perPage,
+        startDate: startDate,
+        endDate: endDate,
+        orderState: orderState);
+    if (response != null && response.statusCode == 200) {
+      final Map<String, dynamic> responseBody = json.decode(response.body);
+      // Access the nested "orders" within "data"
+      final List<dynamic> ordersData = responseBody['data']['orders'];
+      final int totalPages = responseBody['data']['totalPages'];
+      final int totalCount = responseBody['data']['totalCount'];
+
+      final List<OrderViewModel> fetchedOrders =
+          ordersData.map((order) => OrderViewModel.fromJson(order)).toList();
+
+      fetchedOrders.sort((a, b) => b.createdDate.compareTo(a.createdDate));
+
+      setState(() {
+        _orders = fetchedOrders;
+        _totalPages = totalPages;
+        _currentPage = pageNumber - 1;
+        _totalOrdersCount = totalCount;
+      });
+    } else {
+      print("Failed to fetch orders. Status code: ${response?.statusCode}");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,12 +84,11 @@ class _OrdersPageState extends State<OrdersPage> {
           SizedBox(height: 16),
           _buildDatePickers(context),
           SizedBox(height: 10),
-          _buildSearchField(context),
           SizedBox(height: 20),
           _buildStatusFilters(context),
           SizedBox(height: 40),
-          Expanded(child: _buildOrdersTable(context)),
-          _buildPagination(context),
+          Expanded(child: _buildOrdersTable()),
+          _buildPagination(),
           SizedBox(height: 10),
           _buildPrintReportButton(context),
         ],
@@ -70,61 +99,59 @@ class _OrdersPageState extends State<OrdersPage> {
   Widget _buildDatePickers(BuildContext context) {
     return Row(
       children: <Widget>[
-        SizedBox(
-          width: 5,
-        ),
-        Text('Trenutno pronadjene 2 narudzbe:'),
-        SizedBox(
-          width: 16,
-        ),
+        SizedBox(width: 5),
+        Text('Trenutno pronađeno $_totalOrdersCount narudžbi:'),
+        SizedBox(width: 16),
         Text('Od:'),
-        SizedBox(
-          width: 16,
-        ),
+        SizedBox(width: 16),
         ElevatedButton(
           onPressed: () => _selectDate(context, true),
           child: Text(
             _selectedFromDate == null
-                ? 'Select Date'
-                : MaterialLocalizations.of(context)
-                    .formatShortDate(_selectedFromDate!),
+                ? 'Odaberite datum'
+                : DateFormat('yyyy-MM-dd').format(_selectedFromDate!),
           ),
         ),
-        SizedBox(
-          width: 16,
-        ),
+        SizedBox(width: 16),
         Text('Do:'),
-        SizedBox(
-          width: 16,
-        ),
+        SizedBox(width: 16),
         ElevatedButton(
           onPressed: () => _selectDate(context, false),
           child: Text(
             _selectedToDate == null
-                ? 'Select Date'
-                : MaterialLocalizations.of(context)
-                    .formatShortDate(_selectedToDate!),
+                ? 'Odaberite datum'
+                : DateFormat('yyyy-MM-dd').format(_selectedToDate!),
           ),
         ),
-        SizedBox(
-          width: 25,
-        ),
+        SizedBox(width: 25),
         IconButton(
           icon: Icon(Icons.search),
-          onPressed: _searchOrders,
+          onPressed: () {
+            // Here, we call _fetchOrders with the currently selected dates
+            _fetchOrders(
+                startDate: _selectedFromDate, endDate: _selectedToDate);
+          },
+        ),
+        SizedBox(width: 25),
+        IconButton(
+          icon: Icon(Icons.clear),
+          onPressed: () {
+            _clearFilters();
+          },
         ),
       ],
     );
   }
 
-  Widget _buildSearchField(BuildContext context) {
-    return TextField(
-      maxLength: 20,
-      decoration: InputDecoration(
-        labelText: 'Search',
-        suffixIcon: Icon(Icons.search),
-      ),
-    );
+  void _clearFilters() {
+    setState(() {
+      _selectedFromDate = null;
+      _selectedToDate = null;
+      _currentStatus = 'Sve';
+      _currentOrderState = null;
+      _currentPage = 1; // Reset to the first page
+    });
+    _fetchOrders();
   }
 
   void _selectDate(BuildContext context, bool isFrom) async {
@@ -148,6 +175,35 @@ class _OrdersPageState extends State<OrdersPage> {
     }
   }
 
+  Widget _buildPagination() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: _currentPage > 0
+              ? () => _fetchOrders(
+                  pageNumber: _currentPage,
+                  startDate: _selectedFromDate,
+                  endDate: _selectedToDate,
+                  orderState: _currentOrderState)
+              : null,
+        ),
+        Text('Page ${_currentPage + 1} of $_totalPages'),
+        IconButton(
+          icon: Icon(Icons.arrow_forward_ios),
+          onPressed: _currentPage < _totalPages - 1
+              ? () => _fetchOrders(
+                  pageNumber: _currentPage + 2,
+                  startDate: _selectedFromDate,
+                  endDate: _selectedToDate,
+                  orderState: _currentOrderState)
+              : null,
+        ),
+      ],
+    );
+  }
+
   void _searchOrders() {
     print(
         'From: ${_selectedFromDate == null ? "Not selected" : MaterialLocalizations.of(context).formatShortDate(_selectedFromDate!)}');
@@ -157,15 +213,28 @@ class _OrdersPageState extends State<OrdersPage> {
 
   Widget _buildStatusFilters(BuildContext context) {
     List<String> statuses = ['Sve', 'U pripremi', 'Na dostavi', 'Dostavljeno'];
+    // No need to maintain a separate list for status codes if converting directly in the method
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: statuses.map((status) {
+      children: statuses.asMap().entries.map((entry) {
+        int index = entry.key;
+        String status = entry.value;
+
         return ChoiceChip(
           label: Text(status),
           selected: _currentStatus == status,
           onSelected: (bool selected) {
             setState(() {
               _currentStatus = status;
+              // Convert status to orderState integer, handling "Sve" as null
+
+              _currentOrderState = status == 'Sve' ? null : index;
+              // Now pass the integer or null to _fetchOrders
+              _fetchOrders(
+                startDate: _selectedFromDate,
+                endDate: _selectedToDate,
+                orderState: _currentOrderState,
+              );
             });
           },
           selectedColor: Colors.orange,
@@ -175,36 +244,13 @@ class _OrdersPageState extends State<OrdersPage> {
     );
   }
 
-  /*  Widget _buildOrdersTable(BuildContext context) {
-    // Replace with your actual table widget
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: DataTable(
-        columns: const <DataColumn>[
-          DataColumn(label: Text('Id')),
-          DataColumn(label: Text('Ime')),
-          DataColumn(label: Text('Adresa')),
-          DataColumn(label: Text('Datum')),
-          DataColumn(label: Text('Cijena')),
-          DataColumn(label: Text('Status')),
-          DataColumn(label: Text('Akcija')),
-        ],
-        rows: _orders.map((order) {
-          return DataRow(cells: [
-            DataCell(Text(order['id'])),
-            DataCell(Text(order['name'])),
-            DataCell(Text(order['address'])),
-            DataCell(Text(order['date'])),
-            DataCell(Text(order['price'])),
-            DataCell(Text(order['status'])),
-            DataCell(TextButton(onPressed: () {}, child: Text('Detalji'))),
-          ]);
-        }).toList(),
-      ),
-    );
-  } */
+  String formatDateTime(String dateTimeStr) {
+    final DateTime dateTime = DateTime.parse(dateTimeStr);
+    final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm');
+    return formatter.format(dateTime);
+  }
 
-  Widget _buildOrdersTable(BuildContext context) {
+  Widget _buildOrdersTable() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: ConstrainedBox(
@@ -214,7 +260,6 @@ class _OrdersPageState extends State<OrdersPage> {
           columns: const <DataColumn>[
             DataColumn(label: Text('Id')),
             DataColumn(label: Text('Ime')),
-            DataColumn(label: Text('Adresa')),
             DataColumn(label: Text('Datum')),
             DataColumn(label: Text('Cijena')),
             DataColumn(label: Text('Status')),
@@ -222,14 +267,13 @@ class _OrdersPageState extends State<OrdersPage> {
           ],
           rows: _orders.map((order) {
             return DataRow(cells: [
-              DataCell(Text(order['id'])),
-              DataCell(Text(order['name'])),
-              DataCell(Text(order['address'])),
-              DataCell(Text(order['date'])),
-              DataCell(Text(order['price'])),
-              DataCell(Text(order['status'])),
+              DataCell(Text(order.id)),
+              DataCell(Text(order.location.city.title)),
+              DataCell(Text(formatDateTime(order.createdDate.toString()))),
+              DataCell(Text(order.totalCost.toString())),
+              DataCell(Text(order.orderStateText)),
               DataCell(TextButton(
-                  onPressed: widget.onNavigateToDetails,
+                  onPressed: () => widget.onNavigateToDetails(order.id),
                   child: Text('Detalji'))),
             ]);
           }).toList(),
@@ -237,34 +281,21 @@ class _OrdersPageState extends State<OrdersPage> {
       ),
     );
   }
-}
 
-Widget _buildPagination(BuildContext context) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: () {}),
-      SizedBox(width: 12),
-      Text('1'),
-      SizedBox(width: 12),
-      IconButton(icon: Icon(Icons.arrow_forward_ios), onPressed: () {}),
-    ],
-  );
-}
-
-Widget _buildPrintReportButton(BuildContext context) {
-  return Align(
-    alignment: Alignment.centerRight,
-    child: ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        primary: Colors.green,
-        textStyle: TextStyle(fontWeight: FontWeight.bold),
-        padding: EdgeInsets.symmetric(horizontal: 35, vertical: 18),
+  Widget _buildPrintReportButton(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          primary: Colors.green,
+          textStyle: TextStyle(fontWeight: FontWeight.bold),
+          padding: EdgeInsets.symmetric(horizontal: 35, vertical: 18),
+        ),
+        onPressed: () {
+          // Implement your print logic here
+        },
+        child: Text('Printaj izvještaj'),
       ),
-      onPressed: () {
-        // Implement your print logic here
-      },
-      child: Text('Printaj izvještaj'),
-    ),
-  );
+    );
+  }
 }

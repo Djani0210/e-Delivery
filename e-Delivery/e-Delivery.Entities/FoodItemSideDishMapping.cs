@@ -15,8 +15,6 @@ namespace e_Delivery.Entities
         public int SideDishId { get; set; }
         public SideDish SideDish { get; set; }
 
-        //    var sideDishesForFoodItem = dbContext.SideDishes
-        //.Where(sd => sd.FoodItemId == myFoodItem.ID)
-        //.ToList();
+       
     }
 }

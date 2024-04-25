@@ -36,6 +36,9 @@ namespace e_Delivery.Database
         public eDeliveryDBContext(DbContextOptions<eDeliveryDBContext> options) : base(options)
         {
         }
+
+       
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<BaseEntity>().UseTpcMappingStrategy();
@@ -56,7 +59,7 @@ namespace e_Delivery.Database
                     v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList()  // Convert back to List<int>
                 );
 
-          
+
 
             modelBuilder.Entity<Restaurant>()
             .HasOne(r => r.CreatedByUser)
@@ -69,7 +72,11 @@ namespace e_Delivery.Database
             .HasForeignKey(r => r.ModifiedByUserId);
 
 
-
+            modelBuilder.Entity<FoodItem>()
+            .HasMany(fi => fi.FoodItemPictures)
+            .WithOne(fip => fip.FoodItem)
+            .HasForeignKey(fip => fip.FoodItemId)
+            .OnDelete(DeleteBehavior.Cascade);
 
             //modelBuilder.Ignore<BaseEntity>();
 

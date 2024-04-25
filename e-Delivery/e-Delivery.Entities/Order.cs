@@ -17,7 +17,7 @@ namespace e_Delivery.Entities
         public bool IsDeleted { get; set; } = false;
         public DateTime CreatedDate { get; set; }
         public bool IsPaid { get; set; }
-    
+        public string? Address { get; set; }
 
         public PaymentMethod PaymentMethod { get; set; }
         public double TotalCost { get; set; }

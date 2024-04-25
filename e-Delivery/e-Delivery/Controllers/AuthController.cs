@@ -32,7 +32,7 @@ namespace e_Delivery.Controllers
 
             return Ok(authData.Session);
         }
-        [Authorize, HttpPost("logout")]
+        [HttpPost("logout"),Authorize()]
         public async Task<IActionResult> Logout()
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);

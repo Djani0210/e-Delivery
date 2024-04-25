@@ -21,16 +21,39 @@ namespace e_Delivery.Controllers
             this._fileService = _fileService;
         }
 
-        //[HttpPost, AllowAnonymous]
-        //public async Task<IActionResult> UploadFileAsMessageDto([FromForm]FileUploadDto fileUploadDto, CancellationToken cancellationToken)
-        //{
-        //    var message = await _fileService.UploadImageAsMessage(fileUploadDto,cancellationToken);
-        //    if (message.IsValid == false)
-        //        return BadRequest(message);
-        //    return Ok(message);
-        //}
+        [HttpPost("upload-restaurant-logo"), Authorize(Roles ="Desktop")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UploadAndSetRestaurantLogo([FromForm] FileUploadVM fileUploadDto, CancellationToken cancellationToken)
+        {
+            var message = await _fileService.UploadAndSetRestaurantLogoAsync(fileUploadDto, cancellationToken);
+            if (!message.IsValid)
+                return BadRequest(message);
+            return Ok(message);
+        }
+
+        [HttpDelete("delete-restaurant-logo"), Authorize(Roles ="Desktop")]
+        public async Task<IActionResult> DeleteRestaurantLogo(CancellationToken cancellationToken)
+        {
+            var message = await _fileService.DeleteRestaurantLogoAsync(cancellationToken);
+            if (!message.IsValid)
+                return BadRequest(message);
+            return Ok(message);
+        }
+        [HttpPut("update-restaurant-logo"), Authorize(Roles ="Desktop")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UpdateRestaurantLogo([FromForm] FileUploadVM fileUploadDto, CancellationToken cancellationToken)
+        {
+            var message = await _fileService.UpdateRestaurantLogoAsync(fileUploadDto, cancellationToken);
+            if (!message.IsValid)
+                return BadRequest(message);
+            return Ok(message);
+        }
+
+
+
         [HttpPost("upload-image"), Authorize()]
-        public async Task<IActionResult> UploadFileAsMessage(FileUploadVM fileUploadDto, CancellationToken cancellationToken)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UploadFileAsMessage([FromForm]FileUploadVM fileUploadDto, CancellationToken cancellationToken)
         {
             var message = await _fileService.UploadImageAsMessageAsync(fileUploadDto, cancellationToken);
             if (message.IsValid == false)
@@ -38,7 +61,8 @@ namespace e_Delivery.Controllers
             return Ok(message);
         }
         [HttpPost("upload-profile-image"), Authorize()]
-        public async Task<IActionResult> UploadProfileFileAsMessage(FileUploadVM fileUploadDto, CancellationToken cancellationToken)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UploadProfileFileAsMessage([FromForm]FileUploadVM fileUploadDto, CancellationToken cancellationToken)
         {
             var message = await _fileService.ChangeMyProfilePictureAsMessageAsync(fileUploadDto, cancellationToken);
             if (message.IsValid == false)
@@ -65,6 +89,15 @@ namespace e_Delivery.Controllers
         public async Task<IActionResult> GetFilesByRestaurantId(int restaurantId, CancellationToken cancellationToken)
         {
             var message = await _fileService.GetImagesByRestaurantIdAsMessageAsync(restaurantId, cancellationToken);
+            if (message.IsValid == false)
+                return BadRequest(message);
+            return Ok(message);
+        }
+
+        [HttpGet("get-Profile-Pic-By-Id/{id}"), Authorize()]
+        public async Task<IActionResult> GetProfileImageByUserId(Guid id, CancellationToken cancellationToken)
+        {
+            var message = await _fileService.GetProfileImageByUserId(id, cancellationToken);
             if (message.IsValid == false)
                 return BadRequest(message);
             return Ok(message);

@@ -34,6 +34,22 @@ class CityViewModel {
   }
 }
 
+class LogoViewModel {
+  final int id;
+  final String path;
+  // other fields if needed
+
+  LogoViewModel({required this.id, required this.path});
+  String get fullImageUrl => 'https://localhost:44395$path';
+
+  factory LogoViewModel.fromJson(Map<String, dynamic> json) {
+    return LogoViewModel(
+      id: json['id'],
+      path: json['path'],
+    );
+  }
+}
+
 class RestaurantViewModel {
   final int id;
   final String name;
@@ -45,6 +61,7 @@ class RestaurantViewModel {
   final double deliveryCharge;
   final int deliveryTime;
   final LocationViewModel location;
+  final LogoViewModel? logo;
   // Assuming 'reviews' will be a list of another model, omitted for brevity
 
   RestaurantViewModel({
@@ -58,6 +75,7 @@ class RestaurantViewModel {
     required this.deliveryCharge,
     required this.deliveryTime,
     required this.location,
+    this.logo,
     // Initialize reviews
   });
 
@@ -73,6 +91,7 @@ class RestaurantViewModel {
       deliveryCharge: json['deliveryCharge'],
       deliveryTime: json['deliveryTime'],
       location: LocationViewModel.fromJson(json['location']),
+      logo: json['logo'] != null ? LogoViewModel.fromJson(json['logo']) : null,
       // Parse and create reviews list
     );
   }

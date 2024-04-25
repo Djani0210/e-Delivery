@@ -8,7 +8,7 @@ namespace e_Delivery.Model.Images
 {
     public class ImageGetVM
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Path { get; set; }
         public DateTime CreatedDate { get; set; }
         public Guid CreatedByUserId { get; set; }

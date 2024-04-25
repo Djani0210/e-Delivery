@@ -4,7 +4,7 @@ import 'package:desktop/components/hover_animation.dart';
 import 'package:desktop/user/map_selection.dart';
 import 'package:flutter/material.dart';
 
-import 'package:desktop/restaurant/restaurant_service.dart';
+import 'package:desktop/restaurant/api_calls/restaurant_service.dart';
 import 'package:desktop/user/user_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';

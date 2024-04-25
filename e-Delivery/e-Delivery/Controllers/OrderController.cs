@@ -5,6 +5,7 @@ using e_Delivery.Model.Order;
 using e_Delivery.Model.Restaurant;
 using e_Delivery.Model.SideDish;
 using e_Delivery.Services.Interfaces;
+using e_Delivery.Services.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -70,9 +71,10 @@ namespace e_Delivery.Controllers
         }
 
         [HttpGet("get-Orders-For-Restaurant"), Authorize(Roles ="Desktop")]
-        public async Task<IActionResult> GetOrderForRestaurant(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetOrderForRestaurant(CancellationToken cancellationToken,int items_per_page = 4, int pageNumber = 1, DateTime? startDate = null, // Adding startDate parameter
+         DateTime? endDate = null, int? orderState = null)
         {
-            var message = await _orderService.GetOrderByRestaurantAsMessageAsync (cancellationToken);
+            var message = await _orderService.GetOrderByRestaurantAsMessageAsync (cancellationToken,items_per_page, pageNumber, startDate, endDate, orderState);
             if (!message.IsValid)
             {
                 return BadRequest(message);
@@ -104,6 +106,18 @@ namespace e_Delivery.Controllers
             return Ok(message);
         }
 
+        [HttpPatch("assign-delivery-person"), Authorize(Roles ="Desktop")]
+        public async Task<IActionResult> AssignDeliveryPerson([FromBody] AssignDeliveryPersonRequest request, CancellationToken cancellationToken)
+        {
+            var message = await _orderService.AssignDeliveryPersonToOrderAsMessageAsync(request.OrderId, request.UserId, cancellationToken);
+
+            if (!message.IsValid)
+            {
+                return BadRequest(message);
+            }
+            return Ok(message);
+        }
+
         [HttpGet("get-Orders-For-Customer"), Authorize()]
         public async Task<IActionResult> GetOrdersForCustomer(CancellationToken cancellationToken)
         {
@@ -122,6 +136,18 @@ namespace e_Delivery.Controllers
             {
                 return BadRequest(message);
             }
+            return Ok(message);
+        }
+
+        [HttpPatch("{orderId}/state"),Authorize()]
+        public async Task<IActionResult> PatchOrderState(Guid orderId, [FromBody] OrderStateUpdateDto newStateModel, CancellationToken cancellationToken)
+        {
+            var message = await _orderService.UpdateOrderStateAsMessageAsync(orderId, newStateModel.NewState, cancellationToken);
+            if (!message.IsValid)
+            {
+                return BadRequest(message);
+            }
+
             return Ok(message);
         }
 

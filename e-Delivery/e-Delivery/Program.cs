@@ -109,7 +109,7 @@ builder.Services.AddControllers()
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<eDeliveryDBContext>(options =>
-options.UseSqlServer(connectionString));
+options.UseSqlServer(connectionString), ServiceLifetime.Scoped);
 
 var app = builder.Build();
 

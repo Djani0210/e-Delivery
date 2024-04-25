@@ -27,7 +27,7 @@ namespace e_Delivery.Controllers
             }
             return Ok(message);
         }
-        [HttpGet("get-categories"), AllowAnonymous]
+        [HttpGet("get-categories"), Authorize()]
         public async Task<IActionResult> GetCategories(CancellationToken cancellationToken)
         {
             var message= await _categoryService.GetCategoriesAsMessageAsync(cancellationToken);
@@ -37,7 +37,7 @@ namespace e_Delivery.Controllers
             }
             return Ok(message);
         }
-        [HttpGet("get-categories-with-foodItems"), AllowAnonymous]
+        [HttpGet("get-categories-with-foodItems"), Authorize()]
         public async Task<IActionResult> GetCategoriesWithFoodItems(int restaurantId, CancellationToken cancellationToken)
         {
             var message = await _categoryService.GetCategoriesWithFoodItemsForRestaurantAsMessageAsync(restaurantId,cancellationToken);

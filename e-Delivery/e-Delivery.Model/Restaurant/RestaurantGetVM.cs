@@ -21,7 +21,7 @@ namespace e_Delivery.Model.Restaurant
         public double DeliveryCharge { get; set; }
         public int DeliveryTime { get; set; }
         public LocationGetVM Location { get; set; }
-        public ImageGetVM Image { get; set; }
+        public ImageGetVM Logo { get; set; }
         public List<GetReviewVM>? Reviews { get; set; }
     }
 }

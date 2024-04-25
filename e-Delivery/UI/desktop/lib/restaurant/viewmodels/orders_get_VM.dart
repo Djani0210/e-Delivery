@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 class OrderViewModel {
   final String id;
   final int paymentMethod;
@@ -7,6 +9,12 @@ class OrderViewModel {
   final DateTime createdDate;
   final LocationViewModel location;
   final List<OrderItemViewModel> orderItems;
+  final int orderState;
+  final String? userName; // Added
+  final String address; // Added
+  final String? deliveryPersonId; // Modified to be nullable
+  final String? deliveryPersonName;
+  final double deliveryCost;
 
   OrderViewModel({
     required this.id,
@@ -17,9 +25,19 @@ class OrderViewModel {
     required this.createdDate,
     required this.location,
     required this.orderItems,
+    required this.orderState,
+    this.userName, // Added
+    required this.address, // Added
+    this.deliveryPersonId, // Modified to be nullable
+    this.deliveryPersonName,
+    required this.deliveryCost,
   });
 
   factory OrderViewModel.fromJson(Map<String, dynamic> json) {
+    if (json.containsKey('data')) {
+      return OrderViewModel.fromJson(json['data']);
+    }
+
     return OrderViewModel(
       id: json['id'],
       paymentMethod: json['paymentMethod'],
@@ -31,7 +49,40 @@ class OrderViewModel {
       orderItems: (json['orderItems'] as List? ?? [])
           .map((i) => OrderItemViewModel.fromJson(i))
           .toList(),
+      orderState: json['orderState'],
+      userName: json['userName'], // Added
+      address: json['address'], // Added
+      deliveryPersonId: json['deliveryPersonId'],
+      deliveryPersonName: json['deliveryPersonAssigned'],
+      deliveryCost: json['deliveryCost'].toDouble(),
     );
+  }
+
+  String get orderStateText {
+    switch (orderState) {
+      case 1:
+        return 'U pripremi';
+      case 2:
+        return 'Na dostavi';
+      case 3:
+        return 'Dostavljeno';
+      case 4:
+        return 'Otkazano';
+      default:
+        return 'Unknown';
+    }
+  }
+
+  String get paymentMethodText {
+    switch (paymentMethod) {
+      case 1:
+        return 'Kreditna kartica';
+      case 2:
+        return 'Keš';
+
+      default:
+        return 'Unknown';
+    }
   }
 }
 
@@ -104,7 +155,7 @@ class FoodItemViewModel {
   final double price;
   final bool isAvailable;
   final int logoId;
-  final int categoryId;
+  final CategoryViewModel category;
   final int restaurantId;
   final List<SideDishViewModel> sideDishes;
 
@@ -115,7 +166,7 @@ class FoodItemViewModel {
     required this.price,
     required this.isAvailable,
     required this.logoId,
-    required this.categoryId,
+    required this.category,
     required this.restaurantId,
     required this.sideDishes,
   });
@@ -128,11 +179,25 @@ class FoodItemViewModel {
       price: json['price'].toDouble(),
       isAvailable: json['isAvailable'],
       logoId: json['logoId'],
-      categoryId: json['categoryId'],
+      category: json['category'] != null
+          ? CategoryViewModel.fromJson(json['category'])
+          : CategoryViewModel(name: 'Unknown'),
       restaurantId: json['restaurantId'],
       sideDishes: (json['sideDishes'] as List? ?? [])
           .map((e) => SideDishViewModel.fromJson(e))
           .toList(),
+    );
+  }
+}
+
+class CategoryViewModel {
+  final String name;
+
+  CategoryViewModel({required this.name});
+
+  factory CategoryViewModel.fromJson(Map<String, dynamic> json) {
+    return CategoryViewModel(
+      name: json['name'],
     );
   }
 }

@@ -18,4 +18,24 @@ class ApiService {
       throw Exception('Failed to load restaurant');
     }
   }
+
+  Future<dynamic> updateRestaurant(
+      int id, Map<String, dynamic> updateData) async {
+    final jwt = await _storage.read(key: 'jwt');
+    final response = await http.put(
+      Uri.parse(
+          'https://localhost:44395/api/Restaurant/update-Restaurant?id=$id'),
+      headers: {
+        'Authorization': 'Bearer $jwt',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(updateData),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to update restaurant');
+    }
+  }
 }

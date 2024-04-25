@@ -31,12 +31,110 @@ namespace e_Delivery.Services.Services
             Mapper = mapper;
             this.authContext = authContext;
         }
+        public async Task<Message> UploadAndSetRestaurantLogoAsync(FileUploadVM fileUploadDto, CancellationToken cancellationToken)
+        {
+            try
+            {
+                if (fileUploadDto.ImageFile == null || fileUploadDto.ImageFile.Length == 0)
+                {
+                    return new Message { IsValid = false, Info = "No file uploaded.", Status = ExceptionCode.BadRequest };
+                }
+
+                var loggedUser = await authContext.GetLoggedUser();
+                var restaurant = await _dbContext.Restaurants.FirstOrDefaultAsync(r => r.CreatedByUserId == loggedUser.Id, cancellationToken);
+
+                if (restaurant == null)
+                {
+                    return new Message { IsValid = false, Info = "Restaurant not found.", Status = ExceptionCode.NotFound };
+                }
+
+                var imagePath = UploadImageHelper.UploadFile(fileUploadDto.ImageFile);
+                var newLogo = new Image
+                {
+                    Path = imagePath,
+                    IsDeleted = false,
+                    CreatedDate = DateTime.Now,
+                    CreatedByUserId = loggedUser.Id,
+                    ModifiedByUserId = loggedUser.Id
+                };
+
+                await _dbContext.AddAsync(newLogo, cancellationToken);
+                await _dbContext.SaveChangesAsync(cancellationToken);
+
+                restaurant.LogoId = newLogo.Id;
+                await _dbContext.SaveChangesAsync(cancellationToken);
+
+                return new Message
+                {
+                    Data = Mapper.Map<ImageGetVM>(newLogo),
+                    IsValid = true,
+                    Info = "Logo uploaded successfully.",
+                    Status = ExceptionCode.Success
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Message
+                {
+                    IsValid = false,
+                    Info = $"An error occurred: {ex.Message}",
+                    Status = ExceptionCode.BadRequest
+                };
+            }
+        }
+
+        public async Task<Message> DeleteRestaurantLogoAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                var loggedUser = await authContext.GetLoggedUser();
+                var restaurant = await _dbContext.Restaurants.Include(r => r.Logo).FirstOrDefaultAsync(r => r.CreatedByUserId == loggedUser.Id, cancellationToken);
+
+                if (restaurant?.Logo == null)
+                {
+                    return new Message { IsValid = false, Info = "No logo found to delete.", Status = ExceptionCode.NotFound };
+                }
+
+                restaurant.Logo.IsDeleted = true;
+                await _dbContext.SaveChangesAsync(cancellationToken);
+
+                return new Message
+                {
+                    IsValid = true,
+                    Info = "Logo deleted successfully.",
+                    Status = ExceptionCode.Success
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Message
+                {
+                    IsValid = false,
+                    Info = $"An error occurred: {ex.Message}",
+                    Status = ExceptionCode.BadRequest
+                };
+            }
+        }
+
+        public async Task<Message> UpdateRestaurantLogoAsync(FileUploadVM fileUploadDto, CancellationToken cancellationToken)
+        {
+            // Delete the current logo
+            var deleteMessage = await DeleteRestaurantLogoAsync(cancellationToken);
+            if (!deleteMessage.IsValid)
+            {
+                return deleteMessage; // Return the message if deletion was unsuccessful
+            }
+
+            // Upload and set the new logo
+            return await UploadAndSetRestaurantLogoAsync(fileUploadDto, cancellationToken);
+        }
+
         public async Task<Message> UploadImageAsMessageAsync(FileUploadVM fileUploadVM, CancellationToken cancellationToken)
         {
             try
             {
-                var loggedUser = await  authContext.GetLoggedUser();
-                var image = UploadImageHelper.UploadFile(fileUploadVM.ImageURL);
+                var loggedUser = await authContext.GetLoggedUser();
+                var image = UploadImageHelper.UploadFile(fileUploadVM.ImageFile);
                 var file = new ImageCreateVM
                 {
                     Path = image,
@@ -73,7 +171,13 @@ namespace e_Delivery.Services.Services
             try
             {
                 var loggedUser = await authContext.GetLoggedUser();
-                var image = UploadImageHelper.UploadFile(fileUploadDto.ImageURL);
+
+                if (fileUploadDto.ImageFile == null || fileUploadDto.ImageFile.Length == 0)
+                {
+                    return new Message { IsValid = false, Info = "No file uploaded.", Status = ExceptionCode.BadRequest };
+                }
+
+                var image = UploadImageHelper.UploadFile(fileUploadDto.ImageFile);
                 var file = new ImageCreateVM
                 {
                     Path = image,
@@ -85,8 +189,9 @@ namespace e_Delivery.Services.Services
                 };
                 var images = await _dbContext.Images.Where(x => x.UserProfilePictureId == loggedUser.Id && !x.IsDeleted).ToListAsync(cancellationToken);
                 foreach (var im in images)
+                {
                     im.IsDeleted = true;
-               
+                }
 
                 var obj = Mapper.Map<Image>(file);
                 await _dbContext.AddAsync(obj);
@@ -101,10 +206,13 @@ namespace e_Delivery.Services.Services
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString()); // Placeholder for actual logging
+
+                // Provide a more specific error message if possible
                 return new Message
                 {
                     IsValid = false,
-                    Info = "Bad Request",
+                    Info = $"An error occurred: {ex.Message}",
                     Status = ExceptionCode.BadRequest
                 };
             }
@@ -117,7 +225,7 @@ namespace e_Delivery.Services.Services
                 var loggedUser = await authContext.GetLoggedUser();
                 var logo = await _dbContext.Images.Where(x => x.Id == Id).FirstOrDefaultAsync(cancellationToken);
                 logo.IsDeleted = true;
-                
+
                 _dbContext.SaveChangesAsync(cancellationToken);
                 return new Message
                 {
@@ -148,7 +256,7 @@ namespace e_Delivery.Services.Services
 
                 return new Message
                 {
-                    Data = Mapper.Map < List < ImageGetVM>>(images),
+                    Data = Mapper.Map<List<ImageGetVM>>(images),
                     IsValid = true,
                     Info = "Success",
                     Status = ExceptionCode.Success
@@ -216,5 +324,31 @@ namespace e_Delivery.Services.Services
             }
         }
 
+        public async Task<Message> GetProfileImageByUserId(Guid id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var user = await _dbContext.Users.Where(u=>u.Id==id).FirstOrDefaultAsync();
+                var image = await _dbContext.Images.Where(x => x.UserProfilePictureId == user.Id && !x.IsDeleted).FirstOrDefaultAsync(cancellationToken);
+
+                return new Message
+                {
+                    Data = Mapper.Map<ImageGetVM>(image),
+                    IsValid = true,
+                    Info = "Success",
+                    Status = ExceptionCode.Success
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Message
+                {
+                    IsValid = false,
+                    Info = "Bad Request",
+                    Status = ExceptionCode.BadRequest
+                };
+            }
+        }
     }
 }
+

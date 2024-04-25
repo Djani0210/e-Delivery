@@ -1,11 +1,13 @@
 import 'dart:ui';
 
-import 'package:desktop/components/hover_animation.dart';
 import 'package:desktop/loginRegistration/log_in_page.dart';
+import 'package:desktop/restaurant/api_calls/restaurant_api_calls.dart';
 
 import 'package:desktop/restaurant/restaurant_dashboard.dart';
-import 'package:desktop/user/userDataVM.dart';
+import 'package:desktop/restaurant/viewmodels/restaurant_get_VM.dart';
+import 'package:desktop/restaurant/viewmodels/userDataVM.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -35,7 +37,9 @@ class City {
 
 class _UserPageState extends State<UserPage> {
   UserDataViewModel? _userDataViewModel;
+  RestaurantViewModel? restaurantViewModel;
   List<City> _cities = [];
+  String? _imagePath;
   @override
   void initState() {
     super.initState();
@@ -57,13 +61,46 @@ class _UserPageState extends State<UserPage> {
   }
 
   Future<void> _loadUserData() async {
-    // Retrieve the user data from secure storage
-    final userDataJson = await StorageService.storage.read(key: 'userData');
-    if (userDataJson != null) {
-      final userData = jsonDecode(userDataJson);
-      setState(() {
-        _userDataViewModel = UserDataViewModel.fromJson(userData);
-      });
+    try {
+      final jwtToken = await StorageService.storage.read(key: 'jwt');
+      print(jwtToken);
+      if (jwtToken != null) {
+        print(
+            'JWT Token from secure storage: $jwtToken'); // Print the JWT token to the console
+      } else {
+        print('No JWT token found in secure storage.');
+      }
+      final userId = await StorageService.storage.read(key: 'currentUserId');
+      if (userId != null) {
+        print('User ID from secure storage: $userId');
+      } else {
+        print('No user ID found in secure storage.');
+      }
+
+      final userDataJson = await StorageService.storage.read(key: 'userData');
+      if (userDataJson != null) {
+        final userData = jsonDecode(userDataJson);
+        setState(() {
+          _userDataViewModel = UserDataViewModel.fromJson(userData);
+        });
+        final restaurantId = _userDataViewModel?.restaurantId;
+        if (restaurantId != null) {
+          final ApiService apiService = ApiService();
+          try {
+            final restaurantData =
+                await apiService.getRestaurantById(restaurantId);
+            setState(() {
+              restaurantViewModel =
+                  RestaurantViewModel.fromJson(restaurantData['data']);
+              _imagePath = restaurantViewModel?.logo?.fullImageUrl;
+            });
+          } catch (e) {
+            print('Error fetching restaurant data: $e');
+          }
+        }
+      }
+    } catch (e) {
+      print('Error loading user data: $e');
     }
   }
 
@@ -264,9 +301,17 @@ class _UserPageState extends State<UserPage> {
                           child: Column(
                             children: [
                               CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                    "https://via.placeholder.com/150"), // Example placeholder image
+                                backgroundImage: _imagePath != null
+                                    ? NetworkImage(_imagePath!)
+                                    : null,
                                 radius: 100,
+                                child: _imagePath == null
+                                    ? Icon(
+                                        Icons.person,
+                                        size: 100,
+                                        color: Colors.white,
+                                      )
+                                    : null,
                               ),
                               const SizedBox(height: 10),
                               Text(

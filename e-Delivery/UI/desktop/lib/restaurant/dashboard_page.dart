@@ -1,5 +1,6 @@
 import 'package:desktop/restaurant/api_calls/food_item_api_calls.dart';
 import 'package:desktop/restaurant/api_calls/order_api_calls.dart';
+import 'package:desktop/restaurant/order_details_page.dart';
 import 'package:desktop/restaurant/viewmodels/orders_get_VM.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -29,10 +30,19 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Future<List<OrderViewModel>> fetchOrders() async {
     var apiService = OrderApiService();
+    // Assume getOrdersForRestaurant() fetches all orders since no pagination is desired here
     var response = await apiService.getOrdersForRestaurant();
-    if (response != null) {
-      final List<dynamic> data = json.decode(response.body)['data'];
-      return data.map((order) => OrderViewModel.fromJson(order)).toList();
+    if (response != null && response.statusCode == 200) {
+      final Map<String, dynamic> responseBody = json.decode(response.body);
+      final List<dynamic> ordersData = responseBody['data']['orders'];
+      List<OrderViewModel> orders =
+          ordersData.map((order) => OrderViewModel.fromJson(order)).toList();
+
+      // Sort orders by createdDate in descending order to get the most recent orders
+      orders.sort((a, b) => b.createdDate.compareTo(a.createdDate));
+
+      // Take the top 3 most recent orders
+      return orders.take(3).toList();
     } else {
       throw Exception('Failed to load orders');
     }
@@ -83,7 +93,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     } else if (snapshot.hasError) {
                       return Text("Error");
                     } else {
-                      return Text(snapshot.data ?? "N/A");
+                      return Text(snapshot.data ?? "Nemate narucene proizvode");
                     }
                   },
                 ),
@@ -120,6 +130,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                 price: '${order.totalCost} KM',
                                 paymentMethod:
                                     _mapPaymentMethod(order.paymentMethod),
+                                id: order.id,
                               ))
                           .toList(),
                     );
@@ -184,12 +195,14 @@ class OrderCard extends StatelessWidget {
   final String address;
   final String price;
   final String paymentMethod;
+  final String id;
 
   const OrderCard({
     Key? key,
     required this.address,
     required this.price,
     required this.paymentMethod,
+    required this.id,
   }) : super(key: key);
 
   @override
@@ -201,7 +214,9 @@ class OrderCard extends StatelessWidget {
         subtitle: Text('Cijena: $price | Plaćanje: $paymentMethod'),
         trailing: ElevatedButton(
           onPressed: () {
-            // Add your action for the button press here
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => OrderDetailsPage(id: id),
+            ));
           },
           style: ElevatedButton.styleFrom(
             primary: Colors.orange,

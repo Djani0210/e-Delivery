@@ -67,20 +67,6 @@ class _MapSelectionState extends State<MapSelection> {
                               'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                           userAgentPackageName: 'com.example.app',
                         ),
-                        /* CircleLayer(
-                          circles: clusters
-                              .where((c) => c.locationCount == 1)
-                              .map((c) {
-                            return CircleMarker(
-                              useRadiusInMeter: true,
-                              radius: c.radius?.toDouble() ?? 0,
-                              point: LatLng(c.latitude, c.longitude),
-                              color: Colors.black12,
-                              borderColor: Colors.green.shade700,
-                              borderStrokeWidth: 2,
-                            );
-                          }).toList(),
-                        ), */
                         MarkerLayer(markers: [
                           Marker(
                             width: 80.0,
@@ -120,7 +106,7 @@ class _MapSelectionState extends State<MapSelection> {
         ),
         SizedBox(height: 10),
         Text(
-          'Click To Choose Your Location',
+          'Click To View Your Location',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
       ],

@@ -83,9 +83,9 @@ namespace e_Delivery.Controllers
         }
 
         [HttpGet("get-FoodItems"), Authorize()]
-        public async Task<IActionResult> GetFoodItems(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetFoodItems(CancellationToken cancellationToken, string? categoryName = null, int items_per_page = 4, int pageNumber = 1, bool? isAvailable = null, string? itemName = null)
         {
-            var message= await _foodItemService.GetFoodItemsAsMessageAsync(cancellationToken);
+            var message= await _foodItemService.GetFoodItemsAsMessageAsync(cancellationToken,categoryName,items_per_page,pageNumber,isAvailable,itemName);
             if (!message.IsValid)
             {
                 return BadRequest(message);
@@ -93,7 +93,7 @@ namespace e_Delivery.Controllers
             return Ok(message);
         }
 
-        [HttpGet("get-FoodItemsById"), Authorize()]
+        [HttpGet("get-FoodItemById"), Authorize()]
         public async Task<IActionResult> GetFoodItemById(int id, CancellationToken cancellationToken)
         {
             var message = await _foodItemService.GetFoodItemByIdAsMessageAsync(id,cancellationToken);

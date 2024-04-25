@@ -10,7 +10,7 @@ namespace e_Delivery.Model.Category
 {
     public class CategoriesWithFoodItemsGetVM
     {
-        public string CategoryName { get; set; }
+        public string Name { get; set; }
         public List<FoodItemGetVM> FoodItems { get; set; }
     }
 }

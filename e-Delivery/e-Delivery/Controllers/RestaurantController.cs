@@ -50,11 +50,32 @@ namespace e_Delivery.Controllers
             }
             return Ok(message);
         }
+        [HttpPut("remove-Employee"), Authorize(Roles = "Desktop")]
+        public async Task<IActionResult> RemoveEmployee(Guid id, CancellationToken cancellationToken)
+        {
+            var message = await _restaurantService.RemoveEmployeeFromRestaurantAsMessageAsync(id, cancellationToken);
+            if (!message.IsValid)
+            {
+                return BadRequest(message);
+            }
+            return Ok(message);
+        }
 
         [HttpGet("get-Restaurants"), Authorize()]
         public async Task<IActionResult> GetRestaurants(int id, CancellationToken cancellationToken)
         {
             var message= await _restaurantService.GetRestaurantsAsMessage(id, cancellationToken);
+            if (!message.IsValid)
+            {
+                return BadRequest(message);
+            }
+            return Ok(message);
+        }
+
+        [HttpGet("get-Restaurant-Employees"), Authorize(Roles="Desktop")]
+        public async Task<IActionResult> GetRestaurantEmployees(CancellationToken cancellationToken, int items_per_page = 3, int pageNumber = 1, bool? isAvailable = null, string? username = null)
+        {
+            var message = await _restaurantService.GetRestaurantEmployeesAsMessageAsync(cancellationToken,items_per_page,pageNumber,isAvailable,username);
             if (!message.IsValid)
             {
                 return BadRequest(message);
@@ -82,6 +103,8 @@ namespace e_Delivery.Controllers
             }
             return Ok(message);
         }
+
+
 
     }
 }

@@ -8,6 +8,7 @@ namespace e_Delivery.Model.Category
 {
     public class CategoriesGetVM
     {
+        public int Id { get; set; }
         public string Name { get; set; }
     }
 }
