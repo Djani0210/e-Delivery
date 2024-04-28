@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 
 import 'package:http/http.dart';
-// Replace these imports with the correct paths to your files
 
 class DashboardPage extends StatefulWidget {
   @override
@@ -17,6 +16,7 @@ class _DashboardPageState extends State<DashboardPage> {
   late Future<List<OrderViewModel>> _ordersFuture;
   late Future<int> _monthlyOrderCountFuture;
   late Future<String> _mostFrequentFoodItemFuture;
+  late Future<double?> _averageRatingFuture;
   @override
   void initState() {
     super.initState();
@@ -24,8 +24,8 @@ class _DashboardPageState extends State<DashboardPage> {
     final foodItemApiService = FoodItemApiService(); // Corrected variable name
     _ordersFuture = fetchOrders();
     _monthlyOrderCountFuture = orderApiService.getMonthlyOrderCount();
-    _mostFrequentFoodItemFuture =
-        foodItemApiService.GetMostFrequentFoodItem(); // This should be fine now
+    _mostFrequentFoodItemFuture = foodItemApiService.GetMostFrequentFoodItem();
+    _averageRatingFuture = orderApiService.getAverageRating();
   }
 
   Future<List<OrderViewModel>> fetchOrders() async {
@@ -98,7 +98,21 @@ class _DashboardPageState extends State<DashboardPage> {
                   },
                 ),
               ),
-              // Add your statistic cards and other static content here...
+              StatisticCard(
+                label: "Prosječna ocjena restorana:",
+                value: FutureBuilder<double?>(
+                  future: _averageRatingFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Text("Loading...");
+                    } else if (snapshot.hasError) {
+                      return Text("Error");
+                    } else {
+                      return Text("${snapshot.data}");
+                    }
+                  },
+                ),
+              ),
               SizedBox(height: 30),
               Text(
                 'Najnovije narudžbe',

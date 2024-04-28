@@ -22,5 +22,7 @@ namespace e_Delivery.Entities
         [ForeignKey(nameof(RestaurantId))]
         public Restaurant Restaurant { get; set; }
         public int RestaurantId { get; set; }
+
+        public List<OrderItemSideDish> OrderItemSideDishes { get; set; } = new List<OrderItemSideDish>();
     }
 }

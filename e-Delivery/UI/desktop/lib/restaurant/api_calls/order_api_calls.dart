@@ -13,6 +13,25 @@ class OrderApiService {
     return jwt ?? '';
   }
 
+  Future<double?> getAverageRating() async {
+    try {
+      final jwt = await _fetchJwtToken();
+      final response = await http.get(
+        Uri.parse('${_baseUrl}Review/get-Review-Score-For-Restaurant'),
+        headers: {'Authorization': 'Bearer $jwt'},
+      );
+
+      if (response.statusCode == 200) {
+        return double.parse(response.body);
+      } else {
+        throw Exception(
+            'Failed to load average rating: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to load average rating: $e');
+    }
+  }
+
   Future<http.Response?> getOrdersForRestaurant({
     int pageNumber = 1,
     int itemsPerPage = 4,
@@ -160,6 +179,43 @@ class OrderApiService {
     } catch (e) {
       print("Error assigning delivery person: $e");
       return false;
+    }
+  }
+
+  Future<http.Response?> generateOrderReport({
+    DateTime? fromDate,
+    DateTime? toDate,
+    double? minPrice,
+    double? maxPrice,
+  }) async {
+    try {
+      String jwt =
+          await _fetchJwtToken(); // Assuming you have a method to fetch the JWT token
+
+      final url = Uri.parse('${_baseUrl}OrderReport/order-report');
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $jwt', // Include the JWT token in the headers
+      };
+
+      final body = json.encode({
+        'FromDate': fromDate?.toIso8601String(),
+        'ToDate': toDate?.toIso8601String(),
+        'MinPrice': minPrice,
+        'MaxPrice': maxPrice,
+      });
+
+      final response = await http.post(url, headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        return response;
+      } else {
+        print('Failed to generate report. Status code: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error generating report: $e');
+      return null;
     }
   }
 }

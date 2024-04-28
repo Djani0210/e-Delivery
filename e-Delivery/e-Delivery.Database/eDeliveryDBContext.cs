@@ -37,7 +37,7 @@ namespace e_Delivery.Database
         {
         }
 
-       
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -77,6 +77,19 @@ namespace e_Delivery.Database
             .WithOne(fip => fip.FoodItem)
             .HasForeignKey(fip => fip.FoodItemId)
             .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<OrderItemSideDish>()
+        .HasKey(ois => new { ois.OrderItemId, ois.SideDishId });
+
+            modelBuilder.Entity<OrderItemSideDish>()
+                .HasOne(ois => ois.OrderItem)
+                .WithMany(oi => oi.OrderItemSideDishes)
+                .HasForeignKey(ois => ois.OrderItemId);
+
+            modelBuilder.Entity<OrderItemSideDish>()
+                .HasOne(ois => ois.SideDish)
+                .WithMany(sd => sd.OrderItemSideDishes)
+                .HasForeignKey(ois => ois.SideDishId);
 
             //modelBuilder.Ignore<BaseEntity>();
 

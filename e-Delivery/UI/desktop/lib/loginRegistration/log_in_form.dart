@@ -2,6 +2,8 @@
 
 import 'dart:async';
 
+import 'package:desktop/admin/admin_page.dart';
+import 'package:desktop/components/storage_service.dart';
 import 'package:desktop/loginRegistration/forgot_password_page.dart';
 import 'package:desktop/loginRegistration/registration_page.dart';
 import 'package:desktop/user/user_page.dart';
@@ -62,19 +64,59 @@ class _LogInFormState extends State<LogInForm> {
 
     LoginResult result = await loginService.loginUser(username, password);
     if (result.success) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const UserPage()),
-      );
+      // Retrieve the user data from secure storage
+      String? userDataJson = await StorageService.storage.read(key: 'userData');
+      if (userDataJson != null) {
+        Map<String, dynamic> userData = jsonDecode(userDataJson);
+        List<dynamic> roles = userData['roles'];
+
+        if (roles.contains('Desktop')) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const UserPage()),
+          );
+        } else if (roles.contains('Admin')) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AdminPage()),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              duration: Duration(milliseconds: 2000),
+              content: Center(
+                child: Text(
+                  'Nemoguće prijavljivanje',
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+            ),
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            duration: Duration(milliseconds: 2000),
+            content: Center(
+              child: Text(
+                'User data not found',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ),
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            duration: Duration(milliseconds: 2000),
-            content: Center(
-                child: Text(
+          duration: Duration(milliseconds: 2000),
+          content: Center(
+            child: Text(
               result.message ?? 'Login failed',
               style: TextStyle(color: Colors.red),
-            ))),
+            ),
+          ),
+        ),
       );
     }
   }

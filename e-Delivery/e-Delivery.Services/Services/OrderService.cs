@@ -92,7 +92,6 @@ namespace e_Delivery.Services.Services
 
                 if (locationMessage == null || !locationMessage.IsValid)
                 {
-
                     return new Message
                     {
                         IsValid = false,
@@ -107,7 +106,6 @@ namespace e_Delivery.Services.Services
                 obj.OrderState = OrderState.Created;
                 obj.LocationId = ((LocationGetVM)locationMessage.Data).Id;
 
-
                 var orderItemsToAdd = new List<OrderItem>();
                 foreach (var item in obj.OrderItems)
                 {
@@ -116,31 +114,19 @@ namespace e_Delivery.Services.Services
                     orderItem.FoodItem = await _dbContext.FoodItems.FindAsync(item.FoodItemId);
 
                     var sideDishIds = item.SideDishIds ?? new List<int>();
-                    orderItem.SideDishes = new List<SideDish>();
+                    orderItem.OrderItemSideDishes = new List<OrderItemSideDish>();
 
                     foreach (var sideDishId in sideDishIds)
                     {
                         var sideDish = await _dbContext.SideDishes.FindAsync(sideDishId);
                         if (sideDish != null)
                         {
-                            var trackedSideDish = _dbContext.Entry(sideDish).State == EntityState.Detached
-                                ? sideDish
-                                : _dbContext.SideDishes.Local.FirstOrDefault(sd => sd.Id == sideDishId);
-
-                            if (trackedSideDish == null)
+                            var orderItemSideDish = new OrderItemSideDish
                             {
-                                trackedSideDish = new SideDish
-                                {
-                                    Id = sideDish.Id,
-                                    Name = sideDish.Name,
-                                    Price = sideDish.Price,
-                                    IsAvailable = sideDish.IsAvailable,
-                                    RestaurantId = sideDish.RestaurantId
-                                };
-                                _dbContext.SideDishes.Attach(trackedSideDish);
-                            }
-
-                            orderItem.SideDishes.Add(trackedSideDish);
+                                OrderItem = orderItem,
+                                SideDish = sideDish
+                            };
+                            orderItem.OrderItemSideDishes.Add(orderItemSideDish);
                         }
                     }
 
@@ -156,6 +142,13 @@ namespace e_Delivery.Services.Services
 
                 await _dbContext.AddAsync(obj);
                 await _dbContext.SaveChangesAsync(cancellationToken);
+
+                // Populate the SideDishes property of each OrderItem after saving to the database
+                foreach (var orderItem in obj.OrderItems)
+                {
+                    orderItem.SideDishes = orderItem.OrderItemSideDishes.Select(ois => ois.SideDish).ToList();
+                }
+
                 var orderGetVM = Mapper.Map<GetOrderVM>(obj);
                 return new Message
                 {
@@ -164,7 +157,6 @@ namespace e_Delivery.Services.Services
                     Status = ExceptionCode.Success,
                     Data = orderGetVM
                 };
-
             }
             catch (Exception ex)
             {
@@ -242,11 +234,15 @@ namespace e_Delivery.Services.Services
                     .Include(order => order.Location).ThenInclude(o => o.City)
                     .Include(o => o.OrderItems).ThenInclude(oi => oi.FoodItem).ThenInclude(fi => fi.FoodItemPictures)
 
-                    .Include(o => o.OrderItems).ThenInclude(oi => oi.SideDishes)
 
+                     .Include(o => o.OrderItems).ThenInclude(oi => oi.OrderItemSideDishes).ThenInclude(ois => ois.SideDish)
                     .Include(o => o.OrderItems).ThenInclude(oi => oi.FoodItem).ThenInclude(fi => fi.Category)
                     .Where(order => order.Id == id).AsNoTracking()
                     .FirstOrDefaultAsync();
+                foreach (var orderItem in order.OrderItems)
+                {
+                    orderItem.SideDishes = orderItem.OrderItemSideDishes.Select(ois => ois.SideDish).ToList();
+                }
 
                 var getOrderVM = Mapper.Map<GetOrderVM>(order);
                 getOrderVM.Address = order.Address;
@@ -291,7 +287,7 @@ namespace e_Delivery.Services.Services
                 var query = _dbContext.Orders
                     .Include(order => order.Location).ThenInclude(o => o.City)
                     .Include(o => o.OrderItems).ThenInclude(oi => oi.FoodItem).ThenInclude(fi => fi.FoodItemPictures)
-                    .Include(o => o.OrderItems).ThenInclude(oi => oi.SideDishes)
+                    .Include(o => o.OrderItems).ThenInclude(oi => oi.OrderItemSideDishes).ThenInclude(ois => ois.SideDish)
                     .Where(order => order.RestaurantId == loggedUser.RestaurantId).OrderByDescending(order => order.CreatedDate)
                     .AsQueryable();
                 if (startDate.HasValue)
@@ -308,6 +304,14 @@ namespace e_Delivery.Services.Services
                     query = query.Where(order => (int)order.OrderState == orderState.Value);
                 }
                 var pagedOrders = await PagedList<Order>.Create(query, pageNumber, items_per_page);
+
+                foreach (var order in pagedOrders.DataItems)
+                {
+                    foreach (var orderItem in order.OrderItems)
+                    {
+                        orderItem.SideDishes = orderItem.OrderItemSideDishes.Select(ois => ois.SideDish).ToList();
+                    }
+                }
 
                 var getOrdersVM = Mapper.Map<List<GetOrderVM>>(pagedOrders.DataItems);
 
@@ -340,9 +344,17 @@ namespace e_Delivery.Services.Services
                     .Include(order => order.Location).ThenInclude(o => o.City)
                     .Include(o => o.OrderItems).ThenInclude(oi => oi.FoodItem).ThenInclude(fi => fi.FoodItemPictures)
 
-                    .Include(o => o.OrderItems).ThenInclude(oi => oi.SideDishes)
+                    .Include(o => o.OrderItems).ThenInclude(oi => oi.OrderItemSideDishes).ThenInclude(ois => ois.SideDish)
                     .Where(order => order.CreatedByUserId == loggedUser.Id).AsNoTracking()
                     .ToListAsync();
+
+                foreach (var order in orders)
+                {
+                    foreach (var orderItem in order.OrderItems)
+                    {
+                        orderItem.SideDishes = orderItem.OrderItemSideDishes.Select(ois => ois.SideDish).ToList();
+                    }
+                }
 
                 var getOrderVM = Mapper.Map<List<GetOrderVM>>(orders);
 
@@ -375,9 +387,17 @@ namespace e_Delivery.Services.Services
                     .Include(order => order.Location).ThenInclude(o => o.City)
                     .Include(o => o.OrderItems).ThenInclude(oi => oi.FoodItem).ThenInclude(fi => fi.FoodItemPictures)
 
-                    .Include(o => o.OrderItems).ThenInclude(oi => oi.SideDishes)
+                    .Include(o => o.OrderItems).ThenInclude(oi => oi.OrderItemSideDishes).ThenInclude(ois => ois.SideDish)
                     .Where(order => order.DeliveryPersonAssignedId == loggedUser.Id).AsNoTracking()
                     .ToListAsync();
+
+                foreach (var order in orders)
+                {
+                    foreach (var orderItem in order.OrderItems)
+                    {
+                        orderItem.SideDishes = orderItem.OrderItemSideDishes.Select(ois => ois.SideDish).ToList();
+                    }
+                }
 
                 var getOrderVM = Mapper.Map<List<GetOrderVM>>(orders);
 

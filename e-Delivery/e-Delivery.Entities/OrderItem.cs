@@ -20,6 +20,7 @@ namespace e_Delivery.Entities
 
         public List<int>? SideDishIds { get; set; } = new List<int>();
 
+        [NotMapped]
         public List<SideDish>? SideDishes { get; set; } = new List<SideDish>();
 
         public int Quantity { get; set; }
@@ -28,5 +29,7 @@ namespace e_Delivery.Entities
         [ForeignKey(nameof(Order))]
         [JsonIgnore]
         public Guid? OrderId { get; set; }
+
+        public List<OrderItemSideDish> OrderItemSideDishes { get; set; } = new List<OrderItemSideDish>();
     }
 }

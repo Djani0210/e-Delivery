@@ -39,7 +39,7 @@ namespace e_Delivery.Services.Services
                         Status = ExceptionCode.BadRequest
                     };
                 }
-                var restaurant = await  _dbContext.Restaurants.FindAsync(createOrUpdateReviewVM.RestaurantId);
+                var restaurant = await _dbContext.Restaurants.FindAsync(createOrUpdateReviewVM.RestaurantId);
 
                 if (restaurant == null)
                 {
@@ -77,7 +77,7 @@ namespace e_Delivery.Services.Services
                 var existingReview = await _dbContext.Reviews
                 .FirstOrDefaultAsync(r => r.CreatedByUserId == user.Id && r.RestaurantId == createOrUpdateReviewVM.RestaurantId);
 
-                
+
                 if (existingReview == null)
                 {
                     var obj = Mapper.Map<Entities.Review>(createOrUpdateReviewVM);
@@ -92,16 +92,16 @@ namespace e_Delivery.Services.Services
                     existingReview.Description = createOrUpdateReviewVM.Description;
                     existingReview.CreatedDate = DateTime.Now;
                     existingReview.ModifiedByUserId = user.Id;
-                     
+
                 }
                 await _dbContext.SaveChangesAsync(cancellationToken);
-                
+
                 return new Message
                 {
                     IsValid = true,
                     Info = existingReview == null ? "Created review." : "Updated review.",
                     Status = ExceptionCode.Success,
-                    Data =  null
+                    Data = null
                 };
             }
             catch (Exception ex)
@@ -136,5 +136,31 @@ namespace e_Delivery.Services.Services
                 IsValid = true
             };
         }
+
+        public async Task<double?> GetReviewScoreForRestaurantAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                var loggedUser = await authContext.GetLoggedUser();
+                var restaurant = await _dbContext.Restaurants
+                    .Include(r => r.Reviews)
+                    .FirstOrDefaultAsync(r => r.Id == loggedUser.RestaurantId);
+
+                if (restaurant != null && restaurant.Reviews.Any())
+                {
+                    double averageScore = restaurant.Reviews.Average(review => review.Grade);
+                    return averageScore;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

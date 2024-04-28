@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'package:desktop/restaurant/order_report_form.dart';
+
 import 'package:intl/intl.dart';
 
 import 'package:desktop/restaurant/api_calls/order_api_calls.dart';
-import 'package:desktop/restaurant/order_details_page.dart';
+
 import 'package:desktop/restaurant/viewmodels/orders_get_VM.dart';
 import 'package:flutter/material.dart';
 
@@ -282,6 +284,23 @@ class _OrdersPageState extends State<OrdersPage> {
     );
   }
 
+  void _showOrderReportDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: OrderReportForm(
+            onGenerateReport: (fromDate, toDate, minPrice, maxPrice) {
+              // Handle the generated report here
+              print(
+                  'Report generated from $fromDate to $toDate with min price $minPrice and max price $maxPrice');
+            },
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildPrintReportButton(BuildContext context) {
     return Align(
       alignment: Alignment.centerRight,
@@ -291,9 +310,7 @@ class _OrdersPageState extends State<OrdersPage> {
           textStyle: TextStyle(fontWeight: FontWeight.bold),
           padding: EdgeInsets.symmetric(horizontal: 35, vertical: 18),
         ),
-        onPressed: () {
-          // Implement your print logic here
-        },
+        onPressed: _showOrderReportDialog,
         child: Text('Printaj izvještaj'),
       ),
     );

@@ -12,5 +12,8 @@ namespace e_Delivery.Services.Interfaces
         Task<Message> CreateOrUpdateReviewAsMessageAsync(CreateOrUpdateReviewVM createOrUpdateReviewVM, CancellationToken cancellationToken);
 
         Task<Message> DeleteReviewAsMessageAsync(int id, CancellationToken cancellationToken);
+        Task<double?> GetReviewScoreForRestaurantAsync(CancellationToken cancellationToken);
+
+        
     }
 }
