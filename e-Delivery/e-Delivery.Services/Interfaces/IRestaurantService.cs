@@ -13,6 +13,7 @@ namespace e_Delivery.Services.Interfaces
         Task<Message> UpdateRestaurantAsMessage(int RestaurantId, RestaurantUpdateVM restaurantUpdateVM, CancellationToken cancellationToken);
         Task<Message> DeleteRestaurantAndRelatedEntitiesAsync(int restaurantId,  CancellationToken cancellationToken);
         Task<Message> GetRestaurantsAsMessage(int cityId, CancellationToken cancellationToken);
+        Task<Message> GetRestaurantsForAdminAsMessage(CancellationToken cancellationToken, int? cityId, string? name, int items_per_page = 10, int pageNumber = 1);
         Task<Message> GetRestaurantByIdAsMessage(int RestaurantId, CancellationToken cancellationToken);
         Task<Message> RemoveEmployeeFromRestaurantAsMessageAsync(Guid id, CancellationToken cancellationToken);
         Task<Message> GetRestaurantEmployeesAsMessageAsync(CancellationToken cancellationToken, int items_per_page = 3, int pageNumber = 1, bool? isAvailable = null, string? username = null);

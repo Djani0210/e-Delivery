@@ -2,6 +2,7 @@
 using e_Delivery.Database;
 using e_Delivery.Entities;
 using e_Delivery.Entities.Enums;
+using e_Delivery.Model.City;
 using e_Delivery.Model.Location;
 using e_Delivery.Model.Restaurant;
 using e_Delivery.Model.User;
@@ -30,9 +31,10 @@ namespace e_Delivery.Services.Services
         public ILocationService _locationService { get; set; }
         public IAuthContext _authContext { get; set; }
         private UserManager<User> _userManager { get; set; }
+        private RoleManager<Role> _roleManager { get; set; }
 
         public RestaurantService(eDeliveryDBContext dbContext, IMapper mapper,
-            IFileService fileService, ILocationService locationService, IAuthContext authContext, UserManager<User> userManager)
+            IFileService fileService, ILocationService locationService, IAuthContext authContext, UserManager<User> userManager, RoleManager<Role> roleManager)
         {
             _dbContext = dbContext;
             Mapper = mapper;
@@ -40,6 +42,7 @@ namespace e_Delivery.Services.Services
             _locationService = locationService;
             _authContext = authContext;
             _userManager = userManager;
+            _roleManager = roleManager;
         }
         public async Task<Message> CreateRestaurantAsMessage(RestaurantCreateVM restaurantCreateVM, CancellationToken cancellationToken)
         {
@@ -141,28 +144,40 @@ namespace e_Delivery.Services.Services
 
             try
             {
-                // Retrieve the logged-in user
+
                 var loggedUser = await _authContext.GetLoggedUser();
 
-                // Ensure that the logged-in user is the owner of the restaurant
-                if (loggedUser.RestaurantId != restaurantId)
-                {
-                    return new Message
-                    {
-                        IsValid = false,
-                        Info = "You do not have permission to delete this restaurant.",
-                        Status = ExceptionCode.Forbidden,
-                    };
-                }
+                
 
-                // Delete related entries in FoodItemPictures table
+
                 var foodItemPicturesToDelete = await _dbContext.FoodItemPictures
                     .Where(fip => fip.FoodItem.RestaurantId == restaurantId)
                     .ToListAsync(cancellationToken);
 
-                  _dbContext.FoodItemPictures.RemoveRange(foodItemPicturesToDelete);
+                _dbContext.FoodItemPictures.RemoveRange(foodItemPicturesToDelete);
 
-                // Delete related entries in FoodItem and SideDish tables
+
+                var reviewsToDelete = await _dbContext.Reviews
+                    .Where(r => r.RestaurantId == restaurantId)
+                    .ToListAsync(cancellationToken);
+
+                _dbContext.Reviews.RemoveRange(reviewsToDelete);
+
+                var ordersToDelete = await _dbContext.Orders
+                    .Where(o => o.RestaurantId == restaurantId)
+                        .ToListAsync(cancellationToken);
+
+                foreach (var order in ordersToDelete)
+                {
+                    var orderItemsToDelete = await _dbContext.OrderItems
+                        .Where(oi => oi.OrderId == order.Id)
+                        .ToListAsync(cancellationToken);
+                    _dbContext.OrderItems.RemoveRange(orderItemsToDelete);
+                }
+                _dbContext.Orders.RemoveRange(ordersToDelete);
+
+
+
                 var foodItemsToDelete = await _dbContext.FoodItems
                     .Include(fi => fi.SideDishes)
                     .Where(fi => fi.RestaurantId == restaurantId)
@@ -173,22 +188,60 @@ namespace e_Delivery.Services.Services
                     _dbContext.SideDishes.RemoveRange(foodItem.SideDishes);
                 }
 
-                 _dbContext.FoodItems.RemoveRange(foodItemsToDelete);
-
-               
-
-                // Set the RestaurantId of the logged-in user to null
-
-                var userEntity = await _userManager.FindByIdAsync(loggedUser.Id.ToString());
-                userEntity.RestaurantId = null; 
-                await _userManager.UpdateAsync(userEntity);
+                _dbContext.FoodItems.RemoveRange(foodItemsToDelete);
 
 
-                 // Delete the actual Restaurant entity
+
+
+                var desktopRole = await _roleManager.FindByNameAsync("Desktop");
+                if (desktopRole != null)
+                {
+                    var user = await _dbContext.Users
+                        .Where(u => u.RestaurantId == restaurantId)
+                        .FirstOrDefaultAsync(cancellationToken);
+
+                    if (user != null)
+                    {
+                        var isDesktopUser = await _userManager.IsInRoleAsync(user, "Desktop");
+                        if (isDesktopUser)
+                        {
+                            user.RestaurantId = null;
+                            await _userManager.UpdateAsync(user);
+                        }
+                    }
+                }
+
+                var mobileDeliveryPersonRole = await _roleManager.FindByNameAsync("MOBILEDELIVERYPERSON");
+                if (mobileDeliveryPersonRole != null)
+                {
+                    var mobileDeliveryPersonUsers = await _dbContext.Users
+                        .Where(u => u.RestaurantId == restaurantId)
+                        .ToListAsync(cancellationToken);
+
+                    foreach (var user in mobileDeliveryPersonUsers)
+                    {
+                        var isMobileDeliveryPersonUser = await _userManager.IsInRoleAsync(user, "MOBILEDELIVERYPERSON");
+                        if (isMobileDeliveryPersonUser)
+                        {
+                            user.RestaurantId = null;
+                            await _userManager.UpdateAsync(user);
+                        }
+                    }
+                }
+
+                var restaurantProfilePhotoToDelete = await _dbContext.Images.Where(i => i.CreatedByUser.RestaurantId == restaurantId).FirstOrDefaultAsync();
+                if (restaurantProfilePhotoToDelete != null)
+                {
+                    _dbContext.Images.Remove(restaurantProfilePhotoToDelete);
+                }
+
                 var restaurantToDelete = await _dbContext.Restaurants.FindAsync(restaurantId);
-                _dbContext.Restaurants.Remove(restaurantToDelete);
+                if (restaurantToDelete != null)
+                {
+                    _dbContext.Restaurants.Remove(restaurantToDelete);
+                }
 
-                // Commit the transaction
+
                 await _dbContext.SaveChangesAsync(cancellationToken);
                 await transaction.CommitAsync(cancellationToken);
 
@@ -204,11 +257,11 @@ namespace e_Delivery.Services.Services
                 var innerException = ex.InnerException;
                 while (innerException != null)
                 {
-                    // Log or inspect inner exception details
+
                     innerException = innerException.InnerException;
                     Console.WriteLine(innerException);
                 }
-                // Rollback the transaction in case of an exception
+
                 await transaction.RollbackAsync(cancellationToken);
 
                 return new Message
@@ -225,7 +278,8 @@ namespace e_Delivery.Services.Services
         {
             try
             {
-                var restaurant = await _dbContext.Restaurants.Include(x => x.Logo).Include(x => x.Location).Include(x => x.Location.City).Include(x => x.Reviews).AsNoTracking().Where(x => x.Id == RestaurantId).FirstOrDefaultAsync(cancellationToken);
+                var restaurant = await _dbContext.Restaurants.Include(x => x.Logo).Include(x => x.Location).Include(x => x.Location.City)
+                    .Include(x => x.Reviews).Include(x => x.CreatedByUser).AsNoTracking().Where(x => x.Id == RestaurantId).FirstOrDefaultAsync(cancellationToken);
 
 
                 var obj = Mapper.Map<RestaurantGetVM>(restaurant);
@@ -280,6 +334,50 @@ namespace e_Delivery.Services.Services
 
         }
 
+        public async Task<Message> GetRestaurantsForAdminAsMessage(CancellationToken cancellationToken, int? cityId, string? name, int items_per_page = 10, int pageNumber = 1)
+        {
+            try
+            {
+                IQueryable<Restaurant> query = _dbContext.Restaurants
+                    .Include(x => x.Location)
+                    .Include(x => x.CreatedByUser)
+                    .Include(x => x.Logo)
+                    .Include(x => x.Location.City);
+
+                if (cityId.HasValue)
+                {
+                    query = query.Where(x => x.Location.CityId == cityId.Value);
+                }
+
+                if (!string.IsNullOrEmpty(name))
+                {
+                    query = query.Where(x => x.Name.StartsWith(name));
+                }
+
+                var pagedRestaurants = await PagedList<Restaurant>.Create(query, pageNumber, items_per_page);
+
+                var restaurantsVM = Mapper.Map<List<RestaurantGetVM>>(pagedRestaurants.DataItems);
+
+                return new Message
+                {
+                    IsValid = true,
+                    Info = "Successfully returned paginated and filtered restaurants",
+                    Status = ExceptionCode.Success,
+                    Data = new { Restaurants = restaurantsVM, pagedRestaurants.TotalPages, pagedRestaurants.TotalCount }
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Message
+                {
+                    IsValid = false,
+                    Info = ex.Message,
+                    Status = ExceptionCode.BadRequest
+                };
+            }
+        }
+
+
         public async Task<Message> UpdateRestaurantAsMessage(int RestaurantId, RestaurantUpdateVM restaurantUpdateVM, CancellationToken cancellationToken)
         {
             try
@@ -293,23 +391,6 @@ namespace e_Delivery.Services.Services
                 restaurant.OpeningTime = TimeSpan.ParseExact(restaurantUpdateVM.OpeningTime, "hh\\:mm", CultureInfo.InvariantCulture);
                 restaurant.ClosingTime = TimeSpan.ParseExact(restaurantUpdateVM.ClosingTime, "hh\\:mm", CultureInfo.InvariantCulture);
 
-                //var location = await _dbContext.Locations.Where(x => x.Latitude == restaurantUpdateVM.Latitude && x.Longitude == restaurantUpdateVM.Longitude).FirstOrDefaultAsync(cancellationToken);
-                //if (location == null)
-                //{
-                //    LocationCreateVM locationCreateDto = new LocationCreateVM { CityId = restaurantUpdateVM.CityId, Latitude = restaurantUpdateVM.Latitude, Longitude = restaurantUpdateVM.Longitude };
-                //    var message2 = await _locationService.CreateLocationAsMessageAsync(locationCreateDto, cancellationToken);
-                //    if (message2 == null || !message2.IsValid)
-                //    {
-                //        return new Message
-                //        {
-                //            IsValid = false,
-                //            Info = "Error during uploading a location!",
-                //            Status = ExceptionCode.BadRequest
-                //        };
-                //    }
-                //    restaurant.LocationId = ((LocationGetVM)message2.Data).Id;
-                //}
-                //restaurant.Location.CityId = restaurantUpdateVM.CityId;
 
                 await _dbContext.SaveChangesAsync(cancellationToken);
 

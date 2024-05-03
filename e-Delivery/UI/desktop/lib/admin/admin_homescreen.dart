@@ -1,36 +1,70 @@
 import 'dart:convert';
+
+import 'package:desktop/admin/admin_sideBar.dart';
+import 'package:desktop/admin/categories_page.dart';
+import 'package:desktop/admin/cities_page.dart';
+import 'package:desktop/admin/restaurants_page.dart';
 import 'package:desktop/components/storage_service.dart';
-
 import 'package:desktop/loginRegistration/log_in_page.dart';
-import 'package:desktop/restaurant/api_calls/restaurant_api_calls.dart';
-import 'package:desktop/restaurant/dashboard_page.dart';
-import 'package:desktop/restaurant/employees_page.dart';
-import 'package:desktop/restaurant/menu_page.dart';
-import 'package:desktop/restaurant/order_details_page.dart';
-import 'package:desktop/restaurant/orders_page.dart';
-
-import 'package:desktop/restaurant/restaurant_profile_page.dart';
-import 'package:desktop/restaurant/sidebar.dart';
-import 'package:desktop/restaurant/viewmodels/restaurant_get_VM.dart';
+import 'package:desktop/restaurant/viewmodels/userDataVM.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
-class HomeScreenNew extends StatefulWidget {
+class HomeScreenAdminPage extends StatefulWidget {
+  const HomeScreenAdminPage({Key? key}) : super(key: key);
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomeScreenAdminState createState() => _HomeScreenAdminState();
 }
 
-class _HomeScreenState extends State<HomeScreenNew> {
+class _HomeScreenAdminState extends State<HomeScreenAdminPage> {
   int _selectedIndex = 0;
   List<Widget>? _pages = [];
-  RestaurantViewModel? restaurantViewModel;
+  UserDataViewModel? _userDataViewModel;
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
-  @override
   void initState() {
     super.initState();
-    _fetchRestaurantData();
+    _loadUserData();
+  }
+
+  void _onItemTap(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  Future<void> _loadUserData() async {
+    try {
+      final jwtToken = await StorageService.storage.read(key: 'jwt');
+      print(jwtToken);
+      if (jwtToken != null) {
+        print(
+            'JWT Token from secure storage: $jwtToken'); // Print the JWT token to the console
+      } else {
+        print('No JWT token found in secure storage.');
+      }
+      final userId = await StorageService.storage.read(key: 'currentUserId');
+      if (userId != null) {
+        print('User ID from secure storage: $userId');
+      } else {
+        print('No user ID found in secure storage.');
+      }
+
+      final userDataJson = await StorageService.storage.read(key: 'userData');
+      if (userDataJson != null) {
+        final userData = jsonDecode(userDataJson);
+        setState(() {
+          _userDataViewModel = UserDataViewModel.fromJson(userData);
+        });
+        _pages = [
+          CitiesPage(),
+          CategoriesPage(),
+          RestaurantsPage(),
+        ];
+      }
+    } catch (e) {
+      print('Error loading user data: $e');
+    }
   }
 
   Future<void> _logout() async {
@@ -54,10 +88,8 @@ class _HomeScreenState extends State<HomeScreenNew> {
 
     if (confirmation == true) {
       try {
-        // Retrieve the JWT token from secure storage
         final jwtToken = await StorageService.storage.read(key: 'jwt');
 
-        // Call the logout endpoint with the JWT token in the Authorization header
         final response = await http.post(
           Uri.parse('https://localhost:44395/api/Auth/logout'),
           headers: {
@@ -67,20 +99,17 @@ class _HomeScreenState extends State<HomeScreenNew> {
         );
 
         if (response.statusCode == 200) {
-          // Delete the user data from secure storage
           await Future.wait([
             StorageService.storage.delete(key: 'jwt'),
             StorageService.storage.delete(key: 'currentUserId'),
             StorageService.storage.delete(key: 'userData'),
           ]);
 
-          // Navigate to the login page
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => LogInPage()),
           );
         } else {
-          // Handle logout failure
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               duration: Duration(milliseconds: 2000),
@@ -94,7 +123,6 @@ class _HomeScreenState extends State<HomeScreenNew> {
           );
         }
       } catch (e) {
-        // Handle any exceptions that occur during the request
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             duration: Duration(milliseconds: 2000),
@@ -110,57 +138,6 @@ class _HomeScreenState extends State<HomeScreenNew> {
     }
   }
 
-  void _fetchRestaurantData() async {
-    final ApiService apiService = ApiService();
-    final String? userDataJson =
-        await FlutterSecureStorage().read(key: 'userData');
-
-    if (userDataJson == null) {
-      print('User data not found in storage.');
-      return;
-    }
-
-    final Map<String, dynamic> userData = jsonDecode(userDataJson);
-    final int restaurantId = userData['restaurantId'];
-    if (restaurantId == null) {
-      print('Restaurant ID not found in user data.');
-      return;
-    }
-
-    try {
-      final restaurantData = await apiService.getRestaurantById(restaurantId);
-      setState(() {
-        restaurantViewModel =
-            RestaurantViewModel.fromJson(restaurantData['data']);
-
-        _pages = [
-          DashboardPage(),
-          OrdersPage(onNavigateToDetails: _navigateToDetails),
-          MenuPage(),
-          EmployeesPage(),
-          RestaurantProfilePage(restaurantViewModel: restaurantViewModel),
-        ];
-      });
-    } catch (e) {
-      print('Error fetching restaurant data: $e');
-      print(restaurantViewModel);
-    }
-  }
-
-  void _onItemTap(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  void _navigateToDetails(String id) {
-    _navigatorKey.currentState?.push(
-      MaterialPageRoute(
-        builder: (context) => OrderDetailsPage(id: id),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -169,7 +146,7 @@ class _HomeScreenState extends State<HomeScreenNew> {
           Sidebar(
               onTap: _onItemTap,
               selectedIndex: _selectedIndex,
-              restaurantData: restaurantViewModel,
+              userData: _userDataViewModel,
               onLogout: _logout),
           Expanded(
             child: Navigator(

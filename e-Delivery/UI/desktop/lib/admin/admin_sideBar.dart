@@ -1,15 +1,15 @@
-import 'package:desktop/restaurant/viewmodels/restaurant_get_VM.dart';
+import 'package:desktop/restaurant/viewmodels/userDataVM.dart';
 import 'package:flutter/material.dart';
 
 class Sidebar extends StatelessWidget {
   final int selectedIndex;
   final Function(int) onTap;
-  final RestaurantViewModel? restaurantData;
+  final UserDataViewModel? userData;
   final Future<void> Function() onLogout;
   Sidebar(
       {required this.onTap,
       required this.selectedIndex,
-      required this.restaurantData,
+      required this.userData,
       required this.onLogout});
 
   @override
@@ -30,20 +30,16 @@ class Sidebar extends StatelessWidget {
                   child: FlutterLogo(size: 30),
                 ),
                 SizedBox(height: 15),
-                Text(restaurantData?.name ?? 'Loading...',
+                Text(userData?.firstName ?? 'Loading...',
                     style: TextStyle(color: Colors.white)),
               ],
             ),
           ),
-          _createDrawerItem(icon: Icons.home, text: 'Početna', index: 0),
-          _createDrawerItem(icon: Icons.receipt, text: 'Narudžbe', index: 1),
-          _createDrawerItem(icon: Icons.menu_book, text: 'Meni', index: 2),
+          _createDrawerItem(icon: Icons.place, text: 'Gradovi', index: 0),
+          _createDrawerItem(icon: Icons.category, text: 'Kategorije', index: 1),
           _createDrawerItem(
-              icon: Icons.person_2, text: "Dostavljači", index: 3),
-          _createDrawerItem(
-              icon: Icons.settings, text: "Uredi profil", index: 4),
+              icon: Icons.restaurant_outlined, text: 'Restorani', index: 2),
           Divider(),
-          // Logout option
           ListTile(
             leading: Icon(Icons.logout),
             title: Text('Odjavi se'),

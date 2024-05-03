@@ -131,10 +131,10 @@ class _DashboardPageState extends State<DashboardPage> {
                     return Text('Error: ${snapshot.error}');
                   } else if (snapshot.hasData) {
                     final orders = snapshot.data!;
-                    // Sort orders by createdDate descending
+
                     orders
                         .sort((a, b) => b.createdDate.compareTo(a.createdDate));
-                    // Take the top 3 most recent orders
+
                     final recentOrders = orders.take(3).toList();
 
                     return Column(
@@ -161,7 +161,6 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   String _mapPaymentMethod(int method) {
-    // Adjust this method according to how you want to display payment methods
     switch (method) {
       case 1:
         return 'Online';

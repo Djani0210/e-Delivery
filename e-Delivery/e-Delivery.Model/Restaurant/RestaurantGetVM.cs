@@ -1,6 +1,7 @@
 ﻿using e_Delivery.Model.Images;
 using e_Delivery.Model.Location;
 using e_Delivery.Model.Review;
+using e_Delivery.Model.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,5 +24,6 @@ namespace e_Delivery.Model.Restaurant
         public LocationGetVM Location { get; set; }
         public ImageGetVM Logo { get; set; }
         public List<GetReviewVM>? Reviews { get; set; }
+        public UserGetVM CreatedByUser { get; set; }
     }
 }

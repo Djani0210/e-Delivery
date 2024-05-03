@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class OrderViewModel {
   final String id;
   final int paymentMethod;

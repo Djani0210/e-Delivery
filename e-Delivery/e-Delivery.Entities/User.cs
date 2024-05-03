@@ -32,7 +32,6 @@ namespace e_Delivery.Entities
         [ForeignKey(nameof(CityId))]
         public City? City { get; set; }
         public int? CityId { get; set; }
-
         
     }
 }

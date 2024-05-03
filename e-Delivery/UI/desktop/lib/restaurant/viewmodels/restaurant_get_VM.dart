@@ -62,7 +62,7 @@ class RestaurantViewModel {
   final int deliveryTime;
   final LocationViewModel location;
   final LogoViewModel? logo;
-  // Assuming 'reviews' will be a list of another model, omitted for brevity
+  final String? createdByUserEmail;
 
   RestaurantViewModel({
     required this.id,
@@ -76,7 +76,7 @@ class RestaurantViewModel {
     required this.deliveryTime,
     required this.location,
     this.logo,
-    // Initialize reviews
+    this.createdByUserEmail,
   });
 
   factory RestaurantViewModel.fromJson(Map<String, dynamic> json) {
@@ -92,7 +92,8 @@ class RestaurantViewModel {
       deliveryTime: json['deliveryTime'],
       location: LocationViewModel.fromJson(json['location']),
       logo: json['logo'] != null ? LogoViewModel.fromJson(json['logo']) : null,
-      // Parse and create reviews list
+      createdByUserEmail:
+          json['createdByUser'] != null ? json['createdByUser']['email'] : null,
     );
   }
 }
