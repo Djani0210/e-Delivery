@@ -17,14 +17,14 @@ namespace e_Delivery.Controllers
         {
             _chatService = chatService;
         }
-        [HttpPost("send-message")]
+        [HttpPost("send-message"), Authorize()]
         public async Task<IActionResult> SendMessage(SendMessageDto sendMessageDto)
         {
             var result = await _chatService.SendMessage(sendMessageDto.UserToId, sendMessageDto.Content );
             return Ok(result);
         }
 
-        [HttpGet("chat-history/{userToId}")]
+        [HttpGet("chat-history/{userToId}"), Authorize()]
         public async Task<IActionResult> GetChatHistory(Guid userToId)
         {
             var result = await _chatService.GetChatHistory(userToId);
@@ -35,7 +35,7 @@ namespace e_Delivery.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("delete-message/{chatId}")]
+        [HttpDelete("delete-message/{chatId}"), Authorize()]
         public async Task<IActionResult> DeleteMessage(Guid chatId)
         {
             var result = await _chatService.DeleteMessage(chatId);
@@ -48,7 +48,7 @@ namespace e_Delivery.Controllers
 
        
 
-        [HttpGet("connected-delivery-persons")]
+        [HttpGet("connected-delivery-persons"), Authorize()]
         public async Task<IActionResult> GetConnectedDeliveryPersons()
         {
             var result = await _chatService.GetConnectedDeliveryPersons();
@@ -61,7 +61,7 @@ namespace e_Delivery.Controllers
 
        
 
-        [HttpGet("connected-customers")]
+        [HttpGet("connected-customers"), Authorize()]
         public async Task<IActionResult> GetConnectedCustomers()
         {
             var result = await _chatService.GetConnectedCustomers();

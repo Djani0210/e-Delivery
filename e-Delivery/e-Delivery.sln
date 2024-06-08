@@ -13,7 +13,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "e-Delivery.Entities", "e-De
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "e-Delivery.Database", "e-Delivery.Database\e-Delivery.Database.csproj", "{D99D4A62-9A10-44C7-AB00-4706489300F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "e-Delivery.EmailSubscriber", "e-Delivery.EmailSubscriber\e-Delivery.EmailSubscriber.csproj", "{2E23014C-2814-4F86-9623-0A0EE225E17B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "e-Delivery.EmailSubscriber", "e-Delivery.EmailSubscriber\e-Delivery.EmailSubscriber.csproj", "{2E23014C-2814-4F86-9623-0A0EE225E17B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{61B938FF-C805-497F-A785-F32C478FC850}"
+	ProjectSection(SolutionItems) = preProject
+		DockerFile = DockerFile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

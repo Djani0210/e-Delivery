@@ -28,6 +28,7 @@ class _ApplyToRestaurantPageState extends State<ApplyToRestaurantPage> {
   List<RestaurantViewModel> _restaurants = [];
   RestaurantViewModel? _selectedRestaurant;
   bool _isLoading = true;
+  int? _currentRestaurantId;
 
   @override
   void initState() {
@@ -56,6 +57,7 @@ class _ApplyToRestaurantPageState extends State<ApplyToRestaurantPage> {
                 _restaurants.isNotEmpty ? _restaurants[0] : null;
             _isLoading = false;
           });
+          _fetchCurrentRestaurantId();
         } else {
           throw Exception('Failed to fetch restaurants: ${data['info']}');
         }
@@ -66,6 +68,16 @@ class _ApplyToRestaurantPageState extends State<ApplyToRestaurantPage> {
       print('Error fetching restaurants: $e');
       setState(() {
         _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _fetchCurrentRestaurantId() async {
+    String? userDataJson = await _storage.read(key: 'userData');
+    if (userDataJson != null) {
+      final userData = jsonDecode(userDataJson);
+      setState(() {
+        _currentRestaurantId = userData['restaurantId'];
       });
     }
   }
@@ -153,6 +165,16 @@ class _ApplyToRestaurantPageState extends State<ApplyToRestaurantPage> {
                         ? null
                         : () => _applyToRestaurant(_selectedRestaurant!.id),
                     child: Text('Apply'),
+                  ),
+                  SizedBox(height: 20),
+                  Center(
+                    child: Text(
+                      _currentRestaurantId == null
+                          ? "You're currently not a part of any restaurant"
+                          : "Your current restaurant is ${_restaurants.firstWhere((r) => r.id == _currentRestaurantId!).name}",
+                      style: TextStyle(color: Colors.black),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ],
               ),
