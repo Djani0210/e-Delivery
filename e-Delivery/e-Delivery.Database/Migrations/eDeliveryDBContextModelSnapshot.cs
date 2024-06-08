@@ -184,9 +184,6 @@ namespace e_Delivery.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Clicked")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
 
@@ -194,9 +191,6 @@ namespace e_Delivery.Database.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("Seen")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("UserFromId")
@@ -339,6 +333,42 @@ namespace e_Delivery.Database.Migrations
                     b.HasIndex("UserProfilePictureId");
 
                     b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("e_Delivery.Entities.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("RestaurantName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("SentByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("SentToUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SentByUserId");
+
+                    b.HasIndex("SentToUserId");
+
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("e_Delivery.Entities.Order", b =>
@@ -555,9 +585,6 @@ namespace e_Delivery.Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("OrderItemId")
-                        .HasColumnType("int");
-
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
@@ -565,8 +592,6 @@ namespace e_Delivery.Database.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OrderItemId");
 
                     b.HasIndex("RestaurantId");
 
@@ -603,7 +628,7 @@ namespace e_Delivery.Database.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Gender")
+                    b.Property<int?>("Gender")
                         .HasColumnType("int");
 
                     b.Property<bool?>("IsAvailable")
@@ -920,6 +945,23 @@ namespace e_Delivery.Database.Migrations
                     b.Navigation("UserProfilePicture");
                 });
 
+            modelBuilder.Entity("e_Delivery.Entities.Notification", b =>
+                {
+                    b.HasOne("e_Delivery.Entities.User", "SentByUser")
+                        .WithMany()
+                        .HasForeignKey("SentByUserId");
+
+                    b.HasOne("e_Delivery.Entities.User", "SentToUser")
+                        .WithMany()
+                        .HasForeignKey("SentToUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SentByUser");
+
+                    b.Navigation("SentToUser");
+                });
+
             modelBuilder.Entity("e_Delivery.Entities.Order", b =>
                 {
                     b.HasOne("e_Delivery.Entities.User", "CreatedByUser")
@@ -1020,10 +1062,6 @@ namespace e_Delivery.Database.Migrations
 
             modelBuilder.Entity("e_Delivery.Entities.SideDish", b =>
                 {
-                    b.HasOne("e_Delivery.Entities.OrderItem", null)
-                        .WithMany("SideDishes")
-                        .HasForeignKey("OrderItemId");
-
                     b.HasOne("e_Delivery.Entities.Restaurant", "Restaurant")
                         .WithMany()
                         .HasForeignKey("RestaurantId")
@@ -1149,8 +1187,6 @@ namespace e_Delivery.Database.Migrations
             modelBuilder.Entity("e_Delivery.Entities.OrderItem", b =>
                 {
                     b.Navigation("OrderItemSideDishes");
-
-                    b.Navigation("SideDishes");
                 });
 
             modelBuilder.Entity("e_Delivery.Entities.Restaurant", b =>

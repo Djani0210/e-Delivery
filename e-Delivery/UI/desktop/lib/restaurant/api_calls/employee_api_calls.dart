@@ -43,7 +43,7 @@ class EmployeeApiService {
 
   Future<bool> removeEmployee(String id) async {
     final jwt = await _fetchJwtToken();
-    // Append the 'id' as a query parameter instead of part of the path
+
     final apiUrl = Uri.parse('${_baseUrl}Restaurant/remove-Employee')
         .replace(queryParameters: {'id': id});
 
@@ -54,20 +54,19 @@ class EmployeeApiService {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $jwt',
         },
-        // No need to send a body for this request as 'id' is passed as a query parameter
       );
 
       if (response.statusCode == 200) {
         print("Employee successfully removed");
-        return true; // Indicate success
+        return true;
       } else {
         print(
             "Failed to remove employee with status code: ${response.statusCode}");
-        return false; // Indicate failure
+        return false;
       }
     } catch (e) {
       print("Error removing employee: $e");
-      return false; // Indicate failure
+      return false;
     }
   }
 

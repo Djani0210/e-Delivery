@@ -13,6 +13,8 @@ namespace e_Delivery.Services.Interfaces
 
         Task<Message> DeleteReviewAsMessageAsync(int id, CancellationToken cancellationToken);
         Task<double?> GetReviewScoreForRestaurantAsync(CancellationToken cancellationToken);
+        Task<double?> GetReviewScoreForRestaurantMobileAsync(int id, CancellationToken cancellationToken);
+
 
         
     }

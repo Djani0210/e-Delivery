@@ -3,13 +3,16 @@ using e_Delivery.Database;
 using e_Delivery.Entities;
 using e_Delivery.Entities.Enums;
 using e_Delivery.Model.City;
+using e_Delivery.Model.Images;
 using e_Delivery.Model.Location;
 using e_Delivery.Model.Restaurant;
+using e_Delivery.Model.Review;
 using e_Delivery.Model.User;
 using e_Delivery.Services.Interfaces;
 using e_Delivery.Services.PagedList;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.ML;
 using Stripe.Terminal;
 using System;
 using System.Collections.Generic;
@@ -147,7 +150,7 @@ namespace e_Delivery.Services.Services
 
                 var loggedUser = await _authContext.GetLoggedUser();
 
-                
+
 
 
                 var foodItemPicturesToDelete = await _dbContext.FoodItemPictures
@@ -279,10 +282,21 @@ namespace e_Delivery.Services.Services
             try
             {
                 var restaurant = await _dbContext.Restaurants.Include(x => x.Logo).Include(x => x.Location).Include(x => x.Location.City)
-                    .Include(x => x.Reviews).Include(x => x.CreatedByUser).AsNoTracking().Where(x => x.Id == RestaurantId).FirstOrDefaultAsync(cancellationToken);
+                    .Include(x => x.Reviews).ThenInclude(r=>r.CreatedByUser).Include(x => x.CreatedByUser).AsNoTracking().Where(x => x.Id == RestaurantId).FirstOrDefaultAsync(cancellationToken);
 
 
                 var obj = Mapper.Map<RestaurantGetVM>(restaurant);
+
+                obj.Reviews = restaurant.Reviews.Select(r => new GetReviewVM
+                {
+                    Id = r.Id,
+                    Grade = r.Grade,
+                    Description = r.Description,
+                    RestaurantId = r.RestaurantId,
+                    UserName = r.CreatedByUser?.UserName, 
+                    CreatedDate = r.CreatedDate 
+                }).ToList();
+
                 return new Message
                 {
                     IsValid = true,
@@ -303,16 +317,33 @@ namespace e_Delivery.Services.Services
             }
         }
 
-        public async Task<Message> GetRestaurantsAsMessage(int cityId, CancellationToken cancellationToken)
+        public async Task<Message> GetRestaurantsAsMessage(int cityId, CancellationToken cancellationToken, string? name, int? categoryId)
         {
             try
             {
-                var restaurants = await _dbContext.Restaurants.Include(x => x.Location).Include(x => x.Logo)
-                .Include(x => x.Location.City)
-                .Where(x => (cityId == null || cityId == x.Location.CityId))
-                .ToListAsync(cancellationToken);
+                IQueryable<Restaurant> query = _dbContext.Restaurants
+                   .Include(x => x.Location)
+                   .Include(x => x.Logo)
+                   .Include(x => x.Location.City)
+                   //.Include(x => x.Reviews)
+                   .Where(x => (cityId == null || cityId == x.Location.CityId));
 
-                var obj = Mapper.Map<List<RestaurantGetVM>>(restaurants);
+                if (categoryId.HasValue)
+                {
+
+                    query = query.Where(r => _dbContext.FoodItems.Any(fi => fi.RestaurantId == r.Id && fi.CategoryId == categoryId.Value))
+
+                       .Select(r => new { Restaurant = r, FoodItemCount = _dbContext.FoodItems.Count(fi => fi.RestaurantId == r.Id && fi.CategoryId == categoryId.Value) })
+                       .OrderByDescending(r => r.FoodItemCount)
+                       .Select(r => r.Restaurant);
+                }
+
+                if (!string.IsNullOrEmpty(name))
+                {
+                    query = query.Where(x => x.Name.StartsWith(name));
+                }
+
+                var obj = Mapper.Map<List<RestaurantGetVM>>(query);
                 return new Message
                 {
                     IsValid = true,
@@ -330,9 +361,9 @@ namespace e_Delivery.Services.Services
                     Status = ExceptionCode.BadRequest
                 };
             }
-
-
         }
+
+
 
         public async Task<Message> GetRestaurantsForAdminAsMessage(CancellationToken cancellationToken, int? cityId, string? name, int items_per_page = 10, int pageNumber = 1)
         {
@@ -502,6 +533,215 @@ namespace e_Delivery.Services.Services
                     Status = ExceptionCode.BadRequest
                 };
             }
+        }
+
+
+        public async Task<Message> GetRecommendedRestaurantsAsMessageAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                var loggedUser = await _authContext.GetLoggedUser();
+
+                var userOrders = await _dbContext.Orders
+                    .Where(o => o.CreatedByUserId == loggedUser.Id)
+                    .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.FoodItem)
+                    .ThenInclude(fi => fi.Category)
+                    .ToListAsync(cancellationToken);
+
+                var categoryPreferences = new Dictionary<int, int>();
+
+                foreach (var order in userOrders)
+                {
+                    foreach (var orderItem in order.OrderItems)
+                    {
+                        var categoryId = orderItem.FoodItem.CategoryId;
+                        if (categoryPreferences.ContainsKey(categoryId))
+                        {
+                            categoryPreferences[categoryId]++;
+                        }
+                        else
+                        {
+                            categoryPreferences[categoryId] = 1;
+                        }
+                    }
+                }
+
+                var restaurants = await _dbContext.Restaurants
+                    .Where(r => r.Location.CityId == loggedUser.CityId)
+                    .Include(r => r.Reviews)
+                    .Include(r => r.Location)
+                    .Include(r => r.Logo)
+                    .Include(r => r.CreatedByUser)
+                    .ToListAsync(cancellationToken);
+
+                var foodItems = await _dbContext.FoodItems
+                    .Include(fi => fi.Category)
+                    .ToListAsync(cancellationToken);
+
+                var recommendedRestaurants = new List<RestaurantGetVM>();
+
+                foreach (var restaurant in restaurants)
+                {
+                    var averageRating = restaurant.Reviews.Any() ? restaurant.Reviews.Average(r => r.Grade) : 0;
+                    var restaurantFoodItems = foodItems.Where(fi => fi.RestaurantId == restaurant.Id);
+                    var categoryPreferenceScore = restaurantFoodItems
+                        .Count(fi => categoryPreferences.ContainsKey(fi.CategoryId));
+
+                    var recommendationScore = (averageRating * 0.7) + (categoryPreferenceScore * 0.3);
+
+                    recommendedRestaurants.Add(new RestaurantGetVM
+                    {
+                        Id = restaurant.Id,
+                        Name = restaurant.Name,
+                        Address = restaurant.Address,
+                        IsOpen = restaurant.IsOpen,
+                        OpeningTime = restaurant.OpeningTime,
+                        ClosingTime = restaurant.ClosingTime,
+                        ContactNumber = restaurant.ContactNumber,
+                        DeliveryCharge = restaurant.DeliveryCharge,
+                        DeliveryTime = restaurant.DeliveryTime,
+                        Location = Mapper.Map<LocationGetVM>(restaurant.Location),
+                        Logo = Mapper.Map<ImageGetVM>(restaurant.Logo),
+                        Reviews = Mapper.Map<List<GetReviewVM>>(restaurant.Reviews),
+                        CreatedByUser = Mapper.Map<UserGetVM>(restaurant.CreatedByUser)
+                    });
+                }
+
+                recommendedRestaurants = recommendedRestaurants
+                    .OrderByDescending(r => r.Reviews.Any() ? r.Reviews.Average(review => review.Grade) : 0)
+                    .Take(3)
+                    .ToList();
+
+                return new Message
+                {
+                    IsValid = true,
+                    Info = "Successfully retrieved recommended restaurants",
+                    Status = ExceptionCode.Success,
+                    Data = recommendedRestaurants
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Message
+                {
+                    IsValid = false,
+                    Info = ex.Message,
+                    Status = ExceptionCode.BadRequest
+                };
+            }
+        }
+
+
+        public async Task<Message> GetRecommendedRestaurants()
+        {
+            var loggedInUser = await _authContext.GetLoggedUser();
+            var userOrders = await _dbContext.Orders
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.FoodItem)
+                        .ThenInclude(fi => fi.Category)
+                .Where(o => o.CreatedByUserId == loggedInUser.Id)
+                .ToListAsync();
+
+            var userCategoryPreferences = userOrders
+                .SelectMany(o => o.OrderItems)
+                .GroupBy(oi => oi.FoodItem.CategoryId)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            var mlContext = new MLContext();
+
+            var restaurantData =  _dbContext.Restaurants
+                .Include(r => r.Reviews)
+                .Where(r => r.Location.CityId == loggedInUser.CityId)
+                .Select(r => new
+                {
+                    RestaurantId = r.Id,
+                    Rating = r.Reviews.Any() ? r.Reviews.Average(rev => rev.Grade) : 0,
+                    FoodItems = _dbContext.FoodItems.Where(fi => fi.RestaurantId == r.Id).ToList()
+                })
+                .AsEnumerable()
+                .Select(r => new RestaurantRatingData
+                {
+                    RestaurantId = r.RestaurantId,
+                    Rating = r.Rating,
+                    CategoryCounts = r.FoodItems
+                        .GroupBy(fi => fi.CategoryId)
+                        .ToDictionary(g => g.Key, g => g.Count())
+                })
+                .ToList();
+
+            var trainingData = restaurantData
+                .SelectMany(r => userCategoryPreferences
+                    .Select(ucp => new RestaurantRating
+                    {
+                        RestaurantId = r.RestaurantId,
+                        CategoryId = ucp.Key,
+                        Rating = ((float)(r.CategoryCounts.TryGetValue(ucp.Key, out var count)
+                            ? count * r.Rating
+                            : 0))
+                    }))
+                .ToList();
+
+            var dataView = mlContext.Data.LoadFromEnumerable(trainingData);
+
+            var pipeline = mlContext.Transforms
+            .Conversion.MapValueToKey(inputColumnName: nameof(RestaurantRating.RestaurantId), outputColumnName: "RestaurantIdEncoded")
+            .Append(mlContext.Transforms.Conversion.MapValueToKey(inputColumnName: nameof(RestaurantRating.CategoryId), outputColumnName: "CategoryIdEncoded"))
+            .Append(mlContext.Recommendation().Trainers.MatrixFactorization(
+                 labelColumnName: nameof(RestaurantRating.Rating),
+                 matrixColumnIndexColumnName: "RestaurantIdEncoded",
+                 matrixRowIndexColumnName: "CategoryIdEncoded"));
+
+
+            var model = pipeline.Fit(dataView);
+
+            var predictionEngine = mlContext.Model
+                .CreatePredictionEngine<RestaurantRating, RestaurantRatingPrediction>(model);
+
+            var recommendedRestaurants = restaurantData
+                .Select(r => new
+                {
+                    Restaurant = r,
+                    Prediction = predictionEngine.Predict(
+                        new RestaurantRating
+                        {
+                            RestaurantId = r.RestaurantId,
+                            CategoryId = userCategoryPreferences.OrderByDescending(ucp => ucp.Value).First().Key
+                        })
+                })
+                .OrderByDescending(r => r.Prediction.Score)
+                .Select(r => Mapper.Map<RestaurantGetVM>(_dbContext.Restaurants.Include(r=>r.Logo).First(res => res.Id == r.Restaurant.RestaurantId)))
+                .Take(3)
+                .ToList();
+
+            return new Message
+            {
+                Status = ExceptionCode.Success,
+                Info = "Recommended restaurants retrieved successfully.",
+                Data = recommendedRestaurants,
+                IsValid = true
+            };
+        }
+
+
+
+        public class RestaurantRatingData
+        {
+            public int RestaurantId { get; set; }
+            public double Rating { get; set; }
+            public Dictionary<int, int> CategoryCounts { get; set; }
+        }
+
+        public class RestaurantRating
+        {
+            public int RestaurantId { get; set; }
+            public int CategoryId { get; set; }
+            public float Rating { get; set; }
+        }
+
+        public class RestaurantRatingPrediction
+        {
+            public float Score { get; set; }
         }
 
 

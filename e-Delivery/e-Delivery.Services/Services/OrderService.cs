@@ -5,11 +5,14 @@ using e_Delivery.Entities.Enums;
 using e_Delivery.Model.Location;
 using e_Delivery.Model.Order;
 using e_Delivery.Model.Restaurant;
+using e_Delivery.Services.Hubs;
 using e_Delivery.Services.Interfaces;
 using e_Delivery.Services.PagedList;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Stripe;
 using System;
 using System.Collections.Generic;
@@ -26,22 +29,31 @@ namespace e_Delivery.Services.Services
         public ILocationService _locationService { get; set; }
         public IAuthContext _authContext { get; set; }
         private UserManager<User> _userManager { get; set; }
+        public IServiceProvider _serviceProvider { get; set; }
+        private readonly IHubContext<MyHub> _hubContext;
+
 
         public OrderService(eDeliveryDBContext dbContext, IMapper mapper,
-             ILocationService locationService, IAuthContext authContext, UserManager<User> userManager)
+             ILocationService locationService, IAuthContext authContext, UserManager<User> userManager, IServiceProvider serviceProvider, IHubContext<MyHub> hubContext)
         {
             _dbContext = dbContext;
             Mapper = mapper;
             _locationService = locationService;
             _authContext = authContext;
             _userManager = userManager;
+            _serviceProvider = serviceProvider;
+            _hubContext = hubContext;
         }
         public async Task<Message> AssignDeliveryPersonToOrderAsMessageAsync(Guid orderId, Guid userId, CancellationToken cancellationToken)
         {
+           
             try
             {
+                var loggedUser = await _authContext.GetLoggedUser();
                 var order = await _dbContext.Orders.Where(o => o.Id == orderId).FirstOrDefaultAsync();
                 var user = await _dbContext.Users.Where(u => u.Id == userId).FirstOrDefaultAsync();
+
+                var restaurant = await _dbContext.Restaurants.Where(restaurant => restaurant.CreatedByUserId == loggedUser.Id).FirstOrDefaultAsync();
 
                 if (user == null || order == null)
                 {
@@ -54,7 +66,35 @@ namespace e_Delivery.Services.Services
                 }
 
                 order.DeliveryPersonAssignedId = userId;
+                await UpdateOrderStateAsMessageAsync(order.Id, (OrderState)2, cancellationToken);
+
+                if (order.DeliveryPersonAssignedId != null)
+                {
+                    try
+                    {
+                        await _hubContext.Clients.User(userId.ToString()).SendAsync("ReceiveNotification", "You have been assigned to a new order");
+
+                        var notification = new Notification
+                        {
+                            Content = "You have been assigned to a new order",
+                            CreatedDate = DateTime.Now,
+                            IsDeleted = false,
+                            SentByUserId = loggedUser.Id,
+                            SentToUserId = userId,
+                            RestaurantName = restaurant?.Name
+                           
+                        };
+                        await _dbContext.Notifications.AddAsync(notification, cancellationToken);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error sending notification: " + ex.Message);
+                    }
+                }
+
                 await _dbContext.SaveChangesAsync(cancellationToken);
+                
+
                 return new Message
                 {
                     Data = null,
@@ -65,7 +105,7 @@ namespace e_Delivery.Services.Services
             }
             catch (Exception ex)
             {
-
+                
                 return new Message
                 {
                     Info = ex.Message,
@@ -74,6 +114,8 @@ namespace e_Delivery.Services.Services
                 };
             }
         }
+
+
 
 
 
@@ -143,7 +185,7 @@ namespace e_Delivery.Services.Services
                 await _dbContext.AddAsync(obj);
                 await _dbContext.SaveChangesAsync(cancellationToken);
 
-                // Populate the SideDishes property of each OrderItem after saving to the database
+               
                 foreach (var orderItem in obj.OrderItems)
                 {
                     orderItem.SideDishes = orderItem.OrderItemSideDishes.Select(ois => ois.SideDish).ToList();
@@ -198,13 +240,13 @@ namespace e_Delivery.Services.Services
                     };
                 }
 
-                // Remove associated order items
+               
                 _dbContext.OrderItems.RemoveRange(order.OrderItems);
 
-                // Remove the order itself
+                
                 _dbContext.Orders.Remove(order);
 
-                // Save changes to the database
+              
                 await _dbContext.SaveChangesAsync(cancellationToken);
 
                 return new Message
@@ -247,6 +289,8 @@ namespace e_Delivery.Services.Services
                 var getOrderVM = Mapper.Map<GetOrderVM>(order);
                 getOrderVM.Address = order.Address;
                 getOrderVM.DeliveryPersonId = order.DeliveryPersonAssignedId;
+                getOrderVM.RestaurantName = order.Restaurant.Name;
+                getOrderVM.CreatedByUserId = order.CreatedByUserId.ToString();
                 if (order.DeliveryPersonAssigned != null)
                 {
                     getOrderVM.DeliveryPersonAssigned = order.DeliveryPersonAssigned.FirstName + " " + order.DeliveryPersonAssigned.LastName;
@@ -335,20 +379,46 @@ namespace e_Delivery.Services.Services
         }
 
 
-        public async Task<Message> GetOrdersForCustomerAsMessageAsync(CancellationToken cancellationToken)
+        public async Task<Message> GetOrdersForCustomerAsMessageAsync(GetOrdersFilterDto? filterDto,CancellationToken cancellationToken)
         {
             try
             {
                 var loggedUser = await _authContext.GetLoggedUser();
-                var orders = await _dbContext.Orders
-                    .Include(order => order.Location).ThenInclude(o => o.City)
-                    .Include(o => o.OrderItems).ThenInclude(oi => oi.FoodItem).ThenInclude(fi => fi.FoodItemPictures)
+                IQueryable<Order> orders =  _dbContext.Orders
+                     .Include(order => order.Location).ThenInclude(o => o.City)
+                     .Include(o => o.OrderItems).ThenInclude(oi => oi.FoodItem).ThenInclude(fi => fi.FoodItemPictures)
 
-                    .Include(o => o.OrderItems).ThenInclude(oi => oi.OrderItemSideDishes).ThenInclude(ois => ois.SideDish)
-                    .Where(order => order.CreatedByUserId == loggedUser.Id).AsNoTracking()
-                    .ToListAsync();
+                     .Include(o => o.OrderItems).ThenInclude(oi => oi.OrderItemSideDishes).ThenInclude(ois => ois.SideDish)
+                     .Where(order => order.CreatedByUserId == loggedUser.Id);
+                    
+                    
+                  
 
-                foreach (var order in orders)
+
+                if (filterDto.StartDate.HasValue && filterDto.EndDate.HasValue)
+                {
+                    orders = orders.Where(o => o.CreatedDate >= filterDto.StartDate.Value && o.CreatedDate <= filterDto.EndDate.Value);
+                }
+
+                if (filterDto.OrderState.HasValue)
+                {
+                    orders = orders.Where(o => o.OrderState == filterDto.OrderState.Value);
+                }
+
+              
+                if (filterDto.SortBy == "totalPriceAsc")
+                {
+                    orders = orders.OrderBy(o => o.TotalCost);
+                }
+                else if (filterDto.SortBy == "totalPriceDesc")
+                {
+                    orders = orders.OrderByDescending(o => o.TotalCost);
+                }
+
+               
+                var pagedOrders = await PagedList<Order>.Create(orders, filterDto.PageNumber ?? 1, filterDto.PageSize ?? 10);
+
+                foreach (var order in pagedOrders.DataItems)
                 {
                     foreach (var orderItem in order.OrderItems)
                     {
@@ -356,13 +426,19 @@ namespace e_Delivery.Services.Services
                     }
                 }
 
-                var getOrderVM = Mapper.Map<List<GetOrderVM>>(orders);
+                var getOrderVM = Mapper.Map<List<GetOrderVM>>(pagedOrders.DataItems);
 
                 return new Message
                 {
                     IsValid = true,
                     Status = ExceptionCode.Success,
-                    Data = getOrderVM,
+                    Data = new
+                    {
+                        Orders = getOrderVM,
+                        TotalCount = pagedOrders.TotalCount,
+                        CurrentPage = pagedOrders.CurrentPage,
+                        TotalPages = pagedOrders.TotalPages
+                    },
                     Info = "Successfully retrieved Orders"
                 };
             }
@@ -378,20 +454,43 @@ namespace e_Delivery.Services.Services
             }
         }
 
-        public async Task<Message> GetOrdersForDeliveryPersonAsMessageAsync(CancellationToken cancellationToken)
+        public async Task<Message> GetOrdersForDeliveryPersonAsMessageAsync(GetOrdersFilterDto? filterDto,CancellationToken cancellationToken)
         {
             try
             {
                 var loggedUser = await _authContext.GetLoggedUser();
-                var orders = await _dbContext.Orders
+                IQueryable<Order> orders = _dbContext.Orders
                     .Include(order => order.Location).ThenInclude(o => o.City)
                     .Include(o => o.OrderItems).ThenInclude(oi => oi.FoodItem).ThenInclude(fi => fi.FoodItemPictures)
 
                     .Include(o => o.OrderItems).ThenInclude(oi => oi.OrderItemSideDishes).ThenInclude(ois => ois.SideDish)
-                    .Where(order => order.DeliveryPersonAssignedId == loggedUser.Id).AsNoTracking()
-                    .ToListAsync();
+                    .Where(order => order.DeliveryPersonAssignedId == loggedUser.Id);
 
-                foreach (var order in orders)
+
+                if (filterDto.StartDate.HasValue && filterDto.EndDate.HasValue)
+                {
+                    orders = orders.Where(o => o.CreatedDate >= filterDto.StartDate.Value && o.CreatedDate <= filterDto.EndDate.Value);
+                }
+
+                if (filterDto.OrderState.HasValue)
+                {
+                    orders = orders.Where(o => o.OrderState == filterDto.OrderState.Value);
+                }
+
+
+                if (filterDto.SortBy == "totalPriceAsc")
+                {
+                    orders = orders.OrderBy(o => o.TotalCost);
+                }
+                else if (filterDto.SortBy == "totalPriceDesc")
+                {
+                    orders = orders.OrderByDescending(o => o.TotalCost);
+                }
+
+
+                var pagedOrders = await PagedList<Order>.Create(orders, filterDto.PageNumber ?? 1, filterDto.PageSize ?? 10);
+
+                foreach (var order in pagedOrders.DataItems)
                 {
                     foreach (var orderItem in order.OrderItems)
                     {
@@ -399,13 +498,19 @@ namespace e_Delivery.Services.Services
                     }
                 }
 
-                var getOrderVM = Mapper.Map<List<GetOrderVM>>(orders);
+                var getOrderVM = Mapper.Map<List<GetOrderVM>>(pagedOrders.DataItems);
 
                 return new Message
                 {
                     IsValid = true,
                     Status = ExceptionCode.Success,
-                    Data = getOrderVM,
+                    Data = new
+                    {
+                        Orders = getOrderVM,
+                        TotalCount = pagedOrders.TotalCount,
+                        CurrentPage = pagedOrders.CurrentPage,
+                        TotalPages = pagedOrders.TotalPages
+                    },
                     Info = "Successfully retrieved Orders"
                 };
             }
@@ -421,17 +526,16 @@ namespace e_Delivery.Services.Services
             }
         }
 
-        public async Task<Message> UpdateOrderAsMessageAsync(Guid id, UpdateOrderVM updateOrderVM, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public async Task<Message> UpdateOrderStateAsMessageAsync(Guid orderId, OrderState newState, CancellationToken cancellationToken)
         {
+            using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                var order = await _dbContext.Orders
+                var order = await _dbContext.Orders.Include(o=>o.Restaurant)
                     .FirstOrDefaultAsync(o => o.Id == orderId, cancellationToken);
+                var loggedUser = await _authContext.GetLoggedUser();
 
                 if (order == null)
                 {
@@ -443,7 +547,6 @@ namespace e_Delivery.Services.Services
                     };
                 }
 
-                // Check if the new state is the same as the current state
                 if (order.OrderState == newState)
                 {
                     return new Message
@@ -457,6 +560,32 @@ namespace e_Delivery.Services.Services
                 order.OrderState = newState;
                 await _dbContext.SaveChangesAsync(cancellationToken);
 
+                if (newState == OrderState.Delivered)
+                {
+                    try
+                    {
+                        await _hubContext.Clients.User(order.CreatedByUserId.ToString()).SendAsync("ReceiveNotification", "Your order has been delivered");
+
+                        var notification = new Notification
+                        {
+                            Content = "Your order has been delivered",
+                            CreatedDate = DateTime.Now,
+                            IsDeleted = false,
+                            SentByUserId = loggedUser.Id,
+                            SentToUserId = order.CreatedByUserId,
+                            RestaurantName = order?.Restaurant?.Name
+                        };
+                       await _dbContext.Notifications.AddAsync(notification, cancellationToken);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error sending notification: " + ex.Message);
+                    }
+                }
+
+                await _dbContext.SaveChangesAsync(cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
+
                 return new Message
                 {
                     IsValid = true,
@@ -466,6 +595,7 @@ namespace e_Delivery.Services.Services
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync(cancellationToken);
                 return new Message
                 {
                     IsValid = false,
@@ -474,10 +604,8 @@ namespace e_Delivery.Services.Services
                 };
             }
         }
-
-        public Task<Message> AssignDeliveryPersonToOrder(Guid orderId, Guid userId, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
     }
+
+
 }
+

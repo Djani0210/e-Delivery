@@ -51,7 +51,46 @@ class ImageApiService {
         return true;
       } else {
         // Handle failure
-        print('Failed to upload logo. Status code: ${response.statusCode}');
+        print(
+            'Failed to upload logo. Status code: ${response.statusCode} , Body: ${await response.stream.bytesToString()}');
+        return false;
+      }
+    } catch (e) {
+      print('Exception caught during logo upload: $e');
+      return false;
+    }
+  }
+
+  Future<bool> postRestaurantLogo(String imagePath) async {
+    var uri = Uri.parse(_baseUrl + 'File/upload-restaurant-logo');
+    var request = http.MultipartRequest('POST', uri);
+
+    String jwtToken = await _fetchJwtToken();
+    request.headers.addAll({
+      'Authorization': 'Bearer $jwtToken',
+      'Content-Type': 'multipart/form-data',
+    });
+
+    request.files.add(await http.MultipartFile.fromPath(
+      'ImageFile',
+      imagePath,
+      contentType: MediaType('image', 'jpeg'),
+    ));
+
+    request.fields['IsChangingLogo'] = 'false';
+
+    try {
+      var response = await request.send();
+
+      if (response.statusCode == 200) {
+        var responseData = await response.stream.bytesToString();
+        var decodedResponse = json.decode(responseData);
+
+        print('Logo uploaded successfully: ${decodedResponse['Data']}');
+        return true;
+      } else {
+        print(
+            'Failed to upload logo. Status code: ${response.statusCode}, Body: ${await response.stream.bytesToString()}');
         return false;
       }
     } catch (e) {

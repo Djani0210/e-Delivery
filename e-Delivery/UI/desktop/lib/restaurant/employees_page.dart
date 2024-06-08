@@ -316,7 +316,6 @@ class _EmployeesPageState extends State<EmployeesPage> {
   }
 
   String _formatTime(String time) {
-    // Assume 'time' is in the format 'HH:mm:ss'
     return TimeOfDay.fromDateTime(DateTime.parse('0000-01-01 $time'))
         .format(context);
   }

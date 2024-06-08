@@ -17,6 +17,7 @@ namespace e_Delivery.Model.FoodItem
         public bool IsAvailable { get; set; }
         public int LogoId { get; set; }
         public CategoriesGetVM Category { get; set; }
+        public List<FoodItemPictureGetVM> FoodItemPictures { get; set; }
         public int RestaurantId { get; set; }
         public List<GetSideDishVM> SideDishes { get; set; }
         

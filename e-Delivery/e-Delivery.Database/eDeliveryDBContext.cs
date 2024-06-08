@@ -29,6 +29,8 @@ namespace e_Delivery.Database
         public DbSet<Review> Reviews { get; set; }
         public DbSet<SideDish> SideDishes { get; set; }
         public DbSet<Verification> Verifications { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+
 
 
 
@@ -50,13 +52,13 @@ namespace e_Delivery.Database
 
 
             modelBuilder.Entity<OrderItem>()
-            .HasKey(o => o.Id);  // Define the Id property as the primary key
+            .HasKey(o => o.Id);  
 
             modelBuilder.Entity<OrderItem>()
                 .Property(o => o.SideDishIds)
                 .HasConversion(
-                    v => string.Join(',', v),            // Convert List<int> to a string
-                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList()  // Convert back to List<int>
+                    v => string.Join(',', v),           
+                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList() 
                 );
 
 
@@ -91,40 +93,7 @@ namespace e_Delivery.Database
                 .WithMany(sd => sd.OrderItemSideDishes)
                 .HasForeignKey(ois => ois.SideDishId);
 
-            //modelBuilder.Ignore<BaseEntity>();
-
-            //modelBuilder.Entity<User>()
-            //.HasOne(u => u.City)
-            //.WithMany()
-            //.HasForeignKey(u => u.CityId)
-            //.OnDelete(DeleteBehavior.Restrict); // Adjust the delete behavior as needed
-
-            //modelBuilder.Entity<BaseEntity>()
-            //    .HasOne(b => b.CreatedByUser)   
-            //    .WithMany()
-            //    .HasForeignKey(b => b.CreatedByUserId)
-            //    .OnDelete(DeleteBehavior.Restrict); // Adjust the delete behavior as needed
-
-            //modelBuilder.Entity<BaseEntity>()
-            //    .HasOne(b => b.ModifiedByUser)
-            //    .WithMany()
-            //    .HasForeignKey(b => b.ModifiedByUserId)
-            //    .OnDelete(DeleteBehavior.Restrict); // Adjust the delete behavior as needed
-
-            //modelBuilder.Entity<Chat>()
-            //.HasOne(c => c.UserFrom)
-            //.WithMany()
-            //.HasForeignKey(c => c.UserFromId)
-            //.OnDelete(DeleteBehavior.NoAction);
-
-            //modelBuilder.Entity<Chat>()
-            //    .HasOne(c => c.UserTo)
-            //    .WithMany()
-            //    .HasForeignKey(c => c.UserToId)
-            //    .OnDelete(DeleteBehavior.NoAction);
-
-            //modelBuilder.Entity<FoodItemSideDishMapping>()
-            //.HasKey(mapping => new { mapping.FoodItemId, mapping.SideDishId });
+            
 
             base.OnModelCreating(modelBuilder);
 

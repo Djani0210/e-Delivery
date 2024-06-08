@@ -15,13 +15,12 @@ namespace e_Delivery.Services.Interfaces
         Task<Message> GetOrderByIdAsMessageAsync(Guid id, CancellationToken cancellationToken);
         Task<Message> GetOrderByRestaurantAsMessageAsync(CancellationToken cancellationToken, int items_per_page = 4, int pageNumber = 1,DateTime? startDate =null,
         DateTime? endDate = null, int? orderState = null);
-        Task<Message> GetOrdersForCustomerAsMessageAsync(CancellationToken cancellationToken);
-        Task<Message> GetOrdersForDeliveryPersonAsMessageAsync(CancellationToken cancellationToken);
+        Task<Message> GetOrdersForCustomerAsMessageAsync(GetOrdersFilterDto? filterDto,CancellationToken cancellationToken);
+        Task<Message> GetOrdersForDeliveryPersonAsMessageAsync(GetOrdersFilterDto? filterDto,CancellationToken cancellationToken);
         Task<Message> UpdateOrderStateAsMessageAsync(Guid orderId, OrderState newState, CancellationToken cancellationToken);
-        Task<Message> AssignDeliveryPersonToOrder(Guid orderId,Guid userId, CancellationToken cancellationToken);
         Task<Message> AssignDeliveryPersonToOrderAsMessageAsync(Guid orderId,Guid userId, CancellationToken cancellationToken);
         Task<Message> DeleteOrderAsMessageAsync(Guid orderId, CancellationToken cancellationToken);
-        Task<Message> UpdateOrderAsMessageAsync(Guid id, UpdateOrderVM updateOrderVM, CancellationToken cancellationToken);
+       
 
 
     }

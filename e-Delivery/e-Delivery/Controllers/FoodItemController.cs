@@ -114,5 +114,22 @@ namespace e_Delivery.Controllers
             return Ok(message);
         }
 
+        [HttpGet("get-by-name{id}"),Authorize()]
+        public async Task<ActionResult<string>> GetFoodItemNameById(int id)
+        {
+            try
+            {
+                var foodItemName = await _foodItemService.GetFoodItemNameById(id);
+                if (string.IsNullOrEmpty(foodItemName))
+                {
+                    return NotFound("Food item not found.");
+                }
+                return Ok(foodItemName);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }

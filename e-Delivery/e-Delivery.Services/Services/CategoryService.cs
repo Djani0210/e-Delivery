@@ -98,6 +98,9 @@ namespace e_Delivery.Services.Services
                 var categoriesWithFoodItems = await _dbContext.Categories
                 .Where(c => c.FoodItems.Any(fi => fi.RestaurantId == restaurantId))
                 .Include(c => c.FoodItems)
+                .ThenInclude(foodItem => foodItem.SideDishes)
+                .Include(c => c.FoodItems)
+                .ThenInclude(foodItem => foodItem.FoodItemPictures)
                 .AsQueryable()
                 .ToListAsync();
                 var obj = Mapper.Map<List<CategoriesWithFoodItemsGetVM>>(categoriesWithFoodItems);
@@ -185,7 +188,8 @@ namespace e_Delivery.Services.Services
         {
             try
             {
-                var categories = await _dbContext.Categories.ToListAsync();
+                var categories = _dbContext.Categories.AsQueryable();
+               
                 var obj = Mapper.Map<List<CategoriesGetVM>>(categories);
 
                 return new Message { Data = obj, Info = "Successfully retrieved categories", IsValid = true, Status = ExceptionCode.Success };

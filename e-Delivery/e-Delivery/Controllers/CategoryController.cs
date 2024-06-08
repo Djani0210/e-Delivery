@@ -59,7 +59,7 @@ namespace e_Delivery.Controllers
             return Ok(message);
         }
 
-        [HttpGet("get-categories-with-foodItems"), Authorize()]
+        [HttpGet("get-categories-with-foodItems"),Authorize()]
         public async Task<IActionResult> GetCategoriesWithFoodItems(int restaurantId, CancellationToken cancellationToken)
         {
             var message = await _categoryService.GetCategoriesWithFoodItemsForRestaurantAsMessageAsync(restaurantId,cancellationToken);

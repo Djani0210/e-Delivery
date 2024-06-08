@@ -425,8 +425,6 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
       if (success) {
         print('Delivery person assigned successfully');
         await fetchOrderDetails();
-
-        // Close the dialog after state update
       } else {
         print('Failed to assign delivery person');
         ScaffoldMessenger.of(context).showSnackBar(

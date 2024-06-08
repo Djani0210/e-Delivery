@@ -206,9 +206,7 @@ namespace e_Delivery.Services.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString()); // Placeholder for actual logging
-
-                // Provide a more specific error message if possible
+                Console.WriteLine(ex.ToString()); 
                 return new Message
                 {
                     IsValid = false,

@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 class ApiService {
   final _storage = FlutterSecureStorage();
   static const _baseUrl =
-      'https://localhost:44395/api/Restaurant/get-RestauantById';
+      'https://localhost:44395/api/Restaurant/get-RestaurantById';
 
   Future<dynamic> getRestaurantById(int id) async {
     final jwt = await _storage.read(key: 'jwt');

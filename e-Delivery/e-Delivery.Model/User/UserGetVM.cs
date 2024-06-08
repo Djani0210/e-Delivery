@@ -17,7 +17,7 @@ namespace e_Delivery.Model.User
         public string? PhoneNumber { get; set; }
         public string? UserName { get; set; }
         public string? Email { get; set; }
-        public Gender Gender { get; set; }
+        public Gender? Gender { get; set; }
         public List<UserRoleGetVM>? Role { get; set; }
         public RestaurantGetVM? Company { get; set; }
         public bool? IsAvailable { get; set; }

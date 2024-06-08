@@ -15,7 +15,7 @@ namespace e_Delivery.Entities
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public Gender Gender { get; set; }
+        public Gender? Gender { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime CreatedDate { get; set; }
         public string? RefreshToken { get; set; }

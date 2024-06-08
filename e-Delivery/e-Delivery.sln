@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "e-Delivery.Model", "e-Deliv
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "e-Delivery.Services", "e-Delivery.Services\e-Delivery.Services.csproj", "{6D40B974-4B97-46BF-8703-CA8D948FF391}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "e-Delivery.Entities", "e-Delivery.Entities\e-Delivery.Entities.csproj", "{EF11423B-1231-4B73-8EF7-5E434CBD9CC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "e-Delivery.Entities", "e-Delivery.Entities\e-Delivery.Entities.csproj", "{EF11423B-1231-4B73-8EF7-5E434CBD9CC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "e-Delivery.Database", "e-Delivery.Database\e-Delivery.Database.csproj", "{D99D4A62-9A10-44C7-AB00-4706489300F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "e-Delivery.Database", "e-Delivery.Database\e-Delivery.Database.csproj", "{D99D4A62-9A10-44C7-AB00-4706489300F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "e-Delivery.EmailSubscriber", "e-Delivery.EmailSubscriber\e-Delivery.EmailSubscriber.csproj", "{2E23014C-2814-4F86-9623-0A0EE225E17B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{D99D4A62-9A10-44C7-AB00-4706489300F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D99D4A62-9A10-44C7-AB00-4706489300F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D99D4A62-9A10-44C7-AB00-4706489300F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E23014C-2814-4F86-9623-0A0EE225E17B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E23014C-2814-4F86-9623-0A0EE225E17B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E23014C-2814-4F86-9623-0A0EE225E17B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E23014C-2814-4F86-9623-0A0EE225E17B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

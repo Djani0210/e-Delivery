@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "e_Delivery.EmailSubscriber": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

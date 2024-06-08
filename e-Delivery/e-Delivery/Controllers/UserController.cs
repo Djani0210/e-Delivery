@@ -34,14 +34,7 @@ namespace ITShop.API.Controllers
                 return BadRequest(message);
             return Ok(message);
         }
-        [HttpPut("update-user/{Id}"), Authorize()]
-        public async Task<IActionResult> UpdateUserAsMessageAsync(Guid Id, UserUpdateVM user, CancellationToken cancellationToken)
-        {
-            var message = await _userService.UpdateUserAsMessageAsync(Id, user, cancellationToken);
-            if (message.IsValid == false)
-                return BadRequest(message);
-            return Ok(message);
-        }
+        
 
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassowrdAsMessageAsync(VerificationCreateVM verificationCreateDto, CancellationToken cancellationToken)
@@ -75,5 +68,72 @@ namespace ITShop.API.Controllers
                 return BadRequest(message);
             return Ok(message);
         }
+
+        [HttpGet("get-admin"), Authorize()]
+        public async Task<IActionResult> GetAdminMessageAsync(CancellationToken cancellationToken)
+        {
+            var message = await _userService.GetAdminAsMessageAsync(cancellationToken);
+            if (message.IsValid == false)
+                return BadRequest(message);
+            return Ok(message);
+        }
+
+
+        [HttpGet("get-logged-customer"), Authorize()]
+        public async Task<IActionResult> GetLoggedCustomer(CancellationToken cancellationToken)
+        {
+            var message = await _userService.GetLoggedCustomerAsMessageAsync(cancellationToken);
+            if (message.IsValid == false)
+                return BadRequest(message);
+            return Ok(message);
+        }
+        [HttpGet("get-logged-delivery-person"), Authorize()]
+        public async Task<IActionResult> GetLoggedDeliveryPerson(CancellationToken cancellationToken)
+        {
+            var message = await _userService.GetLoggedDeliveryPersonAsMessageAsync(cancellationToken);
+            if (message.IsValid == false)
+                return BadRequest(message);
+            return Ok(message);
+        }
+
+        [HttpPut("update-profile/{id}"), Authorize()]
+        public async Task<IActionResult> UpdateProfile(Guid id, [FromBody] UserUpdateVM userUpdateVM, CancellationToken cancellationToken)
+        {
+            var result = await _userService.UpdateUserAsMessageAsync(id, userUpdateVM, cancellationToken);
+            if (result.IsValid)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpPut("update-delivery-person-availability"),Authorize()]
+        public async Task<IActionResult> UpdateDeliveryPersonAvailability( [FromBody] DeliveryPersonUpdateVM vm, CancellationToken cancellationToken)
+        {
+            var result = await _userService.UpdateDeliveryPersonAsync( vm, cancellationToken);
+            if (result.IsValid)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("confirm")]
+        public async Task<IActionResult> ConfirmApplication(Guid deliveryPersonId, int restaurantId)
+        {
+            var message = await _userService.ConfirmApplicationAsync(deliveryPersonId, restaurantId);
+            if (message.IsValid == false)
+                return BadRequest(message);
+            return Ok(message);
+        }
+        [HttpPost("apply/{restaurantId}")]
+        public async Task<IActionResult> ApplyToRestaurant(int restaurantId, CancellationToken cancellationToken)
+        {
+            var message = await _userService.ApplyToRestaurantAsync(restaurantId, cancellationToken);
+            if (message.IsValid == false)
+                return BadRequest(message);
+            return Ok(message);
+        }
+
     }
 }

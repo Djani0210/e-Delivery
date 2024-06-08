@@ -2,6 +2,7 @@
 using e_Delivery.Database;
 using e_Delivery.Entities;
 using e_Delivery.Entities.Enums;
+using e_Delivery.Model;
 using e_Delivery.Model.Auth;
 using e_Delivery.Model.Images;
 using e_Delivery.Model.Restaurant;
@@ -9,8 +10,12 @@ using e_Delivery.Model.Role;
 using e_Delivery.Model.User;
 using e_Delivery.Model.Verification;
 using e_Delivery.Services.Interfaces;
+using EasyNetQ;
+using MailKit.Security;
+using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -18,6 +23,9 @@ using System.Linq;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using Hangfire.Server;
+using Microsoft.Extensions.Logging;
+
 
 namespace e_Delivery.Services.Services
 {
@@ -25,16 +33,114 @@ namespace e_Delivery.Services.Services
     {
         private readonly eDeliveryDBContext _dbContext;
         private UserManager<User> UserManager { get; set; }
+        private RoleManager<Role> RoleManager { get; set; }
         
+
         public IMapper Mapper { get; set; }
         public IAuthContext _authContext { get; set; }
-        public UserService(eDeliveryDBContext dbContext, UserManager<User> userManager, IMapper mapper, IAuthContext authContext)
+        private readonly IBus _bus;
+
+        public UserService(eDeliveryDBContext dbContext, UserManager<User> userManager,RoleManager<Role> roleManager, IMapper mapper, IAuthContext authContext, IBus bus)
         {
             _dbContext = dbContext;
             _authContext = authContext;
             Mapper = mapper;
             UserManager= userManager;
+            RoleManager= roleManager;
+            _bus = bus;
+            
         }
+
+        public async Task<Message> ApplyToRestaurantAsync(int restaurantId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var loggedUser = await _authContext.GetLoggedUser();
+                var loggedUserEntity = await _dbContext.Users.FindAsync(loggedUser.Id);
+
+                var restaurant = await _dbContext.Restaurants.Include(r => r.CreatedByUser).FirstOrDefaultAsync(r => r.Id == restaurantId);
+                if (restaurant == null)
+                {
+                    return new Message
+                    {
+                        Status = ExceptionCode.NotFound,
+                        Info = "Restaurant not found",
+                        IsValid = false
+                    };
+                }
+
+                var restaurantOwnerEmail = restaurant.CreatedByUser.Email;
+                var confirmationLink = $"https://localhost:44395/api/User/confirm?deliveryPersonId={loggedUser.Id}&restaurantId={restaurantId}";
+
+                var emailMessage = new ApplyMessage
+                {
+                    DeliveryPersonEmail = loggedUserEntity.Email,
+                    RestaurantOwnerEmail = restaurantOwnerEmail,
+                    ConfirmationLink = confirmationLink
+                };
+
+                await _bus.PubSub.PublishAsync(emailMessage);
+                Console.WriteLine($"Published ApplyMessage to RabbitMQ for restaurantId {restaurantId}");
+
+
+                return new Message
+                {
+                    Status = ExceptionCode.Success,
+                    Info = "Application sent",
+                    IsValid = true
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to apply to restaurantId {restaurantId}: {ex.Message}");
+                return new Message
+                {
+                    Status = ExceptionCode.BadRequest,
+                    Info = ex.Message,
+                    IsValid = false
+                };
+            }
+        }
+
+
+        public async Task<Message> ConfirmApplicationAsync(Guid deliveryPersonId, int restaurantId)
+        {
+            try
+            {
+                var deliveryPerson = await _dbContext.Users.FindAsync(deliveryPersonId);
+                if (deliveryPerson == null)
+                {
+                    return new Message
+                    {
+                        Status = ExceptionCode.NotFound,
+                        Info = "Delivery person not found",
+                        IsValid = false
+                    };
+                }
+
+                deliveryPerson.RestaurantId = restaurantId;
+                await _dbContext.SaveChangesAsync();
+
+                return new Message
+                {
+                    Status = ExceptionCode.Success,
+                    Info = "Application confirmed",
+                    IsValid = true
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Message
+                {
+                    Status = ExceptionCode.BadRequest,
+                    Info = ex.Message,
+                    IsValid = false
+                };
+            }
+        }
+
+
+
 
         public async Task<Message> CheckCodeAsMessageAsync(VerificationCodeVM verificationCodeDto, CancellationToken cancellationToken)
         {
@@ -55,8 +161,6 @@ namespace e_Delivery.Services.Services
                 return new Message { Info = "Greška", IsValid = false, Status = ExceptionCode.BadRequest };
             }
         }
-
-        
 
         public async Task<Message> CreateUserAsMessageAsync(UserCreateVM userCreateVM, CancellationToken cancellationToken)
         {
@@ -97,7 +201,7 @@ namespace e_Delivery.Services.Services
                     user.IsDeleted = false;
                     user.CityId = userCreateVM.CityId;
                     user.RestaurantId= userCreateVM.RestaurantId;
-                    user.IsAvailable = userCreateVM.IsAvailable;
+                    user.IsAvailable = true;
                     user.WorkFrom = TimeSpan.ParseExact(userCreateVM.WorkFrom, "hh\\:mm", CultureInfo.InvariantCulture); 
                     user.WorkUntil= TimeSpan.ParseExact(userCreateVM.WorkUntil, "hh\\:mm", CultureInfo.InvariantCulture); 
 
@@ -241,7 +345,7 @@ namespace e_Delivery.Services.Services
             message.Body = Sadrzaj;
             message.BodyEncoding = Encoding.UTF8;
             message.IsBodyHtml = true;
-            SmtpClient client = new SmtpClient("smtp.gmail.com", 587); //Gmail smtp    
+            System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient("smtp.gmail.com", 587); //Gmail smtp    
             System.Net.NetworkCredential basicCredential1 = new
             System.Net.NetworkCredential("mverifikacija@gmail.com", "qhmjyeiyiuruotrc");
             client.EnableSsl = true;
@@ -274,28 +378,67 @@ namespace e_Delivery.Services.Services
                 return new Message { Info = "Greška", IsValid = false, Status = ExceptionCode.BadRequest };
             }
         }
-
-        public async Task<Message> UpdateUserAsMessageAsync(Guid Id, UserUpdateVM user, CancellationToken cancellationToken)
+       
+        public async Task<Message> UpdateUserAsMessageAsync(Guid userId, UserUpdateVM userUpdateVM, CancellationToken cancellationToken)
         {
             try
             {
-                var _user = await _dbContext.Users.Where(x => x.Id == Id && !x.IsDeleted).FirstOrDefaultAsync(cancellationToken);
-                if (_user == null)
+                var user = await UserManager.FindByIdAsync(userId.ToString());
+                if (user == null)
                 {
-                    return new Message { Info = "Greška, korisnik ne postoji", IsValid = false, Status = ExceptionCode.BadRequest };
+                    return new Message { Info = "Error: User does not exist", IsValid = false, Status = ExceptionCode.BadRequest };
                 }
-                
-                Mapper.Map(user, _user);
-               
-               
-               
-                await _dbContext.SaveChangesAsync(cancellationToken);
-                return new Message { Info = "Uspješno ažuriran korisnik", Data = user, IsValid = true, Status = ExceptionCode.Success };
 
+               
+                if (!string.IsNullOrEmpty(userUpdateVM.Email) && userUpdateVM.Email != user.Email)
+                {
+                    var emailUser = await UserManager.FindByEmailAsync(userUpdateVM.Email);
+                    if (emailUser != null && emailUser.Id != user.Id)
+                    {
+                        return new Message { Info = "Error: Email is already taken", IsValid = false, Status = ExceptionCode.BadRequest };
+                    }
+                }
+
+               
+                if (!string.IsNullOrEmpty(userUpdateVM.UserName) && userUpdateVM.UserName != user.UserName)
+                {
+                    var usernameUser = await UserManager.FindByNameAsync(userUpdateVM.UserName);
+                    if (usernameUser != null && usernameUser.Id != user.Id)
+                    {
+                        return new Message { Info = "Error: Username is already taken", IsValid = false, Status = ExceptionCode.BadRequest };
+                    }
+                }
+
+               
+                if (!string.IsNullOrEmpty(userUpdateVM.PhoneNumber) && userUpdateVM.PhoneNumber != user.PhoneNumber)
+                {
+                    var phoneNumberUser = await UserManager.Users
+                        .FirstOrDefaultAsync(u => u.PhoneNumber == userUpdateVM.PhoneNumber && u.Id != user.Id, cancellationToken);
+                    if (phoneNumberUser != null)
+                    {
+                        return new Message { Info = "Error: Phone number is already taken", IsValid = false, Status = ExceptionCode.BadRequest };
+                    }
+                }
+
+               
+                user.FirstName = userUpdateVM.FirstName ?? user.FirstName;
+                user.LastName = userUpdateVM.LastName ?? user.LastName;
+                user.Email = userUpdateVM.Email ?? user.Email;
+                user.UserName = userUpdateVM.UserName ?? user.UserName;
+                user.PhoneNumber = userUpdateVM.PhoneNumber ?? user.PhoneNumber;
+                user.CityId = userUpdateVM.CityId ?? user.CityId;
+
+                var updateResult = await UserManager.UpdateAsync(user);
+                if (!updateResult.Succeeded)
+                {
+                    return new Message { Info = "Error updating user", IsValid = false, Status = ExceptionCode.BadRequest };
+                }
+
+                return new Message { Info = "User successfully updated", Data = userUpdateVM, IsValid = true, Status = ExceptionCode.Success };
             }
             catch (Exception ex)
             {
-                return new Message { Info = "Greška na serveru", IsValid = false, Status = ExceptionCode.BadRequest };
+                return new Message { Info = "Server error", IsValid = false, Status = ExceptionCode.BadRequest };
             }
         }
 
@@ -337,6 +480,167 @@ namespace e_Delivery.Services.Services
                     Info = "Error",
                     IsValid = false,
                     Status = ExceptionCode.BadRequest
+                };
+            }
+        }
+
+        public async Task<Message> GetAdminAsMessageAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                var adminRole = await RoleManager.FindByNameAsync("Admin");
+                if (adminRole != null)
+                {
+                    var users = await UserManager.Users.ToListAsync(cancellationToken);
+                    var adminUser = users.FirstOrDefault(u => UserManager.IsInRoleAsync(u, "Admin").Result);
+                    
+
+                    if (adminUser != null)
+                    {
+                        var adminUserVM =  Mapper.Map<UserGetVM>(adminUser);
+                        return new Message
+                        {
+                            Status = ExceptionCode.Success,
+                            Info = "Successfully retrieved admin",
+                            IsValid = true,
+                            Data = adminUserVM
+                        };
+                    }
+                }
+
+                return new Message
+                {
+                    Status = ExceptionCode.NotFound,
+                    Info = "Admin user not found.",
+                    Data = null,
+                    IsValid = false
+                    
+                };
+            }
+            catch (Exception ex)
+            {
+                
+                return new Message
+                {
+                    Status = ExceptionCode.BadRequest,
+                    IsValid = false,
+                    Info = $"An error occurred: {ex.Message}",
+                    Data = null
+                };
+            }
+        }
+
+        public async Task<Message> GetLoggedCustomerAsMessageAsync(CancellationToken cancellationToken)
+        {
+
+            {
+                try
+                {
+
+                    var user = await _authContext.GetLoggedUser();
+                    var userId = user.Id;
+
+                    var targetUser = await _dbContext.Users.
+                        Where(u => u.Id == userId).FirstOrDefaultAsync();
+
+                    var obj = Mapper.Map<CustomerGetVM>(targetUser);
+                   
+                    
+                    
+
+                    return new Message
+                    {
+                        Status = ExceptionCode.Success,
+                        Info = "Success",
+                        Data = obj,
+                        IsValid = true
+
+                    };
+                }
+                catch (Exception ex)
+                {
+
+                    return new Message
+                    {
+                        Status = ExceptionCode.BadRequest,
+                        IsValid = false,
+                        Info = $"An error occurred: {ex.Message}",
+                        Data = null
+                    };
+                }
+            }
+        }
+
+        public async Task<Message> GetLoggedDeliveryPersonAsMessageAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+
+                var user = await _authContext.GetLoggedUser();
+                var userId = user.Id;
+
+                var targetUser = await _dbContext.Users.
+                    Where(u => u.Id == userId).FirstOrDefaultAsync();
+
+                var obj = Mapper.Map<DeliveryPersonGetVM>(targetUser);
+
+
+
+
+                return new Message
+                {
+                    Status = ExceptionCode.Success,
+                    Info = "Success",
+                    Data = obj,
+                    IsValid = true
+
+                };
+            }
+            catch (Exception ex)
+            {
+
+                return new Message
+                {
+                    Status = ExceptionCode.BadRequest,
+                    IsValid = false,
+                    Info = $"An error occurred: {ex.Message}",
+                    Data = null
+                };
+            }
+        }
+
+        public async Task<Message> UpdateDeliveryPersonAsync(DeliveryPersonUpdateVM deliveryPersonUpdateVM, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var loggedUser = await _authContext.GetLoggedUser();
+                var user = await _dbContext.Users.Where(u=>u.Id == loggedUser.Id).FirstOrDefaultAsync();
+
+                user.IsAvailable = deliveryPersonUpdateVM.IsAvailable;
+                user.WorkFrom = TimeSpan.ParseExact(deliveryPersonUpdateVM.WorkFrom, "hh\\:mm", CultureInfo.InvariantCulture);
+                user.WorkUntil = TimeSpan.ParseExact(deliveryPersonUpdateVM.WorkUntil, "hh\\:mm", CultureInfo.InvariantCulture);
+
+                await _dbContext.SaveChangesAsync(cancellationToken);
+
+                var obj = Mapper.Map<UserGetVM>(user);
+                return new Message
+                {
+                    Status = ExceptionCode.Success,
+                    IsValid = true,
+                    Info = $"Successfully updated deliveryPerson",
+                    Data = obj
+                };
+
+            }
+            catch (Exception ex)
+            {
+
+                return new Message
+                {
+                    Status = ExceptionCode.BadRequest,
+                    IsValid = false,
+                    Info = $"An error occurred: {ex.Message}",
+                    Data = null
                 };
             }
         }

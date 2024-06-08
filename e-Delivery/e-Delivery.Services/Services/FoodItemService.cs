@@ -7,7 +7,9 @@ using e_Delivery.Model.FoodItem;
 using e_Delivery.Model.SideDish;
 using e_Delivery.Services.Interfaces;
 using e_Delivery.Services.PagedList;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -111,7 +113,7 @@ namespace e_Delivery.Services.Services
                     Info = ex.Message,
                     Status = ExceptionCode.BadRequest,
                     IsValid = false,
-                   
+
                 };
             }
 
@@ -125,14 +127,14 @@ namespace e_Delivery.Services.Services
                 var loggedUser = await authContext.GetLoggedUser();
                 var restaurant = await _dbContext.Restaurants.FirstOrDefaultAsync(x => x.Id == loggedUser.RestaurantId);
 
-                
+
                 IQueryable<FoodItem> query = _dbContext.FoodItems
                                                        .Include(x => x.Category)
                                                        .Include(x => x.FoodItemSideDishMappings)
                                                            .ThenInclude(sdm => sdm.SideDish)
                                                        .Where(fi => fi.RestaurantId == restaurant.Id);
 
-                
+
                 if (!string.IsNullOrEmpty(categoryName))
                 {
                     query = query.Where(fi => fi.Category.Name == categoryName);
@@ -146,7 +148,7 @@ namespace e_Delivery.Services.Services
                     query = query.Where(fi => fi.IsAvailable == isAvailable.Value);
                 }
 
-                
+
                 var pagedFoodItems = await PagedList<FoodItem>.Create(query, pageNumber, items_per_page);
 
                 var getFoodItemsVM = pagedFoodItems.DataItems.Select(fi => new FoodItemGetVM
@@ -156,7 +158,7 @@ namespace e_Delivery.Services.Services
                     Description = fi.Description,
                     Price = fi.Price,
                     IsAvailable = fi.IsAvailable,
-                    Category = new CategoriesGetVM { Name = fi.Category?.Name }, 
+                    Category = new CategoriesGetVM { Name = fi.Category?.Name },
                     SideDishes = fi.FoodItemSideDishMappings.Select(mapping => new GetSideDishVM
                     {
                         Id = mapping.SideDish.Id,
@@ -187,7 +189,7 @@ namespace e_Delivery.Services.Services
 
 
 
-        
+
 
         public async Task<Message> GetFoodItemByIdAsMessageAsync(int foodItemId, CancellationToken cancellationToken)
         {
@@ -244,6 +246,29 @@ namespace e_Delivery.Services.Services
                 };
             }
         }
+
+        public async Task<string> GetFoodItemNameById(int id)
+        {
+            try
+            {
+                var foodItem = await _dbContext.FoodItems.FindAsync(id);
+
+                if (foodItem != null)
+                {
+                    return foodItem.Name;
+                }
+                else
+                {
+                    return "Item not found";
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to get food item name", ex);
+            }
+        }
+
+
 
 
         public async Task<Message> UpdateFoodItemAsMessageAsync(int foodItemId, UpdateFoodItemVM updateFoodItemVM, CancellationToken cancellationToken)
@@ -305,7 +330,7 @@ namespace e_Delivery.Services.Services
                 var loggedUser = await authContext.GetLoggedUser();
                 var restaurant = await _dbContext.Restaurants.Where(x => x.Id == loggedUser.RestaurantId).FirstOrDefaultAsync();
 
-                var existingFoodItem = await _dbContext.FoodItems.Include(fi=>fi.FoodItemPictures)
+                var existingFoodItem = await _dbContext.FoodItems.Include(fi => fi.FoodItemPictures)
                     .SingleOrDefaultAsync(fi => fi.Id == foodItemId && fi.RestaurantId == restaurant.Id);
 
                 if (existingFoodItem == null)

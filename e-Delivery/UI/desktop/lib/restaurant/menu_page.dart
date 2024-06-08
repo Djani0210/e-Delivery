@@ -20,10 +20,10 @@ class _MenuPageState extends State<MenuPage> {
   int _totalPages = 0;
   final int _perPage = 3;
   String _searchTerm = '';
-  bool? _isAvailable;
+
   String _selectedAvailability = 'Svi';
   String _selectedCategory = 'Sve';
-  final TextEditingController _priceController = TextEditingController();
+
   List<String> _categories = [];
   List<Map<String, dynamic>> _allCategories = [];
   int _selectedCategoryId = 0;
@@ -31,7 +31,7 @@ class _MenuPageState extends State<MenuPage> {
   List<SideDishViewModel> _sideDishes = [];
   late _SideDishesTableState _sideDishesTableState;
   String? _imagePath;
-  FoodItemViewModel? _selectedFoodItem;
+
   @override
   void initState() {
     super.initState();

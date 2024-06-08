@@ -1,4 +1,5 @@
 ﻿using e_Delivery.Database;
+using e_Delivery.Entities.Enums;
 using e_Delivery.Model.City;
 using e_Delivery.Model.FoodItem;
 using e_Delivery.Model.Order;
@@ -20,7 +21,7 @@ namespace e_Delivery.Controllers
         private readonly IOrderService _orderService;
         private readonly eDeliveryDBContext _dbContext;
         public IAuthContext _authContext { get; set; }
-        public OrderController(eDeliveryDBContext dbContext,IOrderService orderService,IAuthContext authContext)
+        public OrderController(eDeliveryDBContext dbContext, IOrderService orderService, IAuthContext authContext)
         {
             _orderService = orderService;
             _dbContext = dbContext;
@@ -48,21 +49,12 @@ namespace e_Delivery.Controllers
         //    return Ok(message);
         //}
 
-        [HttpPut("update-Order"), Authorize(Roles = "MobileClient")]
-        public async Task<IActionResult> UpdateRestaurant(Guid id ,UpdateOrderVM updateOrderVM, CancellationToken cancellationToken)
-        {
-            var message = await _orderService.UpdateOrderAsMessageAsync(id, updateOrderVM, cancellationToken);
-            if (!message.IsValid)
-            {
-                return BadRequest(message);
-            }
-            return Ok(message);
-        }
+        
 
         [HttpGet("get-Order-By-Id"), Authorize()]
         public async Task<IActionResult> GetOrderById(Guid id, CancellationToken cancellationToken)
         {
-            var message= await _orderService.GetOrderByIdAsMessageAsync(id, cancellationToken);
+            var message = await _orderService.GetOrderByIdAsMessageAsync(id, cancellationToken);
             if (!message.IsValid)
             {
                 return BadRequest(message);
@@ -70,11 +62,11 @@ namespace e_Delivery.Controllers
             return Ok(message);
         }
 
-        [HttpGet("get-Orders-For-Restaurant"), Authorize(Roles ="Desktop")]
-        public async Task<IActionResult> GetOrderForRestaurant(CancellationToken cancellationToken,int items_per_page = 4, int pageNumber = 1, DateTime? startDate = null, // Adding startDate parameter
+        [HttpGet("get-Orders-For-Restaurant"), Authorize(Roles = "Desktop")]
+        public async Task<IActionResult> GetOrderForRestaurant(CancellationToken cancellationToken, int items_per_page = 4, int pageNumber = 1, DateTime? startDate = null, // Adding startDate parameter
          DateTime? endDate = null, int? orderState = null)
         {
-            var message = await _orderService.GetOrderByRestaurantAsMessageAsync (cancellationToken,items_per_page, pageNumber, startDate, endDate, orderState);
+            var message = await _orderService.GetOrderByRestaurantAsMessageAsync(cancellationToken, items_per_page, pageNumber, startDate, endDate, orderState);
             if (!message.IsValid)
             {
                 return BadRequest(message);
@@ -82,7 +74,7 @@ namespace e_Delivery.Controllers
             return Ok(message);
         }
 
-        [HttpGet("monthly-count"), Authorize(Roles ="Desktop")]
+        [HttpGet("monthly-count"), Authorize(Roles = "Desktop")]
         public async Task<ActionResult<int>> GetMonthlyOrderCount()
         {
             var loggedUser = await _authContext.GetLoggedUser();
@@ -93,12 +85,29 @@ namespace e_Delivery.Controllers
             return Ok(count);
         }
 
-        
+
 
         [HttpGet("get-Orders-For-DeliveryPerson"), Authorize()]
-        public async Task<IActionResult> GetOrdersForDeliveryPerson( CancellationToken cancellationToken)
+        public async Task<IActionResult> GetOrderForDeliveryPerson(
+                [FromQuery] DateTime? startDate,
+                [FromQuery] DateTime? endDate,
+                [FromQuery] OrderState? orderState,
+                [FromQuery] string? sortBy,
+                [FromQuery] int? pageNumber,
+                [FromQuery] int? pageSize,
+                CancellationToken cancellationToken)
         {
-            var message = await _orderService.GetOrdersForDeliveryPersonAsMessageAsync(cancellationToken);
+            var filterDto = new GetOrdersFilterDto
+            {
+                StartDate = startDate,
+                EndDate = endDate,
+                OrderState = orderState,
+                SortBy = sortBy,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+
+            var message = await _orderService.GetOrdersForDeliveryPersonAsMessageAsync(filterDto, cancellationToken);
             if (!message.IsValid)
             {
                 return BadRequest(message);
@@ -106,7 +115,7 @@ namespace e_Delivery.Controllers
             return Ok(message);
         }
 
-        [HttpPatch("assign-delivery-person"), Authorize(Roles ="Desktop")]
+        [HttpPatch("assign-delivery-person"), Authorize(Roles = "Desktop")]
         public async Task<IActionResult> AssignDeliveryPerson([FromBody] AssignDeliveryPersonRequest request, CancellationToken cancellationToken)
         {
             var message = await _orderService.AssignDeliveryPersonToOrderAsMessageAsync(request.OrderId, request.UserId, cancellationToken);
@@ -119,9 +128,26 @@ namespace e_Delivery.Controllers
         }
 
         [HttpGet("get-Orders-For-Customer"), Authorize()]
-        public async Task<IActionResult> GetOrdersForCustomer(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetOrdersForCustomer(
+                [FromQuery] DateTime? startDate,
+                [FromQuery] DateTime? endDate,
+                [FromQuery] OrderState? orderState,
+                [FromQuery] string? sortBy,
+                [FromQuery] int? pageNumber,
+                [FromQuery] int? pageSize,
+                CancellationToken cancellationToken)
         {
-            var message = await _orderService.GetOrdersForCustomerAsMessageAsync(cancellationToken);
+            var filterDto = new GetOrdersFilterDto
+            {
+                StartDate = startDate,
+                EndDate = endDate,
+                OrderState = orderState,
+                SortBy = sortBy,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+
+            var message = await _orderService.GetOrdersForCustomerAsMessageAsync(filterDto, cancellationToken);
             if (!message.IsValid)
             {
                 return BadRequest(message);
@@ -131,7 +157,7 @@ namespace e_Delivery.Controllers
         [HttpDelete("delete-Order"), Authorize()]
         public async Task<IActionResult> DeleteOrder(Guid id, CancellationToken cancellationToken)
         {
-            var message = await _orderService.DeleteOrderAsMessageAsync(id,cancellationToken);
+            var message = await _orderService.DeleteOrderAsMessageAsync(id, cancellationToken);
             if (!message.IsValid)
             {
                 return BadRequest(message);
@@ -139,7 +165,7 @@ namespace e_Delivery.Controllers
             return Ok(message);
         }
 
-        [HttpPatch("{orderId}/state"),Authorize()]
+        [HttpPatch("{orderId}/state"), Authorize()]
         public async Task<IActionResult> PatchOrderState(Guid orderId, [FromBody] OrderStateUpdateDto newStateModel, CancellationToken cancellationToken)
         {
             var message = await _orderService.UpdateOrderStateAsMessageAsync(orderId, newStateModel.NewState, cancellationToken);

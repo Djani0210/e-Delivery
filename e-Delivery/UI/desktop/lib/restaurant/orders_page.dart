@@ -47,7 +47,7 @@ class _OrdersPageState extends State<OrdersPage> {
         orderState: orderState);
     if (response != null && response.statusCode == 200) {
       final Map<String, dynamic> responseBody = json.decode(response.body);
-      // Access the nested "orders" within "data"
+
       final List<dynamic> ordersData = responseBody['data']['orders'];
       final int totalPages = responseBody['data']['totalPages'];
       final int totalCount = responseBody['data']['totalCount'];
@@ -79,8 +79,8 @@ class _OrdersPageState extends State<OrdersPage> {
           Text(
             'Narudzbe',
             style: TextStyle(
-              fontSize: 24, // Make the font size larger
-              fontWeight: FontWeight.bold, // Make the text bold
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
           ),
           SizedBox(height: 16),
@@ -129,7 +129,6 @@ class _OrdersPageState extends State<OrdersPage> {
         IconButton(
           icon: Icon(Icons.search),
           onPressed: () {
-            // Here, we call _fetchOrders with the currently selected dates
             _fetchOrders(
                 startDate: _selectedFromDate, endDate: _selectedToDate);
           },
@@ -151,7 +150,7 @@ class _OrdersPageState extends State<OrdersPage> {
       _selectedToDate = null;
       _currentStatus = 'Sve';
       _currentOrderState = null;
-      _currentPage = 1; // Reset to the first page
+      _currentPage = 1;
     });
     _fetchOrders();
   }
@@ -215,7 +214,7 @@ class _OrdersPageState extends State<OrdersPage> {
 
   Widget _buildStatusFilters(BuildContext context) {
     List<String> statuses = ['Sve', 'U pripremi', 'Na dostavi', 'Dostavljeno'];
-    // No need to maintain a separate list for status codes if converting directly in the method
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: statuses.asMap().entries.map((entry) {
@@ -228,10 +227,9 @@ class _OrdersPageState extends State<OrdersPage> {
           onSelected: (bool selected) {
             setState(() {
               _currentStatus = status;
-              // Convert status to orderState integer, handling "Sve" as null
 
               _currentOrderState = status == 'Sve' ? null : index;
-              // Now pass the integer or null to _fetchOrders
+
               _fetchOrders(
                 startDate: _selectedFromDate,
                 endDate: _selectedToDate,
@@ -256,9 +254,9 @@ class _OrdersPageState extends State<OrdersPage> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: ConstrainedBox(
-        constraints: BoxConstraints(minWidth: 1500), // Minimum table width
+        constraints: BoxConstraints(minWidth: 1500),
         child: DataTable(
-          columnSpacing: 38, // Adjust the spacing as needed
+          columnSpacing: 38,
           columns: const <DataColumn>[
             DataColumn(label: Text('Id')),
             DataColumn(label: Text('Ime')),
@@ -291,7 +289,6 @@ class _OrdersPageState extends State<OrdersPage> {
         return Dialog(
           child: OrderReportForm(
             onGenerateReport: (fromDate, toDate, minPrice, maxPrice) {
-              // Handle the generated report here
               print(
                   'Report generated from $fromDate to $toDate with min price $minPrice and max price $maxPrice');
             },

@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:desktop/restaurant/api_calls/image_api_calls.dart';
 import 'package:desktop/restaurant/api_calls/restaurant_api_calls.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:image_picker/image_picker.dart';
-import 'package:desktop/restaurant/viewmodels/restaurant_get_VM.dart'; // Ensure this path is correct
+import 'package:desktop/restaurant/viewmodels/restaurant_get_VM.dart';
 
 class RestaurantProfilePage extends StatefulWidget {
   final RestaurantViewModel? restaurantViewModel;
@@ -41,7 +41,6 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
 
   @override
   void dispose() {
-    // Dispose of all your text editing controllers here
     _nameController.dispose();
     _contactController.dispose();
     _addressController.dispose();
@@ -50,7 +49,7 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
     _deliveryChargeController.dispose();
     _deliveryTimeController.dispose();
 
-    super.dispose(); // Call the dispose method of the superclass at the end
+    super.dispose();
   }
 
   void _populateFields(RestaurantViewModel restaurantViewModel) {
@@ -71,12 +70,16 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
   }
 
   Future<void> uploadImage() async {
-    if (_imagePath != null && !_imagePath!.startsWith('http')) {
-      bool uploadSuccess =
-          await _imageApiService.updateRestaurantLogo(_imagePath!);
+    if (_imagePath != null) {
+      bool uploadSuccess = false;
+      if (_imagePath!.startsWith('http')) {
+        uploadSuccess =
+            await _imageApiService.updateRestaurantLogo(_imagePath!);
+      } else {
+        uploadSuccess = await _imageApiService.postRestaurantLogo(_imagePath!);
+      }
       if (uploadSuccess) {
         print("Image successfully uploaded.");
-        // Here you would ideally fetch the updated RestaurantViewModel to get the new image URL
       } else {
         print("Failed to upload image.");
       }
@@ -84,11 +87,10 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
   }
 
   Widget _buildImageWidget() {
-    // Check if the image path is null or empty, show a placeholder or stock image in that case
     if (_imagePath == null || _imagePath!.isEmpty) {
       return Container(
-        width: 340, // Smaller width for the placeholder
-        height: 300, // Smaller height for the placeholder
+        width: 340,
+        height: 300,
         decoration: BoxDecoration(
           color: Colors.grey[300],
           borderRadius: BorderRadius.circular(8),
@@ -104,7 +106,7 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
         ),
       );
     }
-    // If the image path starts with "http" it's a network image, else it's a file image
+
     if (_imagePath!.startsWith('http')) {
       return Image.network(
         _imagePath!,
@@ -113,7 +115,6 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
         fit: BoxFit.cover,
       );
     } else {
-      // Using dart:io's File class to create a file from the local path
       return Image.file(
         File(_imagePath!),
         width: 340,
@@ -124,15 +125,13 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
   }
 
   String _formatTime(String? timeString) {
-    // Check if timeString is not null and follows expected format
     if (timeString != null && timeString.contains(":")) {
       final parts = timeString.split(':');
       if (parts.length >= 2) {
-        // Ensure there's at least hours and minutes
-        return "${parts[0]}:${parts[1]}"; // Returns hh:mm format
+        return "${parts[0]}:${parts[1]}";
       }
     }
-    return "00:00"; // Return a default value if format is incorrect
+    return "00:00";
   }
 
   Future<void> pickImage() async {
@@ -148,15 +147,14 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
   Widget _buildTextField(TextEditingController controller, String label,
       {int? maxLength, String? suffixText}) {
     return Container(
-      width: 350, // Consistent width for all fields
-      padding: EdgeInsets.only(bottom: 20), // Adds spacing between fields
+      width: 350,
+      padding: EdgeInsets.only(bottom: 20),
       child: TextFormField(
         controller: controller,
         decoration: InputDecoration(
           labelText: label,
           suffixText: suffixText,
-          border:
-              OutlineInputBorder(), // Provides a border around the input fields
+          border: OutlineInputBorder(),
         ),
         maxLength: maxLength,
       ),
@@ -165,7 +163,7 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
 
   Widget _buildSwitch(String label, bool value, Function(bool) onChanged) {
     return SizedBox(
-      width: 350, // Set the width to 300
+      width: 350,
       child: SwitchListTile(
         title: Text(label),
         value: value,
@@ -193,7 +191,6 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
 
   Widget _buildTimePickerField(TextEditingController controller, String label,
       String? initialTimeString) {
-    // Convert the initial time string to a TimeOfDay
     final TimeOfDay initialTime = _timeFromString(initialTimeString);
 
     return Container(
@@ -215,7 +212,7 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
 
   TimeOfDay _timeFromString(String? timeString) {
     if (timeString == null) {
-      return TimeOfDay.now(); // Return current time if the string is null
+      return TimeOfDay.now();
     }
     final List<String> parts = timeString.split(':');
     return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
@@ -314,7 +311,6 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
                     child: ElevatedButton(
                       onPressed: () async {
                         try {
-// Collect data from controllers and call the API
                           final updateData = {
                             'Name': _nameController.text,
                             'Address': _addressController.text,
@@ -326,7 +322,6 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
                                 double.parse(_deliveryChargeController.text),
                             'DeliveryTime':
                                 int.parse(_deliveryTimeController.text),
-// Include other fields here
                           };
                           final response = await _apiService.updateRestaurant(
                               widget.restaurantViewModel!.id, updateData);

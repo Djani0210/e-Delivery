@@ -5,7 +5,7 @@ class EmployeeViewModel {
   final String phoneNumber;
   final String userName;
   final String email;
-  final int gender;
+  final int? gender;
   final String? role;
   final String? company;
   final bool isAvailable;

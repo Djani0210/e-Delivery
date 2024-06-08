@@ -47,7 +47,7 @@ namespace e_Delivery.Controllers
             return Ok(message);
         }
 
-        [HttpGet("get-city"), Authorize(Roles = "Admin")]
+        [HttpGet("get-city"), Authorize()]
         public async Task<IActionResult> GetCityById(int id, CancellationToken cancellationToken)
         {
             var message = await _cityService.GetCityByAsMessageAsync(id, cancellationToken);

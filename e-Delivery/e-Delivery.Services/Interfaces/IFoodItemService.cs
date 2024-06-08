@@ -16,6 +16,7 @@ namespace e_Delivery.Services.Interfaces
         Task<Message> UpdateFoodItemAsMessageAsync(int id,UpdateFoodItemVM updateFoodItemVM, CancellationToken cancellationToken);
         Task<Message> DeleteFoodItemAsMessageAsync(int id, CancellationToken cancellationToken);
         Task<Message> RemoveSideDishesFromFoodItemAsync(int foodItemId, List<int> sideDishIds);
+        Task<string> GetFoodItemNameById(int id);
 
 
     }

@@ -15,5 +15,6 @@ namespace e_Delivery.Services.Interfaces
         Task<Message> GetSideDishesByRestaurantAsMessageAsync(CancellationToken cancellationToken);
         Task<Message> GetSideDishByIdAsMessageAsync(int id,CancellationToken cancellationToken);
         Task<Message> DeleteSideDishByRestaurantAsMessageAsync(int id, CancellationToken cancellationToken);
+        Task<List<string>> GetSideDishNames(List<int> ids);
     }
 }

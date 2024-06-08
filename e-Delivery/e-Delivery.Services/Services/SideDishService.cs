@@ -184,5 +184,22 @@ namespace e_Delivery.Services.Services
                 };
             }
         }
+        public async Task<List<string>> GetSideDishNames(List<int> ids)
+        {
+            try
+            {
+                
+                var sideDishNames = await _dbContext.SideDishes
+                   .Where(sd => ids.Contains(sd.Id)) 
+                   .Select(sd => sd.Name)
+                   .ToListAsync(); 
+
+                return sideDishNames;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to get side dish names.", ex);
+            }
+        }
     }
 }

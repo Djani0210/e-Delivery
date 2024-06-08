@@ -59,5 +59,28 @@ namespace e_Delivery.Controllers
             }
 
         }
+
+        [HttpGet("get-Review-Score-For-Restaurant-Mobile"), Authorize(Roles = "MobileClient")]
+        public async Task<IActionResult> GetReviewScoreForRestaurantMobile(int id,CancellationToken cancellationToken)
+        {
+            try
+            {
+                var score = await _reviewService.GetReviewScoreForRestaurantMobileAsync(id,cancellationToken);
+
+                if (score.HasValue)
+                {
+                    return Ok(score.Value);
+                }
+                else
+                {
+                    return NotFound("No reviews found for the restaurant.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+
+        }
     }
 }

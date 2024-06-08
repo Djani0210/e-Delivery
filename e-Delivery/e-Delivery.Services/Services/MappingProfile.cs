@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using e_Delivery.Entities;
 using e_Delivery.Model.Category;
+using e_Delivery.Model.Chat;
 using e_Delivery.Model.City;
 using e_Delivery.Model.FoodItem;
 using e_Delivery.Model.Images;
 using e_Delivery.Model.Location;
+using e_Delivery.Model.Notification;
 using e_Delivery.Model.Order;
 using e_Delivery.Model.Restaurant;
 using e_Delivery.Model.Review;
@@ -28,6 +30,8 @@ namespace e_Delivery.Services.Services
             CreateMap<UserCreateVM, User>();
             CreateMap<UserUpdateVM, User>();
             CreateMap<User, UserGetVM>();
+            CreateMap<User, CustomerGetVM>();
+            CreateMap<User, DeliveryPersonGetVM>();
             //========================================
 
 
@@ -72,6 +76,8 @@ namespace e_Delivery.Services.Services
             CreateMap<CreateFoodItemVM, FoodItem>();
             CreateMap<UpdateFoodItemVM, FoodItem>();
             CreateMap<FoodItem, FoodItemGetVM>();
+            //.ForMember(dest => dest.FoodItemPictures, opt => opt.MapFrom(src => src.FoodItemPictures));
+            CreateMap<FoodItemPictures, FoodItemPictureGetVM>();
 
             //================RESTAURANTS===============
             CreateMap<RestaurantCreateVM, Restaurant>();
@@ -89,7 +95,12 @@ namespace e_Delivery.Services.Services
             //================REVIEWS===============
             CreateMap<CreateOrUpdateReviewVM, Review>();
             CreateMap<Review, GetReviewVM>();
-            
+
+            //================NOTIFICATIONS===============
+            CreateMap<Notification, GetNotificationVM>();
+
+            //================CHATS===============
+            CreateMap<Chat,ChatDto>();
         }
     }
 }

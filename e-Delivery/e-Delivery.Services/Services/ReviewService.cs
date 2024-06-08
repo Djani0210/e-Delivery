@@ -162,5 +162,29 @@ namespace e_Delivery.Services.Services
             }
         }
 
+        public async Task<double?> GetReviewScoreForRestaurantMobileAsync(int id, CancellationToken cancellationToken)
+        {
+            try
+            {
+
+                var restaurant = await _dbContext.Restaurants
+                    .Include(r => r.Reviews)
+                    .FirstOrDefaultAsync(r => r.Id == id);
+
+                if (restaurant != null && restaurant.Reviews.Any())
+                {
+                    double averageScore = restaurant.Reviews.Average(review => review.Grade);
+                    return averageScore;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

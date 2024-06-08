@@ -1,12 +1,18 @@
+using e_Delivery;
 using e_Delivery.Database;
 using e_Delivery.Entities;
 using e_Delivery.Services.CreateRoles;
+using e_Delivery.Services.Helper;
+
+using e_Delivery.Services.Hubs;
 using e_Delivery.Services.Interfaces;
 using e_Delivery.Services.JwtConfiguration;
 using e_Delivery.Services.Services;
+using EasyNetQ;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
@@ -19,10 +25,9 @@ using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerGen(options =>
@@ -50,6 +55,13 @@ builder.Services.AddSwaggerGen(c => c.MapType<TimeSpan?>(() => new OpenApiSchema
 
 var jwtConfig = builder.Configuration.GetSection("Jwt").Get<JwtConfiguration>();
 builder.Services.AddSingleton(jwtConfig);
+
+
+builder.Services.AddSignalR(opt =>
+{
+    opt.EnableDetailedErrors = true;
+}).AddMessagePackProtocol();
+
 builder.Services.AddIdentity<User, Role>(options =>
 {
     options.Password.RequiredLength = 6;
@@ -74,7 +86,21 @@ builder.Services.AddAuthentication(options =>
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.Secret)),
                         ClockSkew = TimeSpan.Zero
                     };
-                });
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+                            if (!string.IsNullOrEmpty(accessToken))
+                            {
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
+                }
+
+                ) ;
 
 builder.Services.AddLogging();
 builder.Services.AddHttpContextAccessor();
@@ -94,8 +120,21 @@ builder.Services.AddTransient<IRestaurantService, RestaurantService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddTransient<IReviewService, e_Delivery.Services.Services.ReviewService>();
 builder.Services.AddTransient<IOrderReportService, OrderReportService>();
+builder.Services.AddTransient<INotificationService, NotificationService>();
+builder.Services.AddTransient<IChatService, ChatService>();
+builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
+
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder => builder
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
 
 
 builder.Services.AddControllers()
@@ -106,13 +145,37 @@ builder.Services.AddControllers()
                 .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase)
                 .AddFluentValidation();
 
-//builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<eDeliveryDBContext>(options =>
 options.UseSqlServer(connectionString), ServiceLifetime.Scoped);
 
+
+builder.Services.AddSingleton(sp =>
+{
+    var configuration = sp.GetRequiredService<IConfiguration>();
+    var rabbitMqSettings = configuration.GetSection("RabbitMQ").Get<RabbitMqSettings>();
+
+    if (rabbitMqSettings == null)
+    {
+        throw new InvalidOperationException("RabbitMQ settings are missing in the configuration.");
+    }
+
+    return RabbitHutch.CreateBus($"host={rabbitMqSettings.HostName};port={rabbitMqSettings.Port};username={rabbitMqSettings.UserName};password={rabbitMqSettings.Password}");
+});
+
+
+
+
 var app = builder.Build();
+
+app.UseCors(builder => builder
+    .WithOrigins("http://10.0.2.2", "https://10.0.2.2")
+    .AllowAnyMethod()
+    .AllowAnyHeader());
+
+
+app.UseCors("AllowAll");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -120,6 +183,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+
+
 app.UseStaticFiles();
 app.UseStaticFiles(new StaticFileOptions
 {
@@ -135,10 +201,21 @@ app.UseDirectoryBrowser(new DirectoryBrowserOptions
     RequestPath = "/Uploads/Images"
 });
 
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+
+
+app.UseRouting();
+
 app.UseAuthorization();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<MyHub>("/toastr");
+    endpoints.MapHub<ChatHub>("/chathub");
+    endpoints.MapControllers();
+});
 
 app.MapControllers();
 

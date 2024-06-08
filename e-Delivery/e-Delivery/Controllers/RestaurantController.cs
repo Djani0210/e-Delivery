@@ -62,9 +62,9 @@ namespace e_Delivery.Controllers
         }
 
         [HttpGet("get-Restaurants"), Authorize()]
-        public async Task<IActionResult> GetRestaurants(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetRestaurants(int id, CancellationToken cancellationToken, string? name, int? categoryId)
         {
-            var message= await _restaurantService.GetRestaurantsAsMessage(id, cancellationToken);
+            var message= await _restaurantService.GetRestaurantsAsMessage(id, cancellationToken,name, categoryId);
             if (!message.IsValid)
             {
                 return BadRequest(message);
@@ -94,7 +94,7 @@ namespace e_Delivery.Controllers
             return Ok(message);
         }
 
-        [HttpGet("get-RestauantById"), Authorize()]
+        [HttpGet("get-RestaurantById"), Authorize()]
         public async Task<IActionResult> GetRestaurantById(int id, CancellationToken cancellationToken)
         {
             var message = await _restaurantService.GetRestaurantByIdAsMessage(id,cancellationToken);
@@ -114,6 +114,18 @@ namespace e_Delivery.Controllers
             }
             return Ok(message);
         }
+
+        [HttpGet("get-recommended-restaurants"), Authorize()]
+        public async Task<IActionResult> GetRecommendedRestaurants()
+        {
+            var message = await _restaurantService.GetRecommendedRestaurants();
+            if (!message.IsValid)
+            {
+                return BadRequest(message);
+            }
+            return Ok(message);
+        }
+
 
 
 

@@ -6,6 +6,7 @@ import 'package:desktop/admin/admin_page.dart';
 import 'package:desktop/components/storage_service.dart';
 import 'package:desktop/loginRegistration/forgot_password_page.dart';
 import 'package:desktop/loginRegistration/registration_page.dart';
+import 'package:desktop/signalr_service.dart';
 import 'package:desktop/user/user_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -64,11 +65,17 @@ class _LogInFormState extends State<LogInForm> {
 
     LoginResult result = await loginService.loginUser(username, password);
     if (result.success) {
-      // Retrieve the user data from secure storage
       String? userDataJson = await StorageService.storage.read(key: 'userData');
+      String? userId = await StorageService.storage.read(key: 'currentUserId');
+      if (!mounted) return;
       if (userDataJson != null) {
         Map<String, dynamic> userData = jsonDecode(userDataJson);
         List<dynamic> roles = userData['roles'];
+
+        final signalRService = SignalRService();
+        await signalRService.connect(userId!);
+
+        if (!mounted) return;
 
         if (roles.contains('Desktop')) {
           Navigator.push(
