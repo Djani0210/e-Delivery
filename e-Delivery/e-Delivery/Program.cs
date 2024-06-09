@@ -151,10 +151,18 @@ builder.Services.AddDbContext<eDeliveryDBContext>(options =>
 options.UseSqlServer(connectionString), ServiceLifetime.Scoped);
 
 
+
 builder.Services.AddSingleton(sp =>
 {
     var configuration = sp.GetRequiredService<IConfiguration>();
-    var rabbitMqSettings = configuration.GetSection("RabbitMQ").Get<RabbitMqSettings>();
+    var rabbitMqSettings = new RabbitMqSettings
+    {
+        HostName = configuration["RABBITMQ_HOST"],
+        Port = int.Parse(configuration["RABBITMQ_PORT"] ?? "5672"),
+        UserName = configuration["RABBITMQ_USERNAME"],
+        Password = configuration["RABBITMQ_PASSWORD"],
+        VirtualHost = configuration["RABBITMQ_VIRTUALHOST"] ?? "/"
+    };
 
     if (rabbitMqSettings == null)
     {
@@ -218,10 +226,27 @@ app.UseEndpoints(endpoints =>
 });
 
 app.MapControllers();
+#region EnsureData
+
+Task.Run(() =>
+{
+    IServiceProvider provider = app.Services
+        .GetService<IServiceScopeFactory>()!
+        .CreateScope()
+        .ServiceProvider;
+
+
+    eDeliveryDBContext context = provider.GetService<eDeliveryDBContext>()!;
+    context.Database.Migrate();
+})
+    .Wait();
 
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = (RoleManager<Role>)scope.ServiceProvider.GetService(typeof(RoleManager<Role>));
     CreateRolesHelper.CreateRoles(roleManager).Wait();
 }
+
+
+#endregion
 app.Run();

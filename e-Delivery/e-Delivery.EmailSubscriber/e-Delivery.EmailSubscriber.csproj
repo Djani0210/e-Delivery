@@ -16,10 +16,12 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
     <PackageReference Include="MimeKit" Version="4.6.0" />
     <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\e-Delivery.Model\e-Delivery.Model.csproj" />
     <ProjectReference Include="..\e-Delivery.Services\e-Delivery.Services.csproj" />
+    <ProjectReference Include="..\e-Delivery\e-Delivery.csproj" />
   </ItemGroup>
 </Project>

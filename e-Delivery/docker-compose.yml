@@ -1,0 +1,76 @@
+version: '3'
+services:
+#mssql docker
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    environment:
+      - RABBITMQ_DEFAULT_USER=username
+      - RABBITMQ_DEFAULT_PASS=test
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    expose:
+      - 5672
+    networks:
+      - edeliverynet2024
+
+  edelivery-sql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Password1234!
+      - MSSQL_PID=Developer
+    ports:
+      - 1401:1433
+    expose:
+      - 1433
+    networks:
+      - edeliverynet2024
+
+  edelivery-api:
+    restart: unless-stopped
+    build:
+      context: .
+      # dockerfile: Dockerfile
+    environment:
+      - ConnectionStrings:DefaultConnection=Server=edelivery-sql,1433;Database=190058;User=sa;Password=Password1234!;ConnectRetryCount=0; TrustServerCertificate=True
+      - ASPNETCORE_ENVIRONMENT=Development
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USERNAME=username
+      - RABBITMQ_PASSWORD=test
+      - RABBITMQ_VIRTUALHOST=/
+
+    ports:
+      - 44395:44395
+    networks:
+      - edeliverynet2024
+    depends_on:
+      - edelivery-sql
+
+  mailing-service:
+    restart: on-failure
+    build:
+      context: .
+      dockerfile: Dockerfile.mailservice
+    environment:
+
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USERNAME=username
+      - RABBITMQ_PASSWORD=test
+      - RABBITMQ_VIRTUALHOST=/
+    depends_on:
+      - rabbitmq
+      - edelivery-sql
+      - edelivery-api
+    networks:
+      - edeliverynet2024
+    ports:
+      - 7101:80
+      
+networks:
+  edeliverynet2024:
+    driver: bridge
