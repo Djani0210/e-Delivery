@@ -12,9 +12,11 @@
 - **Username:** admin
 - **Password:** test
 
-### Employee
-- **Username:** employee
+### Desktop
+- **Username:** desktop
 - **Password:** test
+
+
 
 ### Setup Instructions
 
@@ -32,8 +34,12 @@ Run the following commands:
 
 ## Flutter Mobile
 
-### Client
-- **Username:** client
+### MobileClient
+- **Username:** MobileClient
+- **Password:** test
+
+### MobileDeliveryPerson
+- **Username:** MobileDeliveryPerson
 - **Password:** test
 
 ### Setup Instructions
@@ -51,3 +57,17 @@ flutter run --dart-define stripePublishableKey=yourStripePublishableKey --dart-d
 
 ### Stripe Test Card Number
 - Test card number: 4242 4242 4242 4242
+
+### RabbitMq 
+RabbitMQ is implemented in the way that whe a deliveryPerson searches for restaurants he can apply to. When he chooses a restaurant and applies, an email is sent to the owner of that restaurant. The owner then clicks the confirmation button which makes the deliveryPerson part of his restaurant.
+The credentials to the desktop user emails are the following
+user: desktop
+gmail : belminedelivery@gmail.com
+
+user: MobileDeliveryPerson
+gmail: flutterhelpme2@gmail.com
+
+user: MobileCustomer
+gmail : kupac11111@gmail.com
+
+Password for all 3 users are : e-Deliverypassword123#
