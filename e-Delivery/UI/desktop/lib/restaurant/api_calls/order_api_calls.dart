@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 
 class OrderApiService {
   final _storage = const FlutterSecureStorage();
-  final String _baseUrl = 'https://localhost:44395/api/';
+  final String _baseUrl = 'http://localhost:44395/api/';
 
   Future<String> _fetchJwtToken() async {
     // Adjust 'jwt' as necessary based on how you've stored the token

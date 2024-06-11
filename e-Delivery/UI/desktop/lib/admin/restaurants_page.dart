@@ -86,7 +86,7 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
             _filterRestaurants(value);
           },
           decoration: InputDecoration(
-            labelText: 'Pretraži restorane...',
+            labelText: 'Search restaurants...',
             border: OutlineInputBorder(),
           ),
         ),
@@ -112,8 +112,8 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
             city.title.toLowerCase().startsWith(filter.toLowerCase()),
         dropdownDecoratorProps: DropDownDecoratorProps(
           dropdownSearchDecoration: InputDecoration(
-            labelText: 'Odaberite grad',
-            hintText: 'Pretražite gradove...',
+            labelText: 'Choose city...',
+            hintText: 'Search cities...',
             border: OutlineInputBorder(),
           ),
         ),
@@ -123,7 +123,7 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
           searchDelay: Duration(milliseconds: 300),
           searchFieldProps: TextFieldProps(
             decoration: InputDecoration(
-              hintText: 'Pretražite gradove...',
+              hintText: 'Search cities...',
               border: OutlineInputBorder(),
             ),
           ),
@@ -150,26 +150,26 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
   Widget _buildRestaurantTable() {
     return DataTable(
       columns: [
-        DataColumn(label: Text('Naziv')),
-        DataColumn(label: Text('Adresa')),
-        DataColumn(label: Text('Kontakt broj')),
-        DataColumn(label: Text('Otvoreno?')),
-        DataColumn(label: Text('Email vlasnika')),
-        DataColumn(label: Text('Akcija')),
+        DataColumn(label: Text('Name')),
+        DataColumn(label: Text('Address')),
+        DataColumn(label: Text('Contact')),
+        DataColumn(label: Text('Open?')),
+        DataColumn(label: Text('Owners email')),
+        DataColumn(label: Text('Action')),
       ],
       rows: _restaurants.map((restaurant) {
         return DataRow(cells: [
           DataCell(Text(restaurant.name)),
           DataCell(Text(restaurant.address)),
           DataCell(Text(restaurant.contactNumber.toString())),
-          DataCell(Text(restaurant.isOpen ? 'Otvoren' : 'Zatvoren')),
+          DataCell(Text(restaurant.isOpen ? 'Open' : 'Closed')),
           DataCell(Text(restaurant.createdByUserEmail ?? 'N/A')),
           DataCell(TextButton(
             onPressed: () async {
               bool confirmed = await showConfirmationDialog(
                 context,
-                'Potvrda brisanja',
-                'Jeste li sigurni da želite izbrisati restoran "${restaurant.name}"?',
+                'Delete confirmation',
+                'Are you sure you want to delete restaurant "${restaurant.name}"?',
               );
               if (confirmed) {
                 try {
@@ -188,7 +188,7 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
                 }
               }
             },
-            child: Text('Izbriši'),
+            child: Text('Delete'),
           )),
         ]);
       }).toList(),
@@ -208,13 +208,13 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
-              child: Text('Odustani'),
+              child: Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: Text('Potvrdi'),
+              child: Text('Confirm'),
             ),
           ],
         );
@@ -285,7 +285,7 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
                 ? () => _fetchRestaurants(pageNumber: _currentPage)
                 : null,
           ),
-          Text('Stranica ${_currentPage + 1} od $_totalPages'),
+          Text('Page ${_currentPage + 1} of $_totalPages'),
           IconButton(
             icon: Icon(Icons.arrow_forward_ios),
             onPressed: _currentPage < _totalPages - 1

@@ -64,7 +64,7 @@ builder.Services.AddSignalR(opt =>
 
 builder.Services.AddIdentity<User, Role>(options =>
 {
-    options.Password.RequiredLength = 6;
+    options.Password.RequiredLength = 4;
     options.Password.RequireDigit = false;
     options.Password.RequireLowercase = false;
     options.Password.RequireNonAlphanumeric = false;
@@ -148,7 +148,7 @@ builder.Services.AddControllers()
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<eDeliveryDBContext>(options =>
-options.UseSqlServer(connectionString), ServiceLifetime.Scoped);
+options.UseSqlServer(connectionString).EnableSensitiveDataLogging(), ServiceLifetime.Scoped);
 
 
 
@@ -241,11 +241,11 @@ Task.Run(() =>
 })
     .Wait();
 
-using (var scope = app.Services.CreateScope())
-{
-    var roleManager = (RoleManager<Role>)scope.ServiceProvider.GetService(typeof(RoleManager<Role>));
-    CreateRolesHelper.CreateRoles(roleManager).Wait();
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var roleManager = (RoleManager<Role>)scope.ServiceProvider.GetService(typeof(RoleManager<Role>));
+//    CreateRolesHelper.CreateRoles(roleManager).Wait();
+//}
 
 
 #endregion

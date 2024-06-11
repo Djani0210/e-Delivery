@@ -62,20 +62,20 @@ class _CategoriesPageState extends State<CategoriesPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Uredi kategoriju'),
+          title: Text('Edit category'),
           content: Form(
             key: _formKey,
             child: TextFormField(
               controller: _nameController,
               decoration: InputDecoration(
-                labelText: 'Naziv',
+                labelText: 'Name',
               ),
               maxLength: 20,
               validator: (value) {
                 if (value!.isEmpty) {
-                  return 'Molimo unesite naziv';
+                  return 'Please enter the name';
                 } else if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
-                  return 'Samo slova i razmak dozvoljeni';
+                  return 'Only letters and space allowed';
                 }
                 return null;
               },
@@ -83,13 +83,13 @@ class _CategoriesPageState extends State<CategoriesPage> {
           ),
           actions: [
             TextButton(
-              child: Text('Otkaži'),
+              child: Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Uredi'),
+              child: Text('Edit'),
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   CategoryService()
@@ -137,7 +137,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                           controller: _searchController,
                           onChanged: _filterCategories,
                           decoration: InputDecoration(
-                            labelText: 'Pretraži po nazivu',
+                            labelText: 'Search by name',
                             border: OutlineInputBorder(),
                           ),
                         ),
@@ -150,22 +150,22 @@ class _CategoriesPageState extends State<CategoriesPage> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text('Dodaj kategoriju'),
+                              title: Text('Add category'),
                               content: TextField(
                                 controller: _nameController,
                                 decoration: InputDecoration(
-                                  labelText: 'Naziv',
+                                  labelText: 'Name',
                                 ),
                               ),
                               actions: [
                                 TextButton(
-                                  child: Text('Otkaži'),
+                                  child: Text('Cancel'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
                                 ),
                                 TextButton(
-                                  child: Text('Dodaj'),
+                                  child: Text('Add'),
                                   onPressed: () {
                                     _addCategory();
                                     Navigator.of(context).pop();
@@ -185,7 +185,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                             horizontal: 24.0, vertical: 16.0),
                       ),
                       child: Text(
-                        'Dodaj kategoriju',
+                        'Add category',
                         style: TextStyle(fontSize: 16.0),
                       ),
                     ),
@@ -220,13 +220,13 @@ class _CategoriesPageState extends State<CategoriesPage> {
                       ),
                       DataColumn(
                         label: Text(
-                          'Naziv',
+                          'Name',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
                       DataColumn(
                         label: Text(
-                          'Uredi',
+                          'Edit',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),

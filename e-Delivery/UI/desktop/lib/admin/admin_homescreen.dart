@@ -36,16 +36,13 @@ class _HomeScreenAdminState extends State<HomeScreenAdminPage> {
   Future<void> _loadUserData() async {
     try {
       final jwtToken = await StorageService.storage.read(key: 'jwt');
-      print(jwtToken);
+
       if (jwtToken != null) {
-        print(
-            'JWT Token from secure storage: $jwtToken'); // Print the JWT token to the console
       } else {
         print('No JWT token found in secure storage.');
       }
       final userId = await StorageService.storage.read(key: 'currentUserId');
       if (userId != null) {
-        print('User ID from secure storage: $userId');
       } else {
         print('No user ID found in secure storage.');
       }
@@ -71,16 +68,16 @@ class _HomeScreenAdminState extends State<HomeScreenAdminPage> {
     final confirmation = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Potvrda objave'),
-        content: const Text('Da li ste sigurni da se zelite odjaviti?'),
+        title: const Text('Confirmation'),
+        content: const Text('Are you sure you want to log out?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Ne'),
+            child: const Text('No'),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Da'),
+            child: const Text('Yes'),
           ),
         ],
       ),
@@ -91,7 +88,7 @@ class _HomeScreenAdminState extends State<HomeScreenAdminPage> {
         final jwtToken = await StorageService.storage.read(key: 'jwt');
 
         final response = await http.post(
-          Uri.parse('https://localhost:44395/api/Auth/logout'),
+          Uri.parse('http://localhost:44395/api/Auth/logout'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $jwtToken',

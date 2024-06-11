@@ -10,7 +10,7 @@ import 'package:desktop/loginRegistration/login_service.dart';
 
 enum Gender { Male, Female }
 
-const String apiUrl = 'https://localhost:44395/api/User';
+const String apiUrl = 'http://localhost:44395/api/User';
 
 class UserCreateDTO {
   String? firstName;
@@ -122,8 +122,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter your password';
-    } else if (value.length < 6) {
-      return 'Password must be at least  6 characters long';
+    } else if (value.length < 4) {
+      return 'Password must be at least  4 characters long';
     }
     return null;
   }
@@ -247,7 +247,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     onSaved: (value) {
                       _email = value;
                     },
-                    decoration: const InputDecoration(hintText: "Email"),
+                    decoration: const InputDecoration(
+                        hintText: "Email", border: OutlineInputBorder()),
                   ),
                 ),
               ),

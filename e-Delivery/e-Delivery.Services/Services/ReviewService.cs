@@ -153,7 +153,7 @@ namespace e_Delivery.Services.Services
                 }
                 else
                 {
-                    return null;
+                    return 0.00;
                 }
             }
             catch (Exception ex)

@@ -16,7 +16,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
   final int _perPage = 3;
   String _searchTerm = '';
   bool? _isAvailable;
-  String _selectedAvailability = 'Svi';
+  String _selectedAvailability = 'All';
 
   @override
   void initState() {
@@ -61,9 +61,9 @@ class _EmployeesPageState extends State<EmployeesPage> {
 
     // You may want to move this outside of build to prevent recreating it on every build
     final List<Map<String, dynamic>> _availabilityOptions = [
-      {'label': 'Svi', 'value': null},
-      {'label': 'Dostupni', 'value': true},
-      {'label': 'Nedostupni', 'value': false},
+      {'label': 'All', 'value': null},
+      {'label': 'Available', 'value': true},
+      {'label': 'Unavailable', 'value': false},
     ];
 
     // This is to prevent the cursor from jumping to the end of the input text
@@ -75,9 +75,9 @@ class _EmployeesPageState extends State<EmployeesPage> {
       setState(() {
         _fetchEmployees(
           username: _searchTerm,
-          isAvailable: _selectedAvailability == 'Dostupni'
+          isAvailable: _selectedAvailability == 'Available'
               ? true
-              : _selectedAvailability == 'Nedostupni'
+              : _selectedAvailability == 'Unavailable'
                   ? false
                   : null,
         );
@@ -95,7 +95,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                labelText: 'Pretraži',
+                labelText: 'Search',
                 border: OutlineInputBorder(),
               ),
               onChanged: (value) {
@@ -141,7 +141,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
         Padding(
           padding: EdgeInsets.all(16.0),
           child: Text(
-            'Dostavljači',
+            'Delivery people',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
         ),
@@ -178,15 +178,15 @@ class _EmployeesPageState extends State<EmployeesPage> {
       ),
       child: Row(
         children: <Widget>[
-          Expanded(flex: 2, child: Text('Slika', textAlign: TextAlign.center)),
+          Expanded(flex: 2, child: Text('Image', textAlign: TextAlign.center)),
           Expanded(
             flex: 3,
-            child: Center(child: Text('Ime i prezime')),
+            child: Center(child: Text('Name')),
           ),
-          Expanded(flex: 3, child: Text('Kontakt')),
-          Expanded(flex: 3, child: Text('Dostupnost')),
-          Expanded(flex: 3, child: Text('Radno vrijeme')),
-          Expanded(flex: 2, child: Text('Akcija', textAlign: TextAlign.center)),
+          Expanded(flex: 3, child: Text('Contact')),
+          Expanded(flex: 3, child: Text('Availability')),
+          Expanded(flex: 3, child: Text('Working hours')),
+          Expanded(flex: 2, child: Text('Action', textAlign: TextAlign.center)),
         ],
       ),
     );
@@ -230,7 +230,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
                     Expanded(
                       flex: 3,
                       child: Text(
-                          employee.isAvailable ? 'Dostupan' : 'Nedostupan',
+                          employee.isAvailable ? 'Available' : 'Unavailable',
                           style: TextStyle(
                               color: employee.isAvailable
                                   ? Colors.green
@@ -246,7 +246,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
                       child: TextButton(
                         onPressed: () =>
                             _showRemoveDialog(context, employee.id),
-                        child: Text('Ukloni'),
+                        child: Text('Remove'),
                         style: TextButton.styleFrom(
                           primary: Colors.white,
                           backgroundColor: Colors.red,
@@ -325,12 +325,11 @@ class _EmployeesPageState extends State<EmployeesPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Uklanjanje dostavljača'),
-          content:
-              Text('Da li ste sigurni da želite ukloniti ovog dostavljača?'),
+          title: Text('Remove Employee'),
+          content: Text('Are you sure you want to remove this employee?'),
           actions: <Widget>[
             TextButton(
-              child: Text('Odustani'),
+              child: Text('Cancel'),
               style: TextButton.styleFrom(
                 primary: Colors.grey, // Color for the text
               ),
@@ -339,7 +338,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
               },
             ),
             ElevatedButton(
-              child: Text('Potvrdi'),
+              child: Text('Confirm'),
               style: ElevatedButton.styleFrom(
                 primary: Colors.red, // Background color
               ),

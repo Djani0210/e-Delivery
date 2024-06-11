@@ -33,7 +33,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
     if (userId != null) {
       final response = await http.post(
-        Uri.parse('https://localhost:44395/api/User/change-password'),
+        Uri.parse('http://localhost:44395/api/User/change-password'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'Id': userId,

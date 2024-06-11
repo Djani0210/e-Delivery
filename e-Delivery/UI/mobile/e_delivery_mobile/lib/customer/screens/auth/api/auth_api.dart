@@ -3,7 +3,7 @@ import 'package:e_delivery_mobile/storage_service.dart';
 import 'package:http/http.dart' as http;
 
 class LoginService {
-  static const String apiBaseUrl = 'https://10.0.2.2:44395/api/Auth';
+  static const String apiBaseUrl = 'http://10.0.2.2:44395/api/Auth';
 
   Future<LoginResult> loginUser(String username, String password) async {
     try {

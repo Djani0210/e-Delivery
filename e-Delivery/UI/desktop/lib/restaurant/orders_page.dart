@@ -22,7 +22,7 @@ class _OrdersPageState extends State<OrdersPage> {
   int _currentPage = 0;
   final int _perPage = 4;
   int _totalPages = 0;
-  String _currentStatus = 'Sve';
+  String _currentStatus = 'All';
   DateTime? _selectedFromDate;
   DateTime? _selectedToDate;
   int? _currentOrderState;
@@ -77,7 +77,7 @@ class _OrdersPageState extends State<OrdersPage> {
         children: <Widget>[
           SizedBox(width: 10),
           Text(
-            'Narudzbe',
+            'Orders',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -102,26 +102,26 @@ class _OrdersPageState extends State<OrdersPage> {
     return Row(
       children: <Widget>[
         SizedBox(width: 5),
-        Text('Trenutno pronađeno $_totalOrdersCount narudžbi:'),
+        Text('Currently found $_totalOrdersCount orders:'),
         SizedBox(width: 16),
-        Text('Od:'),
+        Text('From:'),
         SizedBox(width: 16),
         ElevatedButton(
           onPressed: () => _selectDate(context, true),
           child: Text(
             _selectedFromDate == null
-                ? 'Odaberite datum'
+                ? 'Choose a date'
                 : DateFormat('yyyy-MM-dd').format(_selectedFromDate!),
           ),
         ),
         SizedBox(width: 16),
-        Text('Do:'),
+        Text('To:'),
         SizedBox(width: 16),
         ElevatedButton(
           onPressed: () => _selectDate(context, false),
           child: Text(
             _selectedToDate == null
-                ? 'Odaberite datum'
+                ? 'Choose a date'
                 : DateFormat('yyyy-MM-dd').format(_selectedToDate!),
           ),
         ),
@@ -148,7 +148,7 @@ class _OrdersPageState extends State<OrdersPage> {
     setState(() {
       _selectedFromDate = null;
       _selectedToDate = null;
-      _currentStatus = 'Sve';
+      _currentStatus = 'All';
       _currentOrderState = null;
       _currentPage = 1;
     });
@@ -213,7 +213,7 @@ class _OrdersPageState extends State<OrdersPage> {
   }
 
   Widget _buildStatusFilters(BuildContext context) {
-    List<String> statuses = ['Sve', 'U pripremi', 'Na dostavi', 'Dostavljeno'];
+    List<String> statuses = ['All', 'Preparing', 'Deployed', 'Delivered'];
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -228,7 +228,7 @@ class _OrdersPageState extends State<OrdersPage> {
             setState(() {
               _currentStatus = status;
 
-              _currentOrderState = status == 'Sve' ? null : index;
+              _currentOrderState = status == 'All' ? null : index;
 
               _fetchOrders(
                 startDate: _selectedFromDate,
@@ -258,23 +258,21 @@ class _OrdersPageState extends State<OrdersPage> {
         child: DataTable(
           columnSpacing: 38,
           columns: const <DataColumn>[
-            DataColumn(label: Text('Id')),
-            DataColumn(label: Text('Ime')),
-            DataColumn(label: Text('Datum')),
-            DataColumn(label: Text('Cijena')),
+            DataColumn(label: Text('Name')),
+            DataColumn(label: Text('Date')),
+            DataColumn(label: Text('Cost')),
             DataColumn(label: Text('Status')),
-            DataColumn(label: Text('Akcija')),
+            DataColumn(label: Text('Action')),
           ],
           rows: _orders.map((order) {
             return DataRow(cells: [
-              DataCell(Text(order.id)),
               DataCell(Text(order.location.city.title)),
               DataCell(Text(formatDateTime(order.createdDate.toString()))),
               DataCell(Text(order.totalCost.toString())),
               DataCell(Text(order.orderStateText)),
               DataCell(TextButton(
                   onPressed: () => widget.onNavigateToDetails(order.id),
-                  child: Text('Detalji'))),
+                  child: Text('Details'))),
             ]);
           }).toList(),
         ),
@@ -308,7 +306,7 @@ class _OrdersPageState extends State<OrdersPage> {
           padding: EdgeInsets.symmetric(horizontal: 35, vertical: 18),
         ),
         onPressed: _showOrderReportDialog,
-        child: Text('Printaj izvještaj'),
+        child: Text('Print report'),
       ),
     );
   }

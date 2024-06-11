@@ -70,7 +70,7 @@ namespace e_Delivery.Services.Services
                 }
 
                 var restaurantOwnerEmail = restaurant.CreatedByUser.Email;
-                var confirmationLink = $"https://localhost:44395/api/User/confirm?deliveryPersonId={loggedUser.Id}&restaurantId={restaurantId}";
+                var confirmationLink = $"http://localhost:44395/api/User/confirm?deliveryPersonId={loggedUser.Id}&restaurantId={restaurantId}";
 
                 var emailMessage = new ApplyMessage
                 {

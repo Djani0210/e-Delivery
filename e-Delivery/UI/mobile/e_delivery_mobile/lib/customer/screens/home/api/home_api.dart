@@ -5,7 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class RestaurantService {
-  static const String baseUrl = 'https://10.0.2.2:44395/api';
+  static const String baseUrl = 'http://10.0.2.2:44395/api';
 
   final _storage = const FlutterSecureStorage();
 

@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 class DeliveryOrderService {
   final _storage = const FlutterSecureStorage();
-  final String _baseUrl = 'https://10.0.2.2:44395/api/';
+  final String _baseUrl = 'http://10.0.2.2:44395/api/';
 
   Future<String> _fetchJwtToken() async {
     String? jwt = await _storage.read(key: 'jwt');

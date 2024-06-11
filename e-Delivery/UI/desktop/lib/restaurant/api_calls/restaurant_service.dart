@@ -10,7 +10,7 @@ class RestaurantServiceResult {
 }
 
 class RestaurantService {
-  static const String apiBaseUrl = 'https://localhost:44395/api/Restaurant';
+  static const String apiBaseUrl = 'http://localhost:44395/api/Restaurant';
 
   Future<Map<String, dynamic>?> CreateRestaurant(
     String name,

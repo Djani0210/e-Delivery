@@ -41,7 +41,7 @@ class _ApplyToRestaurantPageState extends State<ApplyToRestaurantPage> {
       String jwt = await _fetchJwtToken();
       final cityId = await _fetchCityId();
       final url =
-          'https://10.0.2.2:44395/api/Restaurant/get-Restaurants?id=$cityId';
+          'http://10.0.2.2:44395/api/Restaurant/get-Restaurants?id=$cityId';
       final response = await http
           .get(Uri.parse(url), headers: {'Authorization': 'Bearer $jwt'});
 
@@ -99,7 +99,7 @@ class _ApplyToRestaurantPageState extends State<ApplyToRestaurantPage> {
   Future<void> _applyToRestaurant(int restaurantId) async {
     try {
       String jwt = await _fetchJwtToken();
-      final url = 'https://10.0.2.2:44395/api/User/apply/$restaurantId';
+      final url = 'http://10.0.2.2:44395/api/User/apply/$restaurantId';
       final response = await http
           .post(Uri.parse(url), headers: {'Authorization': 'Bearer $jwt'});
 

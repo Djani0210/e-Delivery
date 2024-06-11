@@ -126,7 +126,7 @@ class _MapScreenState extends State<MapScreen> {
       };
 
       final response = await http.get(
-        Uri.parse('https://10.0.2.2:44395/api/City/get-city?id=$cityId'),
+        Uri.parse('http://10.0.2.2:44395/api/City/get-city?id=$cityId'),
         headers: headers,
       );
 

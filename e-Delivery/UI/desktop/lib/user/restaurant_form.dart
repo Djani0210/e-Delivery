@@ -1,18 +1,14 @@
-import 'dart:math';
+import 'dart:async';
 
 import 'package:desktop/components/hover_animation.dart';
 import 'package:desktop/restaurant/restaurant_dashboard.dart';
 import 'package:desktop/user/map_selection.dart';
+
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 
 import 'package:desktop/restaurant/api_calls/restaurant_service.dart';
 import 'package:desktop/user/user_page.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:desktop/components/storage_service.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:desktop/user/geolocation.dart';
 
 class RestaurantForm extends StatefulWidget {
   final List<City> cities;
@@ -38,20 +34,9 @@ class _RestaurantFormState extends State<RestaurantForm> {
   int _cityId = 0;
   String _latitude = '';
   String _longitude = '';
-
+  City? _selectedCity;
   bool _isLoading = false;
   String _message = '';
-
-  Future<void> _fetchLocationAndAddress() async {
-    Position position = await DeterminePosition();
-    String address =
-        await GetAddressFromLatLng(position.latitude, position.longitude);
-    setState(() {
-      _latitude = position.latitude.toString();
-      _longitude = position.longitude.toString();
-      _address = address;
-    });
-  }
 
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
@@ -163,7 +148,6 @@ class _RestaurantFormState extends State<RestaurantForm> {
           key: _formKey,
           child: Column(
             children: [
-              //MapSelection(),
               SizedBox(height: 16.0),
               HoverAnimation(
                 size: const Size(360, 54),
@@ -189,7 +173,6 @@ class _RestaurantFormState extends State<RestaurantForm> {
                   ),
                 ),
               ),
-
               SizedBox(height: 16.0),
               HoverAnimation(
                 size: const Size(360, 54),
@@ -363,30 +346,40 @@ class _RestaurantFormState extends State<RestaurantForm> {
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  child: DropdownButtonFormField<int>(
-                    decoration: InputDecoration(
-                      hintText: 'City',
-                      contentPadding: EdgeInsets.all(12.0), // Add padding
-                    ),
-                    items: widget.cities.map((City city) {
-                      return DropdownMenuItem<int>(
-                        value: city.id,
-                        child: Text(
-                          city.title,
-                          style: const TextStyle(color: Colors.purple),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (int? newValue) {
+                  child: DropdownSearch<City>(
+                    selectedItem: _selectedCity,
+                    onChanged: (City? newValue) {
                       setState(() {
-                        _cityId = newValue!;
+                        _selectedCity = newValue;
                       });
                     },
-                    onSaved: (int? value) => _cityId = value!,
+                    items: widget.cities,
+                    itemAsString: (City city) => city.title,
+                    dropdownDecoratorProps: DropDownDecoratorProps(
+                      dropdownSearchDecoration: InputDecoration(
+                        hintText: 'Search cities...',
+                        contentPadding: EdgeInsets.all(12.0), // Add padding
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    popupProps: PopupProps.menu(
+                      showSearchBox: true,
+                      searchFieldProps: TextFieldProps(
+                        decoration: InputDecoration(
+                          hintText: 'Search cities...',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      itemBuilder: (context, City city, isSelected) => ListTile(
+                        title: Text(city.title),
+                        selected: isSelected,
+                      ),
+                      constraints:
+                          BoxConstraints(maxHeight: 300), // Limit height
+                    ),
                   ),
                 ),
               ),
-
               SizedBox(height: 16.0),
               CheckboxListTile(
                 title: Text(
@@ -485,7 +478,6 @@ class _RestaurantFormState extends State<RestaurantForm> {
                     ? CircularProgressIndicator()
                     : Text('Create Restaurant'),
               ),
-
               SizedBox(height: 16.0),
             ],
           ),

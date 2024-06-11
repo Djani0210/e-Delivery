@@ -40,7 +40,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Detalji Narudžbe',
+          'Order details',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor:
@@ -87,7 +87,7 @@ class OrderDetailsContent extends StatelessWidget {
               children: [
                 OrderInfoHeaderSection(order: order),
                 SizedBox(height: 20),
-                Text("Sadržaj narudžbe:",
+                Text("Order contents:",
                     style:
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0)),
                 SizedBox(height: 30),
@@ -120,10 +120,8 @@ class OrderInfoHeaderSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Broj narudžbe: ${order.id}',
-                style: Theme.of(context).textTheme.headline6),
             Text(
-                'Datum narudžbe: ${DateFormat('dd.MM.yyyy. HH:mm').format(order.createdDate)}',
+                'Order date: ${DateFormat('dd.MM.yyyy. HH:mm').format(order.createdDate)}',
                 style: TextStyle(color: Colors.grey[700])),
           ],
         ),
@@ -137,31 +135,31 @@ class OrderItemsLabelSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(8.0),
-      child: Row(
+      child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Expanded(
-              child: Text('Slika',
+              child: Text('Image',
                   style: TextStyle(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center)),
           Expanded(
-              child: Text('Naziv jela',
+              child: Text('Food item',
                   style: TextStyle(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center)),
           Expanded(
-              child: Text('Kategorija',
+              child: Text('Category',
                   style: TextStyle(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center)),
           Expanded(
-              child: Text('Cijena',
+              child: Text('Price',
                   style: TextStyle(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center)),
           Expanded(
-              child: Text('Količina',
+              child: Text('Quantity',
                   style: TextStyle(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center)),
           Expanded(
-              child: Text('Prilozi',
+              child: Text('Side dishes',
                   style: TextStyle(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center)),
         ],
@@ -230,7 +228,6 @@ class OrderItemWidget extends StatelessWidget {
                     ],
                   );
                 } else {
-                  print("Fetched Image URL: ${snapshot.data}");
                   return Image.network(
                     snapshot.data!,
                     width: 80,
@@ -257,7 +254,7 @@ class OrderItemWidget extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () =>
                   _showSideDishesDialog(context, orderItem.sideDishes),
-              child: Text('Prilozi'),
+              child: Text('Side Dishes'),
             ),
           ),
         ],
@@ -272,7 +269,7 @@ void _showSideDishesDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text("Prilozi"),
+        title: Text("Side dishes"),
         content: SingleChildScrollView(
           // Added for better scrolling behavior
           child: Container(
@@ -305,7 +302,7 @@ void _showSideDishesDialog(
         ),
         actions: <Widget>[
           TextButton(
-            child: Text("Zatvori"),
+            child: Text("Close"),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ],
@@ -346,7 +343,7 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Odaberite dostavljača"),
+            title: Text("Choose delivery person"),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             content: Container(
@@ -365,12 +362,12 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
                               await assignDeliveryPerson(order.id, employee.id);
                               Navigator.of(context).pop();
                             },
-                            child: Text('Dodaj'),
+                            child: Text('Add'),
                           ),
                         );
                       },
                     )
-                  : Center(child: Text("Dostavljači nisu pronađeni.")),
+                  : Center(child: Text("Delivery persons not found.")),
             ),
             actions: <Widget>[
               TextButton(
@@ -411,7 +408,7 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
       // Update failed, show an error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Greška pri ažuriranju narudžbe'),
+          content: Text('Error updating order state'),
           backgroundColor: Colors.red,
         ),
       );
@@ -460,7 +457,7 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Plaćanje:',
+                  const Text('Payment:',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   Text('${order.paymentMethodText}',
@@ -471,7 +468,7 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Status:',
+                  const Text('Status:',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   Text('${order.orderStateText}',
@@ -482,7 +479,7 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Ime kupca:',
+                  Text('Customer name:',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   Text('${order.userName}', style: TextStyle(fontSize: 16)),
@@ -492,7 +489,7 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Adresa kupca:',
+                  Text('Customer address:',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   Text('${order.address}', style: TextStyle(fontSize: 16)),
@@ -502,7 +499,7 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Alergije:',
+                  Text('Allergies:',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   Text('${order.allergies}', style: TextStyle(fontSize: 16)),
@@ -512,7 +509,7 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Dostavljač:',
+                  Text('Delivery person:',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   order.deliveryPersonId == null
@@ -521,7 +518,7 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
                               showAssignDeliveryPersonDialog(context, order.id),
 
                           icon: Icon(Icons.person_2_outlined), // Employee icon
-                          label: Text('Dodaj dostavljača'),
+                          label: Text('Add delivery person'),
                           style: ElevatedButton.styleFrom(
                             primary: Colors.blue, // Button background color
 
@@ -539,7 +536,7 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Akcija',
+                    'Action',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -552,9 +549,9 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text('Potvrdi akciju'),
+                              title: Text('Confirm action'),
                               content: Text(
-                                  'Da li ste sigurni da želite označiti narudžbu "Na dostavi?'),
+                                  'Are you sure you want to mark this order as deployed?'),
                               actions: [
                                 TextButton(
                                   onPressed: () async {
@@ -562,13 +559,13 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
                                         newState: 2);
                                     Navigator.of(context).pop();
                                   },
-                                  child: Text('Da'),
+                                  child: Text('Yes'),
                                 ),
                                 TextButton(
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
-                                  child: Text('Otkaži'),
+                                  child: Text('Cancel'),
                                 ),
                               ],
                             );
@@ -576,7 +573,7 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
                         );
                       },
                       icon: Icon(Icons.delivery_dining),
-                      label: Text('Označi u dostavi'),
+                      label: Text('Mark as deployed'),
                       style: ElevatedButton.styleFrom(
                         primary: Colors.green,
                         shape: RoundedRectangleBorder(
@@ -586,7 +583,7 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
                     )
                   else
                     Text(
-                      'Već izvršena akcija',
+                      'Already deployed',
                       style: TextStyle(
                         color: Colors.grey,
                         fontStyle: FontStyle.italic,
@@ -598,14 +595,14 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
               Divider(color: Colors.grey[400]),
               Padding(
                 padding: const EdgeInsets.only(bottom: 16.0, top: 16.0),
-                child: Text('Detalji Plaćanja',
+                child: Text('Payment details',
                     style:
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Cijena narudžbe:',
+                  Text('Order cost:',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   Text('${order.totalCost - order.deliveryCost} KM',
@@ -616,7 +613,7 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Trošak dostave:',
+                  Text('Delivery cost:',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   Text('${order.deliveryCost} KM',
@@ -627,7 +624,7 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Ukupna cijena:',
+                  Text('Total cost:',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   Text('${order.totalCost} KM', style: TextStyle(fontSize: 16)),

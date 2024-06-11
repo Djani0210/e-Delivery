@@ -21,7 +21,7 @@ class _ConfirmCodePageState extends State<ConfirmCodePage> {
 
   Future<void> checkCode(String email, String code) async {
     final response = await http.post(
-      Uri.parse('https://localhost:44395/api/User/check-code'),
+      Uri.parse('http://localhost:44395/api/User/check-code'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'Email': widget.email,

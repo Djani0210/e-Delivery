@@ -5,7 +5,7 @@ import 'package:desktop/restaurant/viewmodels/food_item_get_VM.dart';
 
 class SideDishApiService {
   final _storage = const FlutterSecureStorage();
-  final String _baseUrl = 'https://localhost:44395/api/';
+  final String _baseUrl = 'http://localhost:44395/api/';
 
   Future<String> _fetchJwtToken() async {
     String? jwt = await _storage.read(key: 'jwt');

@@ -236,29 +236,29 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
                       child: Column(
                         children: [
                           Text(
-                            'Osnovni podaci o restoranu',
+                            'Important data about the restaurant',
                             style: TextStyle(
                                 fontSize: 24, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(height: 26),
-                          _buildTextField(_nameController, 'Naziv restorana',
-                              maxLength: 20),
-                          _buildSwitch('Restoran otvoren : ', _isOpen, (value) {
+                          _buildTextField(_nameController, 'Restaurant name',
+                              maxLength: 30),
+                          _buildSwitch('Restaurant open : ', _isOpen, (value) {
                             setState(() {
                               _isOpen = value;
                             });
                           }),
                           SizedBox(height: 20),
                           _buildNumericField(
-                              _deliveryChargeController, 'Trošak dostave',
+                              _deliveryChargeController, 'Delivery cost',
                               suffixText: 'KM'),
                           _buildNumericField(
-                              _deliveryTimeController, 'Vrijeme dostave',
+                              _deliveryTimeController, 'Delivery time',
                               suffixText: "min"),
-                          _buildTextField(_contactController, 'Kontakt broj',
+                          _buildTextField(_contactController, 'Contact',
                               maxLength: 12),
                           _buildTextField(
-                              _addressController, 'Adresa restorana',
+                              _addressController, 'Restaurant Address',
                               maxLength: 20),
                         ],
                       ),
@@ -268,19 +268,19 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
                       child: Column(
                         children: [
                           Text(
-                            'Uredi sliku i vrijeme',
+                            'Edit picture and opening hours',
                             style: TextStyle(
                                 fontSize: 24, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(height: 26),
                           _buildTimePickerField(
                               _openingTimeController,
-                              'Vrijeme otvaranja',
+                              'Opening hours',
                               widget.restaurantViewModel?.openingTime),
                           SizedBox(height: 20),
                           _buildTimePickerField(
                               _closingTimeController,
-                              'Vrijeme zatvaranja',
+                              'Closing hours',
                               widget.restaurantViewModel?.closingTime),
                           SizedBox(height: 20),
                           _buildImageWidget(),
@@ -290,11 +290,11 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
                             children: [
                               TextButton(
                                 onPressed: pickImage,
-                                child: Text('Odaberi sliku'),
+                                child: Text('Choose a picture'),
                               ),
                               ElevatedButton(
                                 onPressed: uploadImage,
-                                child: Text('Sačuvaj sliku'),
+                                child: Text('Upload picture'),
                               ),
                             ],
                           ),

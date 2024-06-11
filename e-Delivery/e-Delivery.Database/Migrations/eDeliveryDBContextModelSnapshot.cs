@@ -22,8 +22,6 @@ namespace e_Delivery.Database.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.HasSequence("BaseEntitySequence");
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.Property<int>("Id")
@@ -106,6 +104,78 @@ namespace e_Delivery.Database.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("asp_net_user_roles", "identity");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = new Guid("4325ff27-c4d1-4ee8-8073-518fafba8678"),
+                            RoleId = new Guid("353224f4-7950-428d-a141-08dc2a5ba67c")
+                        },
+                        new
+                        {
+                            UserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            RoleId = new Guid("f57f872c-eaa4-441e-a142-08dc2a5ba67c")
+                        },
+                        new
+                        {
+                            UserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            RoleId = new Guid("f57f872c-eaa4-441e-a142-08dc2a5ba67c")
+                        },
+                        new
+                        {
+                            UserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            RoleId = new Guid("f57f872c-eaa4-441e-a142-08dc2a5ba67c")
+                        },
+                        new
+                        {
+                            UserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            RoleId = new Guid("f57f872c-eaa4-441e-a142-08dc2a5ba67c")
+                        },
+                        new
+                        {
+                            UserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            RoleId = new Guid("f57f872c-eaa4-441e-a142-08dc2a5ba67c")
+                        },
+                        new
+                        {
+                            UserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
+                            RoleId = new Guid("f57f872c-eaa4-441e-a142-08dc2a5ba67c")
+                        },
+                        new
+                        {
+                            UserId = new Guid("d405edf6-6ebf-4c20-861d-077f70fbcfb7"),
+                            RoleId = new Guid("f57f872c-eaa4-441e-a142-08dc2a5ba67c")
+                        },
+                        new
+                        {
+                            UserId = new Guid("b8396f1d-a29a-4856-a4c1-1312dc97a4a1"),
+                            RoleId = new Guid("7d7168d4-ef7e-4503-a144-08dc2a5ba67c")
+                        },
+                        new
+                        {
+                            UserId = new Guid("b8cd72fb-eac5-40d5-8b22-7e8d601e2760"),
+                            RoleId = new Guid("7d7168d4-ef7e-4503-a144-08dc2a5ba67c")
+                        },
+                        new
+                        {
+                            UserId = new Guid("1bb03af4-c9c6-42f4-8153-dfd0e427bb43"),
+                            RoleId = new Guid("7d7168d4-ef7e-4503-a144-08dc2a5ba67c")
+                        },
+                        new
+                        {
+                            UserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
+                            RoleId = new Guid("67c0d30a-d873-4f9b-a143-08dc2a5ba67c")
+                        },
+                        new
+                        {
+                            UserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            RoleId = new Guid("67c0d30a-d873-4f9b-a143-08dc2a5ba67c")
+                        },
+                        new
+                        {
+                            UserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            RoleId = new Guid("67c0d30a-d873-4f9b-a143-08dc2a5ba67c")
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
@@ -125,34 +195,6 @@ namespace e_Delivery.Database.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("asp_net_user_tokens", "identity");
-                });
-
-            modelBuilder.Entity("e_Delivery.Entities.BaseEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("NEXT VALUE FOR [BaseEntitySequence]");
-
-                    SqlServerPropertyBuilderExtensions.UseSequence(b.Property<int>("Id"));
-
-                    b.Property<Guid?>("CreatedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("ModifiedByUserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("BaseEntity");
-
-                    b.UseTpcMappingStrategy();
                 });
 
             modelBuilder.Entity("e_Delivery.Entities.Category", b =>
@@ -176,6 +218,85 @@ namespace e_Delivery.Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5486),
+                            IsDeleted = false,
+                            Name = "Burger"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5516),
+                            IsDeleted = false,
+                            Name = "Pizza"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5518),
+                            IsDeleted = false,
+                            Name = "Pasta"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5520),
+                            IsDeleted = false,
+                            Name = "Sea Food"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5521),
+                            IsDeleted = false,
+                            Name = "Grill"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5525),
+                            IsDeleted = false,
+                            Name = "Vegetarian"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5527),
+                            IsDeleted = false,
+                            Name = "Vegan"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5528),
+                            IsDeleted = false,
+                            Name = "Sandwich"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5530),
+                            IsDeleted = false,
+                            Name = "Cooked dishes"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5532),
+                            IsDeleted = false,
+                            Name = "Cakes"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5533),
+                            IsDeleted = false,
+                            Name = "Pancakes"
+                        });
                 });
 
             modelBuilder.Entity("e_Delivery.Entities.Chat", b =>
@@ -206,6 +327,35 @@ namespace e_Delivery.Database.Migrations
                     b.HasIndex("UserToId");
 
                     b.ToTable("Chats");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("961fe50f-0657-44fa-8493-99bf77c18396"),
+                            Content = "Hello I have your order here!",
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(7190),
+                            IsDeleted = false,
+                            UserFromId = new Guid("b8396f1d-a29a-4856-a4c1-1312dc97a4a1"),
+                            UserToId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045")
+                        },
+                        new
+                        {
+                            Id = new Guid("5a2a9e01-9738-4449-8937-3e317d5f164d"),
+                            Content = "Hello your order is right outside!",
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(7195),
+                            IsDeleted = false,
+                            UserFromId = new Guid("b8cd72fb-eac5-40d5-8b22-7e8d601e2760"),
+                            UserToId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045")
+                        },
+                        new
+                        {
+                            Id = new Guid("71554735-3924-4480-8865-457f196d8e15"),
+                            Content = "Hello, where is your apartment?",
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(7198),
+                            IsDeleted = false,
+                            UserFromId = new Guid("1bb03af4-c9c6-42f4-8153-dfd0e427bb43"),
+                            UserToId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045")
+                        });
                 });
 
             modelBuilder.Entity("e_Delivery.Entities.City", b =>
@@ -229,6 +379,232 @@ namespace e_Delivery.Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cities");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5620),
+                            IsDeleted = false,
+                            Title = "Mostar"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5624),
+                            IsDeleted = false,
+                            Title = "Sarajevo"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5625),
+                            IsDeleted = false,
+                            Title = "Zenica"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5627),
+                            IsDeleted = false,
+                            Title = "Tuzla"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5629),
+                            IsDeleted = false,
+                            Title = "Banja Luka"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5631),
+                            IsDeleted = false,
+                            Title = "Bihać"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5632),
+                            IsDeleted = false,
+                            Title = "Bijeljina"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5634),
+                            IsDeleted = false,
+                            Title = "Brčko"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5635),
+                            IsDeleted = false,
+                            Title = "Cazin"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5638),
+                            IsDeleted = false,
+                            Title = "Čapljina"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5639),
+                            IsDeleted = false,
+                            Title = "Derventa"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5641),
+                            IsDeleted = false,
+                            Title = "Doboj"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5642),
+                            IsDeleted = false,
+                            Title = "Goražde"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5644),
+                            IsDeleted = false,
+                            Title = "Gračanica"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5645),
+                            IsDeleted = false,
+                            Title = "Gradačac"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5647),
+                            IsDeleted = false,
+                            Title = "Gradiška"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5648),
+                            IsDeleted = false,
+                            Title = "Konjic"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5650),
+                            IsDeleted = false,
+                            Title = "Laktaši"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5652),
+                            IsDeleted = false,
+                            Title = "Livno"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5654),
+                            IsDeleted = false,
+                            Title = "Lukavac"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5655),
+                            IsDeleted = false,
+                            Title = "Ljubuški"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5657),
+                            IsDeleted = false,
+                            Title = "Orašje"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5658),
+                            IsDeleted = false,
+                            Title = "Prijedor"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5660),
+                            IsDeleted = false,
+                            Title = "Prnjavor"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5661),
+                            IsDeleted = false,
+                            Title = "Srebrenik"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5663),
+                            IsDeleted = false,
+                            Title = "Stolac"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5664),
+                            IsDeleted = false,
+                            Title = "Široki Brijeg"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5666),
+                            IsDeleted = false,
+                            Title = "Trebinje"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5668),
+                            IsDeleted = false,
+                            Title = "Visoko"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5669),
+                            IsDeleted = false,
+                            Title = "Zavidovići"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5671),
+                            IsDeleted = false,
+                            Title = "Zvornik"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(5672),
+                            IsDeleted = false,
+                            Title = "Živinice"
+                        });
                 });
 
             modelBuilder.Entity("e_Delivery.Entities.Email", b =>
@@ -257,6 +633,1027 @@ namespace e_Delivery.Database.Migrations
                     b.ToTable("Emails");
                 });
 
+            modelBuilder.Entity("e_Delivery.Entities.FoodItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("ModifiedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
+
+                    b.Property<int>("RestaurantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("ModifiedByUserId");
+
+                    b.HasIndex("RestaurantId");
+
+                    b.ToTable("FoodItems");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 1,
+                            CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6327),
+                            Description = "Juicy beef patty with tomato, salad, onions",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            Name = "Hamburger",
+                            Price = 9.0,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 1,
+                            CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6333),
+                            Description = "Juicy beef patty with tomato, salad, onions and cheese",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            Name = "Cheeseburger",
+                            Price = 11.0,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategoryId = 2,
+                            CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6337),
+                            Description = "Regular pizza with Gauda cheese",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            Name = "Margarita",
+                            Price = 9.0,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CategoryId = 2,
+                            CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6340),
+                            Description = "Pizza with salami and mushrooms",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            Name = "Capricciosa",
+                            Price = 11.0,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CategoryId = 2,
+                            CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6343),
+                            Description = "Pizza with mushrooms",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            Name = "Funghi",
+                            Price = 10.0,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CategoryId = 5,
+                            CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6347),
+                            Description = "Grilled chicken 100g",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            Name = "Chicken fillet",
+                            Price = 9.0,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CategoryId = 5,
+                            CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6350),
+                            Description = "Lamb sausages 100g",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            Name = "Sausages",
+                            Price = 9.0,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CategoryId = 8,
+                            CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6353),
+                            Description = "Salami-cheese sandwich with tomato, lettuce and onions",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            Name = "Classic sandwich",
+                            Price = 9.0,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CategoryId = 8,
+                            CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6355),
+                            Description = "Chicken sandwich with tomato, lettuce and onions",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            Name = "Chicken sandwich",
+                            Price = 10.0,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CategoryId = 8,
+                            CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6359),
+                            Description = "Pepperoni sandwich with tomato, lettuce and onions",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            Name = "Pepperoni sandwich",
+                            Price = 10.0,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CategoryId = 10,
+                            CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6362),
+                            Description = "Homemade chocolate cake, original recipe",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            Name = "Sacher-Torte",
+                            Price = 4.0,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CategoryId = 10,
+                            CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6365),
+                            Description = "Homemade baklava, original recipe",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            Name = "Baklava",
+                            Price = 4.0,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CategoryId = 11,
+                            CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6368),
+                            Description = "Nutella filled pancakakes",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            Name = "Nutella pancakes",
+                            Price = 7.0,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CategoryId = 11,
+                            CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6371),
+                            Description = "Strawberry jam filled pancakakes",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            Name = "Jam pancakes",
+                            Price = 6.0,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CategoryId = 2,
+                            CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6374),
+                            Description = "Regular pizza with cheese",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            Name = "Margarita",
+                            Price = 8.0,
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CategoryId = 2,
+                            CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6378),
+                            Description = "Pizza with salami and mushrooms",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            Name = "Capricciosa",
+                            Price = 10.0,
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CategoryId = 2,
+                            CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6382),
+                            Description = "Pizza with mushrooms",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            Name = "Funghi",
+                            Price = 9.0,
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CategoryId = 2,
+                            CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6385),
+                            Description = "Pizza with pepperoni sausage",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            Name = "Pepperoni",
+                            Price = 11.0,
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CategoryId = 5,
+                            CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6388),
+                            Description = "Chicken grilled fillets 100g",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            Name = "Chicken fillets",
+                            Price = 9.0,
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CategoryId = 5,
+                            CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6391),
+                            Description = "5 ćevapi with bread and onions",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            Name = "ćevapi small portion",
+                            Price = 5.0,
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CategoryId = 5,
+                            CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6394),
+                            Description = "10 ćevapi with bread and onions",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            Name = "ćevapi large portion",
+                            Price = 9.0,
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 22,
+                            CategoryId = 6,
+                            CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6397),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            Name = "Greek salad",
+                            Price = 6.0,
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CategoryId = 7,
+                            CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6400),
+                            Description = "Tomato and onions",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            Name = "Tomato salad",
+                            Price = 4.0,
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CategoryId = 7,
+                            CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6433),
+                            Description = "Lettuce, tomato and onions",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            Name = "Regular salad",
+                            Price = 4.0,
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 25,
+                            CategoryId = 8,
+                            CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6436),
+                            Description = "Salami and cheese with lettuce, tomato and onions",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            Name = "Classic sandwich ",
+                            Price = 6.0,
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 26,
+                            CategoryId = 8,
+                            CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6439),
+                            Description = "Chicken and cheese with lettuce, tomato and onions",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            Name = "Chicken sandwich ",
+                            Price = 7.5,
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 27,
+                            CategoryId = 11,
+                            CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6442),
+                            Description = "Pancakes filled with nutella",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            Name = "Nutella pancakes ",
+                            Price = 7.0,
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 28,
+                            CategoryId = 4,
+                            CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6445),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            Name = "Stuffed squid",
+                            Price = 15.0,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 29,
+                            CategoryId = 4,
+                            CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6448),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            Name = "Fried squid",
+                            Price = 15.0,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 30,
+                            CategoryId = 4,
+                            CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6451),
+                            Description = "Filled with cream",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            Name = "Neretvan trout filled",
+                            Price = 15.0,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 31,
+                            CategoryId = 4,
+                            CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6454),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            Name = "Neretvan trout",
+                            Price = 13.0,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 32,
+                            CategoryId = 5,
+                            CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6457),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            Name = "Beefsteak",
+                            Price = 20.0,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 33,
+                            CategoryId = 5,
+                            CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6460),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            Name = "Chicken skewers small",
+                            Price = 6.0,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 34,
+                            CategoryId = 5,
+                            CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6464),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            Name = "Chicken skewers large",
+                            Price = 10.0,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 35,
+                            CategoryId = 5,
+                            CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6467),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            Name = "Ćevapi (small)",
+                            Price = 5.0,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 36,
+                            CategoryId = 5,
+                            CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6470),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            Name = "Ćevapi (large)",
+                            Price = 9.0,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 37,
+                            CategoryId = 7,
+                            CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6473),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            Name = "Green salad",
+                            Price = 3.0,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 38,
+                            CategoryId = 7,
+                            CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6476),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            Name = "Tomato salad",
+                            Price = 3.0,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 39,
+                            CategoryId = 6,
+                            CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6480),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            Name = "Salad with cheese",
+                            Price = 4.0,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 40,
+                            CategoryId = 11,
+                            CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6483),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            Name = "Nutella pancakes",
+                            Price = 6.0,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 41,
+                            CategoryId = 10,
+                            CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6486),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            Name = "Baklava",
+                            Price = 4.0,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 42,
+                            CategoryId = 5,
+                            CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6489),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            Name = "Ćevapi (small)",
+                            Price = 5.0,
+                            RestaurantId = 4
+                        },
+                        new
+                        {
+                            Id = 43,
+                            CategoryId = 5,
+                            CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6492),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            Name = "Ćevapi (large)",
+                            Price = 9.0,
+                            RestaurantId = 4
+                        },
+                        new
+                        {
+                            Id = 44,
+                            CategoryId = 5,
+                            CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6495),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            Name = "Chicken fillets",
+                            Price = 6.0,
+                            RestaurantId = 4
+                        },
+                        new
+                        {
+                            Id = 45,
+                            CategoryId = 11,
+                            CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6498),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            Name = "Nutella pancakes",
+                            Price = 6.0,
+                            RestaurantId = 4
+                        },
+                        new
+                        {
+                            Id = 46,
+                            CategoryId = 10,
+                            CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6501),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            Name = "Baklava",
+                            Price = 4.0,
+                            RestaurantId = 4
+                        },
+                        new
+                        {
+                            Id = 47,
+                            CategoryId = 9,
+                            CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6504),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            Name = "Dolma",
+                            Price = 8.0,
+                            RestaurantId = 4
+                        },
+                        new
+                        {
+                            Id = 48,
+                            CategoryId = 9,
+                            CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6506),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            Name = "Japrak",
+                            Price = 7.0,
+                            RestaurantId = 4
+                        },
+                        new
+                        {
+                            Id = 49,
+                            CategoryId = 9,
+                            CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6509),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            Name = "Biber meso",
+                            Price = 8.5,
+                            RestaurantId = 4
+                        },
+                        new
+                        {
+                            Id = 50,
+                            CategoryId = 9,
+                            CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6512),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            Name = "Bosnian pot",
+                            Price = 7.0,
+                            RestaurantId = 4
+                        },
+                        new
+                        {
+                            Id = 51,
+                            CategoryId = 1,
+                            CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6515),
+                            Description = "Juicy beef patty with tomato, salad, onions",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            Name = "Hamburger",
+                            Price = 9.0,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 52,
+                            CategoryId = 1,
+                            CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6518),
+                            Description = "Juicy beef patty with tomato, salad, onions and cheese",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            Name = "Cheeseburger",
+                            Price = 11.0,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 53,
+                            CategoryId = 2,
+                            CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6522),
+                            Description = "Regular pizza with Gauda cheese",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            Name = "Margarita",
+                            Price = 9.0,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 54,
+                            CategoryId = 2,
+                            CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6525),
+                            Description = "Pizza with salami and mushrooms",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            Name = "Capricciosa",
+                            Price = 11.0,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 55,
+                            CategoryId = 6,
+                            CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6527),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            Name = "Salad with cheese",
+                            Price = 4.0,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 56,
+                            CategoryId = 5,
+                            CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6530),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            Name = "Chicken fillets",
+                            Price = 6.0,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 57,
+                            CategoryId = 8,
+                            CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6563),
+                            Description = "Salami and cheese with lettuce, tomato and onions",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            Name = "Classic sandwich ",
+                            Price = 6.0,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 58,
+                            CategoryId = 8,
+                            CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6566),
+                            Description = "Chicken and cheese with lettuce, tomato and onions",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            Name = "Chicken sandwich ",
+                            Price = 7.5,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 59,
+                            CategoryId = 10,
+                            CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6569),
+                            Description = "Homemade baklava, original recipe",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            Name = "Baklava",
+                            Price = 4.0,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 60,
+                            CategoryId = 11,
+                            CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6575),
+                            Description = "Nutella filled pancakakes",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            Name = "Nutella pancakes",
+                            Price = 7.0,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 61,
+                            CategoryId = 11,
+                            CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6578),
+                            Description = "Strawberry jam filled pancakakes",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            Name = "Jam pancakes",
+                            Price = 6.0,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 62,
+                            CategoryId = 2,
+                            CreatedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6581),
+                            Description = "Regular pizza with Gauda cheese",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
+                            Name = "Margarita",
+                            Price = 9.0,
+                            RestaurantId = 6
+                        },
+                        new
+                        {
+                            Id = 63,
+                            CategoryId = 2,
+                            CreatedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6584),
+                            Description = "Pizza with salami and mushrooms",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
+                            Name = "Capricciosa",
+                            Price = 11.0,
+                            RestaurantId = 6
+                        },
+                        new
+                        {
+                            Id = 64,
+                            CategoryId = 3,
+                            CreatedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6587),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
+                            Name = "Carbonara",
+                            Price = 11.0,
+                            RestaurantId = 6
+                        },
+                        new
+                        {
+                            Id = 65,
+                            CategoryId = 3,
+                            CreatedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6590),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
+                            Name = "Bolognese",
+                            Price = 12.0,
+                            RestaurantId = 6
+                        },
+                        new
+                        {
+                            Id = 66,
+                            CategoryId = 3,
+                            CreatedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6594),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
+                            Name = "Pesto",
+                            Price = 10.0,
+                            RestaurantId = 6
+                        },
+                        new
+                        {
+                            Id = 67,
+                            CategoryId = 3,
+                            CreatedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6597),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
+                            Name = "Lasagne bolognese",
+                            Price = 14.0,
+                            RestaurantId = 6
+                        },
+                        new
+                        {
+                            Id = 68,
+                            CategoryId = 10,
+                            CreatedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6600),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
+                            Name = "Baklava",
+                            Price = 4.0,
+                            RestaurantId = 6
+                        },
+                        new
+                        {
+                            Id = 69,
+                            CategoryId = 11,
+                            CreatedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6603),
+                            Description = "",
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
+                            Name = "Jam pancakes",
+                            Price = 6.0,
+                            RestaurantId = 6
+                        });
+                });
+
             modelBuilder.Entity("e_Delivery.Entities.FoodItemPictures", b =>
                 {
                     b.Property<int>("Id")
@@ -280,6 +1677,491 @@ namespace e_Delivery.Database.Migrations
                     b.HasIndex("FoodItemId");
 
                     b.ToTable("FoodItemPictures");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            FileName = "https://localhost:44395/FoodItem_images/hamburger.jpg",
+                            FileSize = 135168,
+                            FoodItemId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            FileName = "https://localhost:44395/FoodItem_images/cheeseburger.jpg",
+                            FileSize = 57306,
+                            FoodItemId = 2
+                        },
+                        new
+                        {
+                            Id = 3,
+                            FileName = "https://localhost:44395/FoodItem_images/margarita.jpg",
+                            FileSize = 85319,
+                            FoodItemId = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            FileName = "https://localhost:44395/FoodItem_images/capricoza.jpg",
+                            FileSize = 69759,
+                            FoodItemId = 4
+                        },
+                        new
+                        {
+                            Id = 5,
+                            FileName = "https://localhost:44395/FoodItem_images/funghi.jpg",
+                            FileSize = 308224,
+                            FoodItemId = 5
+                        },
+                        new
+                        {
+                            Id = 6,
+                            FileName = "https://localhost:44395/FoodItem_images/fileti.jpg",
+                            FileSize = 59801,
+                            FoodItemId = 6
+                        },
+                        new
+                        {
+                            Id = 7,
+                            FileName = "https://localhost:44395/FoodItem_images/sausage.jpg",
+                            FileSize = 10547,
+                            FoodItemId = 7
+                        },
+                        new
+                        {
+                            Id = 8,
+                            FileName = "https://localhost:44395/FoodItem_images/sendvicklasik.jpg",
+                            FileSize = 197632,
+                            FoodItemId = 8
+                        },
+                        new
+                        {
+                            Id = 9,
+                            FileName = "https://localhost:44395/FoodItem_images/chickensendvic.jpg",
+                            FileSize = 238592,
+                            FoodItemId = 9
+                        },
+                        new
+                        {
+                            Id = 10,
+                            FileName = "https://localhost:44395/FoodItem_images/pepperoni.jpg",
+                            FileSize = 52838,
+                            FoodItemId = 10
+                        },
+                        new
+                        {
+                            Id = 11,
+                            FileName = "https://localhost:44395/FoodItem_images/sacher.jpg",
+                            FileSize = 147456,
+                            FoodItemId = 11
+                        },
+                        new
+                        {
+                            Id = 12,
+                            FileName = "https://localhost:44395/FoodItem_images/baklava.jpg",
+                            FileSize = 64307,
+                            FoodItemId = 12
+                        },
+                        new
+                        {
+                            Id = 13,
+                            FileName = "https://localhost:44395/FoodItem_images/nutellapalacinke.jpg",
+                            FileSize = 103424,
+                            FoodItemId = 13
+                        },
+                        new
+                        {
+                            Id = 14,
+                            FileName = "https://localhost:44395/FoodItem_images/dzempalacinke.jpg",
+                            FileSize = 11366,
+                            FoodItemId = 14
+                        },
+                        new
+                        {
+                            Id = 15,
+                            FileName = "https://localhost:44395/FoodItem_images/margarita.jpg",
+                            FileSize = 85319,
+                            FoodItemId = 15
+                        },
+                        new
+                        {
+                            Id = 16,
+                            FileName = "https://localhost:44395/FoodItem_images/capricoza.jpg",
+                            FileSize = 69759,
+                            FoodItemId = 16
+                        },
+                        new
+                        {
+                            Id = 17,
+                            FileName = "https://localhost:44395/FoodItem_images/funghi.jpg",
+                            FileSize = 308224,
+                            FoodItemId = 17
+                        },
+                        new
+                        {
+                            Id = 18,
+                            FileName = "https://localhost:44395/FoodItem_images/pepperonipizza.jpg",
+                            FileSize = 278528,
+                            FoodItemId = 18
+                        },
+                        new
+                        {
+                            Id = 19,
+                            FileName = "https://localhost:44395/FoodItem_images/fileti.jpg",
+                            FileSize = 59801,
+                            FoodItemId = 19
+                        },
+                        new
+                        {
+                            Id = 20,
+                            FileName = "https://localhost:44395/FoodItem_images/cevapi.jpg",
+                            FileSize = 7469,
+                            FoodItemId = 20
+                        },
+                        new
+                        {
+                            Id = 21,
+                            FileName = "https://localhost:44395/FoodItem_images/cevapi.jpg",
+                            FileSize = 7469,
+                            FoodItemId = 21
+                        },
+                        new
+                        {
+                            Id = 22,
+                            FileName = "https://localhost:44395/FoodItem_images/greeksalad.jpg",
+                            FileSize = 212992,
+                            FoodItemId = 22
+                        },
+                        new
+                        {
+                            Id = 23,
+                            FileName = "https://localhost:44395/FoodItem_images/tomatosalad.jpg",
+                            FileSize = 320512,
+                            FoodItemId = 23
+                        },
+                        new
+                        {
+                            Id = 24,
+                            FileName = "https://localhost:44395/FoodItem_images/regularsalad.jpg",
+                            FileSize = 253952,
+                            FoodItemId = 24
+                        },
+                        new
+                        {
+                            Id = 25,
+                            FileName = "https://localhost:44395/FoodItem_images/sendvicklasik.jpg",
+                            FileSize = 197632,
+                            FoodItemId = 25
+                        },
+                        new
+                        {
+                            Id = 26,
+                            FileName = "https://localhost:44395/FoodItem_images/chickensendvic.jpg",
+                            FileSize = 238592,
+                            FoodItemId = 26
+                        },
+                        new
+                        {
+                            Id = 27,
+                            FileName = "https://localhost:44395/FoodItem_images/nutellapalacinke.jpg",
+                            FileSize = 103424,
+                            FoodItemId = 27
+                        },
+                        new
+                        {
+                            Id = 28,
+                            FileName = "https://localhost:44395/FoodItem_images/friedsquid.jpg",
+                            FileSize = 354304,
+                            FoodItemId = 28
+                        },
+                        new
+                        {
+                            Id = 29,
+                            FileName = "https://localhost:44395/FoodItem_images/friedsquid.jpg",
+                            FileSize = 354304,
+                            FoodItemId = 29
+                        },
+                        new
+                        {
+                            Id = 30,
+                            FileName = "https://localhost:44395/FoodItem_images/pastrmka.jpg",
+                            FileSize = 11572,
+                            FoodItemId = 30
+                        },
+                        new
+                        {
+                            Id = 31,
+                            FileName = "https://localhost:44395/FoodItem_images/pastrmka.jpg",
+                            FileSize = 11572,
+                            FoodItemId = 31
+                        },
+                        new
+                        {
+                            Id = 32,
+                            FileName = "https://localhost:44395/FoodItem_images/beefsteak.jpg",
+                            FileSize = 138240,
+                            FoodItemId = 32
+                        },
+                        new
+                        {
+                            Id = 33,
+                            FileName = "https://localhost:44395/FoodItem_images/chickenskewers.jpg",
+                            FileSize = 149504,
+                            FoodItemId = 33
+                        },
+                        new
+                        {
+                            Id = 34,
+                            FileName = "https://localhost:44395/FoodItem_images/chickenskewers.jpg",
+                            FileSize = 149504,
+                            FoodItemId = 34
+                        },
+                        new
+                        {
+                            Id = 35,
+                            FileName = "https://localhost:44395/FoodItem_images/cevapi.jpg",
+                            FileSize = 7469,
+                            FoodItemId = 35
+                        },
+                        new
+                        {
+                            Id = 36,
+                            FileName = "https://localhost:44395/FoodItem_images/cevapi.jpg",
+                            FileSize = 7469,
+                            FoodItemId = 36
+                        },
+                        new
+                        {
+                            Id = 37,
+                            FileName = "https://localhost:44395/FoodItem_images/regularsalad.jpg",
+                            FileSize = 253952,
+                            FoodItemId = 37
+                        },
+                        new
+                        {
+                            Id = 38,
+                            FileName = "https://localhost:44395/FoodItem_images/tomatosalad.jpg",
+                            FileSize = 320512,
+                            FoodItemId = 38
+                        },
+                        new
+                        {
+                            Id = 39,
+                            FileName = "https://localhost:44395/FoodItem_images/greeksalad.jpg",
+                            FileSize = 212992,
+                            FoodItemId = 39
+                        },
+                        new
+                        {
+                            Id = 40,
+                            FileName = "https://localhost:44395/FoodItem_images/nutellapalacinke.jpg",
+                            FileSize = 103424,
+                            FoodItemId = 40
+                        },
+                        new
+                        {
+                            Id = 41,
+                            FileName = "https://localhost:44395/FoodItem_images/baklava.jpg",
+                            FileSize = 64307,
+                            FoodItemId = 41
+                        },
+                        new
+                        {
+                            Id = 42,
+                            FileName = "https://localhost:44395/FoodItem_images/cevapi.jpg",
+                            FileSize = 7469,
+                            FoodItemId = 42
+                        },
+                        new
+                        {
+                            Id = 43,
+                            FileName = "https://localhost:44395/FoodItem_images/cevapi.jpg",
+                            FileSize = 7469,
+                            FoodItemId = 43
+                        },
+                        new
+                        {
+                            Id = 44,
+                            FileName = "https://localhost:44395/FoodItem_images/fileti.jpg",
+                            FileSize = 59801,
+                            FoodItemId = 44
+                        },
+                        new
+                        {
+                            Id = 45,
+                            FileName = "https://localhost:44395/FoodItem_images/nutellapalacinke.jpg",
+                            FileSize = 103424,
+                            FoodItemId = 45
+                        },
+                        new
+                        {
+                            Id = 46,
+                            FileName = "https://localhost:44395/FoodItem_images/baklava.jpg",
+                            FileSize = 64307,
+                            FoodItemId = 46
+                        },
+                        new
+                        {
+                            Id = 47,
+                            FileName = "https://localhost:44395/FoodItem_images/dolma.jpg",
+                            FileSize = 115712,
+                            FoodItemId = 47
+                        },
+                        new
+                        {
+                            Id = 48,
+                            FileName = "https://localhost:44395/FoodItem_images/japrak.jpg",
+                            FileSize = 83251,
+                            FoodItemId = 48
+                        },
+                        new
+                        {
+                            Id = 49,
+                            FileName = "https://localhost:44395/FoodItem_images/bibermeso.jpg",
+                            FileSize = 9011,
+                            FoodItemId = 49
+                        },
+                        new
+                        {
+                            Id = 50,
+                            FileName = "https://localhost:44395/FoodItem_images/bosanskilonac.jpg",
+                            FileSize = 224256,
+                            FoodItemId = 50
+                        },
+                        new
+                        {
+                            Id = 51,
+                            FileName = "https://localhost:44395/FoodItem_images/hamburger.jpg",
+                            FileSize = 135168,
+                            FoodItemId = 51
+                        },
+                        new
+                        {
+                            Id = 52,
+                            FileName = "https://localhost:44395/FoodItem_images/cheeseburger.jpg",
+                            FileSize = 57306,
+                            FoodItemId = 52
+                        },
+                        new
+                        {
+                            Id = 53,
+                            FileName = "https://localhost:44395/FoodItem_images/margarita.jpg",
+                            FileSize = 85319,
+                            FoodItemId = 53
+                        },
+                        new
+                        {
+                            Id = 54,
+                            FileName = "https://localhost:44395/FoodItem_images/capricoza.jpg",
+                            FileSize = 69759,
+                            FoodItemId = 54
+                        },
+                        new
+                        {
+                            Id = 55,
+                            FileName = "https://localhost:44395/FoodItem_images/greeksalad.jpg",
+                            FileSize = 212992,
+                            FoodItemId = 55
+                        },
+                        new
+                        {
+                            Id = 56,
+                            FileName = "https://localhost:44395/FoodItem_images/fileti.jpg",
+                            FileSize = 59801,
+                            FoodItemId = 56
+                        },
+                        new
+                        {
+                            Id = 57,
+                            FileName = "https://localhost:44395/FoodItem_images/sendvicklasik.jpg",
+                            FileSize = 197632,
+                            FoodItemId = 57
+                        },
+                        new
+                        {
+                            Id = 58,
+                            FileName = "https://localhost:44395/FoodItem_images/chickensendvic.jpg",
+                            FileSize = 238592,
+                            FoodItemId = 58
+                        },
+                        new
+                        {
+                            Id = 59,
+                            FileName = "https://localhost:44395/FoodItem_images/baklava.jpg",
+                            FileSize = 64307,
+                            FoodItemId = 59
+                        },
+                        new
+                        {
+                            Id = 60,
+                            FileName = "https://localhost:44395/FoodItem_images/nutellapalacinke.jpg",
+                            FileSize = 103424,
+                            FoodItemId = 60
+                        },
+                        new
+                        {
+                            Id = 61,
+                            FileName = "https://localhost:44395/FoodItem_images/dzempalacinke.jpg",
+                            FileSize = 11366,
+                            FoodItemId = 61
+                        },
+                        new
+                        {
+                            Id = 62,
+                            FileName = "https://localhost:44395/FoodItem_images/margarita.jpg",
+                            FileSize = 85319,
+                            FoodItemId = 62
+                        },
+                        new
+                        {
+                            Id = 63,
+                            FileName = "https://localhost:44395/FoodItem_images/capricoza.jpg",
+                            FileSize = 69759,
+                            FoodItemId = 63
+                        },
+                        new
+                        {
+                            Id = 64,
+                            FileName = "https://localhost:44395/FoodItem_images/carbonara.jpg",
+                            FileSize = 129024,
+                            FoodItemId = 64
+                        },
+                        new
+                        {
+                            Id = 65,
+                            FileName = "https://localhost:44395/FoodItem_images/bolognese.jpg",
+                            FileSize = 70144,
+                            FoodItemId = 65
+                        },
+                        new
+                        {
+                            Id = 66,
+                            FileName = "https://localhost:44395/FoodItem_images/pesto.jpg",
+                            FileSize = 53760,
+                            FoodItemId = 66
+                        },
+                        new
+                        {
+                            Id = 67,
+                            FileName = "https://localhost:44395/FoodItem_images/lasagne.jpg",
+                            FileSize = 62976,
+                            FoodItemId = 67
+                        },
+                        new
+                        {
+                            Id = 68,
+                            FileName = "https://localhost:44395/FoodItem_images/baklava.jpg",
+                            FileSize = 64307,
+                            FoodItemId = 68
+                        },
+                        new
+                        {
+                            Id = 69,
+                            FileName = "https://localhost:44395/FoodItem_images/dzempalacinke.jpg",
+                            FileSize = 11366,
+                            FoodItemId = 69
+                        });
                 });
 
             modelBuilder.Entity("e_Delivery.Entities.FoodItemSideDishMapping", b =>
@@ -295,6 +2177,503 @@ namespace e_Delivery.Database.Migrations
                     b.HasIndex("SideDishId");
 
                     b.ToTable("FoodItemSideDishMappings");
+
+                    b.HasData(
+                        new
+                        {
+                            FoodItemId = 1,
+                            SideDishId = 1
+                        },
+                        new
+                        {
+                            FoodItemId = 1,
+                            SideDishId = 2
+                        },
+                        new
+                        {
+                            FoodItemId = 1,
+                            SideDishId = 4
+                        },
+                        new
+                        {
+                            FoodItemId = 2,
+                            SideDishId = 1
+                        },
+                        new
+                        {
+                            FoodItemId = 2,
+                            SideDishId = 2
+                        },
+                        new
+                        {
+                            FoodItemId = 2,
+                            SideDishId = 4
+                        },
+                        new
+                        {
+                            FoodItemId = 3,
+                            SideDishId = 1
+                        },
+                        new
+                        {
+                            FoodItemId = 3,
+                            SideDishId = 2
+                        },
+                        new
+                        {
+                            FoodItemId = 3,
+                            SideDishId = 5
+                        },
+                        new
+                        {
+                            FoodItemId = 4,
+                            SideDishId = 1
+                        },
+                        new
+                        {
+                            FoodItemId = 4,
+                            SideDishId = 2
+                        },
+                        new
+                        {
+                            FoodItemId = 4,
+                            SideDishId = 5
+                        },
+                        new
+                        {
+                            FoodItemId = 5,
+                            SideDishId = 1
+                        },
+                        new
+                        {
+                            FoodItemId = 5,
+                            SideDishId = 2
+                        },
+                        new
+                        {
+                            FoodItemId = 5,
+                            SideDishId = 5
+                        },
+                        new
+                        {
+                            FoodItemId = 6,
+                            SideDishId = 1
+                        },
+                        new
+                        {
+                            FoodItemId = 6,
+                            SideDishId = 2
+                        },
+                        new
+                        {
+                            FoodItemId = 6,
+                            SideDishId = 4
+                        },
+                        new
+                        {
+                            FoodItemId = 7,
+                            SideDishId = 1
+                        },
+                        new
+                        {
+                            FoodItemId = 7,
+                            SideDishId = 2
+                        },
+                        new
+                        {
+                            FoodItemId = 7,
+                            SideDishId = 4
+                        },
+                        new
+                        {
+                            FoodItemId = 8,
+                            SideDishId = 1
+                        },
+                        new
+                        {
+                            FoodItemId = 8,
+                            SideDishId = 2
+                        },
+                        new
+                        {
+                            FoodItemId = 8,
+                            SideDishId = 3
+                        },
+                        new
+                        {
+                            FoodItemId = 9,
+                            SideDishId = 1
+                        },
+                        new
+                        {
+                            FoodItemId = 9,
+                            SideDishId = 2
+                        },
+                        new
+                        {
+                            FoodItemId = 9,
+                            SideDishId = 3
+                        },
+                        new
+                        {
+                            FoodItemId = 10,
+                            SideDishId = 1
+                        },
+                        new
+                        {
+                            FoodItemId = 10,
+                            SideDishId = 2
+                        },
+                        new
+                        {
+                            FoodItemId = 10,
+                            SideDishId = 3
+                        },
+                        new
+                        {
+                            FoodItemId = 13,
+                            SideDishId = 6
+                        },
+                        new
+                        {
+                            FoodItemId = 14,
+                            SideDishId = 6
+                        },
+                        new
+                        {
+                            FoodItemId = 15,
+                            SideDishId = 7
+                        },
+                        new
+                        {
+                            FoodItemId = 15,
+                            SideDishId = 8
+                        },
+                        new
+                        {
+                            FoodItemId = 16,
+                            SideDishId = 7
+                        },
+                        new
+                        {
+                            FoodItemId = 16,
+                            SideDishId = 8
+                        },
+                        new
+                        {
+                            FoodItemId = 17,
+                            SideDishId = 7
+                        },
+                        new
+                        {
+                            FoodItemId = 17,
+                            SideDishId = 8
+                        },
+                        new
+                        {
+                            FoodItemId = 18,
+                            SideDishId = 7
+                        },
+                        new
+                        {
+                            FoodItemId = 18,
+                            SideDishId = 8
+                        },
+                        new
+                        {
+                            FoodItemId = 19,
+                            SideDishId = 7
+                        },
+                        new
+                        {
+                            FoodItemId = 19,
+                            SideDishId = 8
+                        },
+                        new
+                        {
+                            FoodItemId = 20,
+                            SideDishId = 8
+                        },
+                        new
+                        {
+                            FoodItemId = 21,
+                            SideDishId = 8
+                        },
+                        new
+                        {
+                            FoodItemId = 25,
+                            SideDishId = 7
+                        },
+                        new
+                        {
+                            FoodItemId = 25,
+                            SideDishId = 8
+                        },
+                        new
+                        {
+                            FoodItemId = 25,
+                            SideDishId = 9
+                        },
+                        new
+                        {
+                            FoodItemId = 26,
+                            SideDishId = 7
+                        },
+                        new
+                        {
+                            FoodItemId = 26,
+                            SideDishId = 8
+                        },
+                        new
+                        {
+                            FoodItemId = 26,
+                            SideDishId = 9
+                        },
+                        new
+                        {
+                            FoodItemId = 27,
+                            SideDishId = 10
+                        },
+                        new
+                        {
+                            FoodItemId = 32,
+                            SideDishId = 12
+                        },
+                        new
+                        {
+                            FoodItemId = 32,
+                            SideDishId = 13
+                        },
+                        new
+                        {
+                            FoodItemId = 32,
+                            SideDishId = 15
+                        },
+                        new
+                        {
+                            FoodItemId = 33,
+                            SideDishId = 12
+                        },
+                        new
+                        {
+                            FoodItemId = 33,
+                            SideDishId = 13
+                        },
+                        new
+                        {
+                            FoodItemId = 34,
+                            SideDishId = 12
+                        },
+                        new
+                        {
+                            FoodItemId = 34,
+                            SideDishId = 13
+                        },
+                        new
+                        {
+                            FoodItemId = 35,
+                            SideDishId = 13
+                        },
+                        new
+                        {
+                            FoodItemId = 35,
+                            SideDishId = 14
+                        },
+                        new
+                        {
+                            FoodItemId = 36,
+                            SideDishId = 13
+                        },
+                        new
+                        {
+                            FoodItemId = 36,
+                            SideDishId = 14
+                        },
+                        new
+                        {
+                            FoodItemId = 37,
+                            SideDishId = 16
+                        },
+                        new
+                        {
+                            FoodItemId = 37,
+                            SideDishId = 17
+                        },
+                        new
+                        {
+                            FoodItemId = 38,
+                            SideDishId = 16
+                        },
+                        new
+                        {
+                            FoodItemId = 38,
+                            SideDishId = 17
+                        },
+                        new
+                        {
+                            FoodItemId = 39,
+                            SideDishId = 16
+                        },
+                        new
+                        {
+                            FoodItemId = 39,
+                            SideDishId = 17
+                        },
+                        new
+                        {
+                            FoodItemId = 42,
+                            SideDishId = 20
+                        },
+                        new
+                        {
+                            FoodItemId = 42,
+                            SideDishId = 21
+                        },
+                        new
+                        {
+                            FoodItemId = 43,
+                            SideDishId = 20
+                        },
+                        new
+                        {
+                            FoodItemId = 43,
+                            SideDishId = 21
+                        },
+                        new
+                        {
+                            FoodItemId = 44,
+                            SideDishId = 20
+                        },
+                        new
+                        {
+                            FoodItemId = 51,
+                            SideDishId = 22
+                        },
+                        new
+                        {
+                            FoodItemId = 51,
+                            SideDishId = 23
+                        },
+                        new
+                        {
+                            FoodItemId = 52,
+                            SideDishId = 22
+                        },
+                        new
+                        {
+                            FoodItemId = 52,
+                            SideDishId = 23
+                        },
+                        new
+                        {
+                            FoodItemId = 53,
+                            SideDishId = 22
+                        },
+                        new
+                        {
+                            FoodItemId = 53,
+                            SideDishId = 23
+                        },
+                        new
+                        {
+                            FoodItemId = 54,
+                            SideDishId = 22
+                        },
+                        new
+                        {
+                            FoodItemId = 54,
+                            SideDishId = 23
+                        },
+                        new
+                        {
+                            FoodItemId = 55,
+                            SideDishId = 27
+                        },
+                        new
+                        {
+                            FoodItemId = 56,
+                            SideDishId = 22
+                        },
+                        new
+                        {
+                            FoodItemId = 56,
+                            SideDishId = 23
+                        },
+                        new
+                        {
+                            FoodItemId = 57,
+                            SideDishId = 22
+                        },
+                        new
+                        {
+                            FoodItemId = 57,
+                            SideDishId = 23
+                        },
+                        new
+                        {
+                            FoodItemId = 57,
+                            SideDishId = 24
+                        },
+                        new
+                        {
+                            FoodItemId = 58,
+                            SideDishId = 22
+                        },
+                        new
+                        {
+                            FoodItemId = 58,
+                            SideDishId = 23
+                        },
+                        new
+                        {
+                            FoodItemId = 58,
+                            SideDishId = 24
+                        },
+                        new
+                        {
+                            FoodItemId = 60,
+                            SideDishId = 25
+                        },
+                        new
+                        {
+                            FoodItemId = 60,
+                            SideDishId = 26
+                        },
+                        new
+                        {
+                            FoodItemId = 61,
+                            SideDishId = 25
+                        },
+                        new
+                        {
+                            FoodItemId = 61,
+                            SideDishId = 26
+                        },
+                        new
+                        {
+                            FoodItemId = 62,
+                            SideDishId = 29
+                        },
+                        new
+                        {
+                            FoodItemId = 62,
+                            SideDishId = 30
+                        },
+                        new
+                        {
+                            FoodItemId = 63,
+                            SideDishId = 29
+                        },
+                        new
+                        {
+                            FoodItemId = 63,
+                            SideDishId = 30
+                        },
+                        new
+                        {
+                            FoodItemId = 67,
+                            SideDishId = 31
+                        });
                 });
 
             modelBuilder.Entity("e_Delivery.Entities.Image", b =>
@@ -333,6 +2712,394 @@ namespace e_Delivery.Database.Migrations
                     b.HasIndex("UserProfilePictureId");
 
                     b.ToTable("Images");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6210),
+                            IsDeleted = false,
+                            Path = "/Uploads/Images/f4af967c-1d73-4f02-a576-75e72d542411.jpg"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6213),
+                            IsDeleted = false,
+                            Path = "/Uploads/Images/a38064f5-960d-43ce-9597-ed27fd588419.jpg"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6216),
+                            IsDeleted = false,
+                            Path = "/Uploads/Images/radobolja.jpg"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6218),
+                            IsDeleted = false,
+                            Path = "/Uploads/Images/dva-fenjera.jpg"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6220),
+                            IsDeleted = false,
+                            Path = "/Uploads/Images/48d82799-50bb-46c7-a655-f6860c8877a9.jpg"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6223),
+                            IsDeleted = false,
+                            Path = "/Uploads/Images/megi.jpg"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedByUserId = new Guid("b8396f1d-a29a-4856-a4c1-1312dc97a4a1"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6225),
+                            IsDeleted = false,
+                            Path = "/Uploads/Images/9c3affff-791b-4680-8168-13d0b632cf8e.jpg",
+                            UserProfilePictureId = new Guid("b8396f1d-a29a-4856-a4c1-1312dc97a4a1")
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreatedByUserId = new Guid("b8cd72fb-eac5-40d5-8b22-7e8d601e2760"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6228),
+                            IsDeleted = false,
+                            Path = "/Uploads/Images/ed3a87b4-3710-4484-893d-ae4751014dab.jpg",
+                            UserProfilePictureId = new Guid("b8cd72fb-eac5-40d5-8b22-7e8d601e2760")
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CreatedByUserId = new Guid("1bb03af4-c9c6-42f4-8153-dfd0e427bb43"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6230),
+                            IsDeleted = false,
+                            Path = "/Uploads/Images/employee4.jpg",
+                            UserProfilePictureId = new Guid("1bb03af4-c9c6-42f4-8153-dfd0e427bb43")
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6234),
+                            IsDeleted = false,
+                            Path = "/Uploads/Images/customer.jpg",
+                            UserProfilePictureId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045")
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6236),
+                            IsDeleted = false,
+                            Path = "/Uploads/Images/customer1.jpg",
+                            UserProfilePictureId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9")
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6238),
+                            IsDeleted = false,
+                            Path = "/Uploads/Images/customer2.jpg",
+                            UserProfilePictureId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257")
+                        });
+                });
+
+            modelBuilder.Entity("e_Delivery.Entities.Location", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CityId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Latitude")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Longitude")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("ModifiedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("ModifiedByUserId");
+
+                    b.ToTable("Locations");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6130),
+                            IsDeleted = false,
+                            Latitude = "43.34205",
+                            Longitude = "17.80042"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6139),
+                            IsDeleted = false,
+                            Latitude = "43.34042",
+                            Longitude = "17.81526"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6141),
+                            IsDeleted = false,
+                            Latitude = "43.33947",
+                            Longitude = "17.80315"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6143),
+                            IsDeleted = false,
+                            Latitude = "43.31130",
+                            Longitude = "17.83038"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6145),
+                            IsDeleted = false,
+                            Latitude = "43.33823",
+                            Longitude = "17.81019"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6148),
+                            IsDeleted = false,
+                            Latitude = "43.35016",
+                            Longitude = "17.80079"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6150),
+                            IsDeleted = false,
+                            Latitude = "43.34731",
+                            Longitude = "17.81352"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6152),
+                            IsDeleted = false,
+                            Latitude = "43.34745",
+                            Longitude = "17.81166"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6154),
+                            IsDeleted = false,
+                            Latitude = "43.34666",
+                            Longitude = "17.80534"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6157),
+                            IsDeleted = false,
+                            Latitude = "43.34988",
+                            Longitude = "17.80171"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6159),
+                            IsDeleted = false,
+                            Latitude = "43.33786",
+                            Longitude = "17.81581"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6161),
+                            IsDeleted = false,
+                            Latitude = "43.34458",
+                            Longitude = "17.81346"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6163),
+                            IsDeleted = false,
+                            Latitude = "43.34731",
+                            Longitude = "17.81352"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6166),
+                            IsDeleted = false,
+                            Latitude = "43.34745",
+                            Longitude = "17.81166"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6169),
+                            IsDeleted = false,
+                            Latitude = "43.34666",
+                            Longitude = "17.80534"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6171),
+                            IsDeleted = false,
+                            Latitude = "43.34988",
+                            Longitude = "17.80171"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6173),
+                            IsDeleted = false,
+                            Latitude = "43.33786",
+                            Longitude = "17.81581"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6176),
+                            IsDeleted = false,
+                            Latitude = "43.34458",
+                            Longitude = "17.81346"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6178),
+                            IsDeleted = false,
+                            Latitude = "43.34731",
+                            Longitude = "17.81352"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6180),
+                            IsDeleted = false,
+                            Latitude = "43.34745",
+                            Longitude = "17.81166"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6182),
+                            IsDeleted = false,
+                            Latitude = "43.34666",
+                            Longitude = "17.80534"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6184),
+                            IsDeleted = false,
+                            Latitude = "43.34988",
+                            Longitude = "17.80171"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6187),
+                            IsDeleted = false,
+                            Latitude = "43.33786",
+                            Longitude = "17.81581"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CityId = 1,
+                            CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6189),
+                            IsDeleted = false,
+                            Latitude = "43.34458",
+                            Longitude = "17.81346"
+                        });
                 });
 
             modelBuilder.Entity("e_Delivery.Entities.Notification", b =>
@@ -369,6 +3136,48 @@ namespace e_Delivery.Database.Migrations
                     b.HasIndex("SentToUserId");
 
                     b.ToTable("Notifications");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Content = "Your order has been delivered.",
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(7211),
+                            IsDeleted = false,
+                            RestaurantName = "Aldi - Caffe slastičarna",
+                            SentByUserId = new Guid("b8396f1d-a29a-4856-a4c1-1312dc97a4a1"),
+                            SentToUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045")
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Content = "Your order has been delivered.",
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(7217),
+                            IsDeleted = false,
+                            RestaurantName = "Aldi - Caffe slastičarna",
+                            SentByUserId = new Guid("b8cd72fb-eac5-40d5-8b22-7e8d601e2760"),
+                            SentToUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045")
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Content = "Your order has been delivered.",
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(7220),
+                            IsDeleted = false,
+                            RestaurantName = "Aldi - Caffe slastičarna",
+                            SentByUserId = new Guid("1bb03af4-c9c6-42f4-8153-dfd0e427bb43"),
+                            SentToUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045")
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Content = "You have been assigned to an order.",
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(7222),
+                            IsDeleted = false,
+                            RestaurantName = "Aldi - Caffe slastičarna",
+                            SentByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            SentToUserId = new Guid("b8396f1d-a29a-4856-a4c1-1312dc97a4a1")
+                        });
                 });
 
             modelBuilder.Entity("e_Delivery.Entities.Order", b =>
@@ -424,6 +3233,281 @@ namespace e_Delivery.Database.Migrations
                     b.HasIndex("RestaurantId");
 
                     b.ToTable("Orders");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("faf51d20-4224-4894-940e-1d916274b611"),
+                            Address = "123 Main St",
+                            Allergies = "None",
+                            CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6919),
+                            IsDeleted = false,
+                            IsPaid = true,
+                            LocationId = 7,
+                            OrderState = 1,
+                            PaymentMethod = 1,
+                            RestaurantId = 1,
+                            TotalCost = 50.0
+                        },
+                        new
+                        {
+                            Id = new Guid("098f1a2e-656c-4b65-9429-be1a4f1022e7"),
+                            Address = "123 Main St",
+                            Allergies = "Some nuts",
+                            CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6928),
+                            DeliveryPersonAssignedId = new Guid("b8396f1d-a29a-4856-a4c1-1312dc97a4a1"),
+                            IsDeleted = false,
+                            IsPaid = true,
+                            LocationId = 8,
+                            OrderState = 2,
+                            PaymentMethod = 2,
+                            RestaurantId = 1,
+                            TotalCost = 40.0
+                        },
+                        new
+                        {
+                            Id = new Guid("15073c29-56ff-4762-8a86-a4211339e0f9"),
+                            Address = "123 Main St",
+                            Allergies = "None",
+                            CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6932),
+                            IsDeleted = false,
+                            IsPaid = true,
+                            LocationId = 9,
+                            OrderState = 1,
+                            PaymentMethod = 1,
+                            RestaurantId = 1,
+                            TotalCost = 30.0
+                        },
+                        new
+                        {
+                            Id = new Guid("0c54c236-4ec5-40e4-b354-2d50e9000778"),
+                            Address = "123 Main St",
+                            Allergies = "Some nuts",
+                            CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6935),
+                            DeliveryPersonAssignedId = new Guid("b8cd72fb-eac5-40d5-8b22-7e8d601e2760"),
+                            IsDeleted = false,
+                            IsPaid = true,
+                            LocationId = 10,
+                            OrderState = 2,
+                            PaymentMethod = 2,
+                            RestaurantId = 1,
+                            TotalCost = 35.0
+                        },
+                        new
+                        {
+                            Id = new Guid("8ce9b7ba-ccff-422c-acc9-ed0a704dacaf"),
+                            Address = "123 Main St",
+                            Allergies = "Maybe a little cream is bad",
+                            CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6938),
+                            IsDeleted = false,
+                            IsPaid = true,
+                            LocationId = 11,
+                            OrderState = 1,
+                            PaymentMethod = 1,
+                            RestaurantId = 1,
+                            TotalCost = 26.0
+                        },
+                        new
+                        {
+                            Id = new Guid("e87e91f7-0b36-4c08-83bc-774aacb99ab8"),
+                            Address = "123 Main St",
+                            Allergies = "Some berries",
+                            CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6942),
+                            DeliveryPersonAssignedId = new Guid("1bb03af4-c9c6-42f4-8153-dfd0e427bb43"),
+                            IsDeleted = false,
+                            IsPaid = true,
+                            LocationId = 12,
+                            OrderState = 2,
+                            PaymentMethod = 2,
+                            RestaurantId = 1,
+                            TotalCost = 27.0
+                        },
+                        new
+                        {
+                            Id = new Guid("328ba3f4-7f21-40f2-ada2-f4f55eaef398"),
+                            Address = "6th street",
+                            Allergies = "None",
+                            CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6945),
+                            IsDeleted = false,
+                            IsPaid = true,
+                            LocationId = 13,
+                            OrderState = 1,
+                            PaymentMethod = 1,
+                            RestaurantId = 1,
+                            TotalCost = 50.0
+                        },
+                        new
+                        {
+                            Id = new Guid("551bf252-ccac-49a9-ade0-5b82db0025f6"),
+                            Address = "6th street",
+                            Allergies = "None",
+                            CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6948),
+                            IsDeleted = false,
+                            IsPaid = true,
+                            LocationId = 14,
+                            OrderState = 1,
+                            PaymentMethod = 1,
+                            RestaurantId = 2,
+                            TotalCost = 36.0
+                        },
+                        new
+                        {
+                            Id = new Guid("4cc493e7-886e-425b-83d7-0c433bf07a9c"),
+                            Address = "6th street",
+                            Allergies = "None",
+                            CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6951),
+                            IsDeleted = false,
+                            IsPaid = true,
+                            LocationId = 15,
+                            OrderState = 1,
+                            PaymentMethod = 1,
+                            RestaurantId = 3,
+                            TotalCost = 12.0
+                        },
+                        new
+                        {
+                            Id = new Guid("81dcd144-67d4-4117-ab76-b511689c9cc2"),
+                            Address = "6th street",
+                            Allergies = "None",
+                            CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6954),
+                            IsDeleted = false,
+                            IsPaid = true,
+                            LocationId = 16,
+                            OrderState = 1,
+                            PaymentMethod = 1,
+                            RestaurantId = 4,
+                            TotalCost = 21.0
+                        },
+                        new
+                        {
+                            Id = new Guid("1991b3fc-5625-49fe-ab51-9ab5495340a9"),
+                            Address = "6th street",
+                            Allergies = "None",
+                            CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6957),
+                            IsDeleted = false,
+                            IsPaid = true,
+                            LocationId = 17,
+                            OrderState = 1,
+                            PaymentMethod = 1,
+                            RestaurantId = 5,
+                            TotalCost = 48.0
+                        },
+                        new
+                        {
+                            Id = new Guid("51fe2fb5-761e-40eb-9518-3be0e95a9af6"),
+                            Address = "6th street",
+                            Allergies = "None",
+                            CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6959),
+                            IsDeleted = false,
+                            IsPaid = true,
+                            LocationId = 18,
+                            OrderState = 1,
+                            PaymentMethod = 1,
+                            RestaurantId = 6,
+                            TotalCost = 34.0
+                        },
+                        new
+                        {
+                            Id = new Guid("ff454850-5665-4246-aa6f-738cb80aa325"),
+                            Address = "6th street",
+                            Allergies = "None",
+                            CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6962),
+                            IsDeleted = false,
+                            IsPaid = true,
+                            LocationId = 19,
+                            OrderState = 1,
+                            PaymentMethod = 1,
+                            RestaurantId = 1,
+                            TotalCost = 50.0
+                        },
+                        new
+                        {
+                            Id = new Guid("5fd9e288-163c-4286-bb40-02213f53198f"),
+                            Address = "6th street",
+                            Allergies = "None",
+                            CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6965),
+                            IsDeleted = false,
+                            IsPaid = true,
+                            LocationId = 20,
+                            OrderState = 1,
+                            PaymentMethod = 1,
+                            RestaurantId = 2,
+                            TotalCost = 36.0
+                        },
+                        new
+                        {
+                            Id = new Guid("650327a7-1218-4306-aca5-cb30ef57de36"),
+                            Address = "6th street",
+                            Allergies = "None",
+                            CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6967),
+                            IsDeleted = false,
+                            IsPaid = true,
+                            LocationId = 21,
+                            OrderState = 1,
+                            PaymentMethod = 1,
+                            RestaurantId = 3,
+                            TotalCost = 12.0
+                        },
+                        new
+                        {
+                            Id = new Guid("0167003f-76d8-4736-9010-9f4f756c5107"),
+                            Address = "6th street",
+                            Allergies = "None",
+                            CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6970),
+                            IsDeleted = false,
+                            IsPaid = true,
+                            LocationId = 22,
+                            OrderState = 1,
+                            PaymentMethod = 1,
+                            RestaurantId = 4,
+                            TotalCost = 21.0
+                        },
+                        new
+                        {
+                            Id = new Guid("425aaa01-bd25-4cae-a267-433e6fef7818"),
+                            Address = "6th street",
+                            Allergies = "None",
+                            CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6973),
+                            IsDeleted = false,
+                            IsPaid = true,
+                            LocationId = 23,
+                            OrderState = 1,
+                            PaymentMethod = 1,
+                            RestaurantId = 5,
+                            TotalCost = 48.0
+                        },
+                        new
+                        {
+                            Id = new Guid("365fd8d6-8de9-4693-bd61-84eb1526c9d9"),
+                            Address = "6th street",
+                            Allergies = "None",
+                            CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6976),
+                            IsDeleted = false,
+                            IsPaid = true,
+                            LocationId = 24,
+                            OrderState = 1,
+                            PaymentMethod = 1,
+                            RestaurantId = 6,
+                            TotalCost = 34.0
+                        });
                 });
 
             modelBuilder.Entity("e_Delivery.Entities.OrderItem", b =>
@@ -456,6 +3540,197 @@ namespace e_Delivery.Database.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("OrderItems");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Cost = 20.0,
+                            FoodItemId = 1,
+                            OrderId = new Guid("faf51d20-4224-4894-940e-1d916274b611"),
+                            Quantity = 2,
+                            SideDishIds = ""
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Cost = 20.0,
+                            FoodItemId = 3,
+                            OrderId = new Guid("faf51d20-4224-4894-940e-1d916274b611"),
+                            Quantity = 2,
+                            SideDishIds = ""
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Cost = 10.0,
+                            FoodItemId = 4,
+                            OrderId = new Guid("098f1a2e-656c-4b65-9429-be1a4f1022e7"),
+                            Quantity = 1,
+                            SideDishIds = ""
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Cost = 10.0,
+                            FoodItemId = 4,
+                            OrderId = new Guid("15073c29-56ff-4762-8a86-a4211339e0f9"),
+                            Quantity = 1,
+                            SideDishIds = ""
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Cost = 10.0,
+                            FoodItemId = 4,
+                            OrderId = new Guid("15073c29-56ff-4762-8a86-a4211339e0f9"),
+                            Quantity = 2,
+                            SideDishIds = ""
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Cost = 10.0,
+                            FoodItemId = 6,
+                            OrderId = new Guid("0c54c236-4ec5-40e4-b354-2d50e9000778"),
+                            Quantity = 1,
+                            SideDishIds = ""
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Cost = 10.0,
+                            FoodItemId = 7,
+                            OrderId = new Guid("8ce9b7ba-ccff-422c-acc9-ed0a704dacaf"),
+                            Quantity = 1,
+                            SideDishIds = ""
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Cost = 10.0,
+                            FoodItemId = 8,
+                            OrderId = new Guid("8ce9b7ba-ccff-422c-acc9-ed0a704dacaf"),
+                            Quantity = 1,
+                            SideDishIds = ""
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Cost = 10.0,
+                            FoodItemId = 9,
+                            OrderId = new Guid("e87e91f7-0b36-4c08-83bc-774aacb99ab8"),
+                            Quantity = 1,
+                            SideDishIds = ""
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Cost = 10.0,
+                            FoodItemId = 10,
+                            OrderId = new Guid("328ba3f4-7f21-40f2-ada2-f4f55eaef398"),
+                            Quantity = 1,
+                            SideDishIds = ""
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Cost = 10.0,
+                            FoodItemId = 11,
+                            OrderId = new Guid("ff454850-5665-4246-aa6f-738cb80aa325"),
+                            Quantity = 2,
+                            SideDishIds = ""
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Cost = 30.0,
+                            FoodItemId = 15,
+                            OrderId = new Guid("551bf252-ccac-49a9-ade0-5b82db0025f6"),
+                            Quantity = 2,
+                            SideDishIds = ""
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Cost = 30.0,
+                            FoodItemId = 16,
+                            OrderId = new Guid("5fd9e288-163c-4286-bb40-02213f53198f"),
+                            Quantity = 2,
+                            SideDishIds = ""
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Cost = 15.0,
+                            FoodItemId = 29,
+                            OrderId = new Guid("4cc493e7-886e-425b-83d7-0c433bf07a9c"),
+                            Quantity = 2,
+                            SideDishIds = ""
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Cost = 15.0,
+                            FoodItemId = 31,
+                            OrderId = new Guid("650327a7-1218-4306-aca5-cb30ef57de36"),
+                            Quantity = 2,
+                            SideDishIds = ""
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Cost = 15.0,
+                            FoodItemId = 44,
+                            OrderId = new Guid("81dcd144-67d4-4117-ab76-b511689c9cc2"),
+                            Quantity = 2,
+                            SideDishIds = ""
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Cost = 15.0,
+                            FoodItemId = 45,
+                            OrderId = new Guid("0167003f-76d8-4736-9010-9f4f756c5107"),
+                            Quantity = 2,
+                            SideDishIds = ""
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Cost = 8.0,
+                            FoodItemId = 57,
+                            OrderId = new Guid("1991b3fc-5625-49fe-ab51-9ab5495340a9"),
+                            Quantity = 1,
+                            SideDishIds = ""
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Cost = 10.0,
+                            FoodItemId = 58,
+                            OrderId = new Guid("425aaa01-bd25-4cae-a267-433e6fef7818"),
+                            Quantity = 2,
+                            SideDishIds = ""
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Cost = 4.0,
+                            FoodItemId = 67,
+                            OrderId = new Guid("51fe2fb5-761e-40eb-9518-3be0e95a9af6"),
+                            Quantity = 1,
+                            SideDishIds = ""
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Cost = 14.0,
+                            FoodItemId = 68,
+                            OrderId = new Guid("365fd8d6-8de9-4693-bd61-84eb1526c9d9"),
+                            Quantity = 2,
+                            SideDishIds = ""
+                        });
                 });
 
             modelBuilder.Entity("e_Delivery.Entities.OrderItemSideDish", b =>
@@ -471,6 +3746,58 @@ namespace e_Delivery.Database.Migrations
                     b.HasIndex("SideDishId");
 
                     b.ToTable("OrderItemSideDish");
+
+                    b.HasData(
+                        new
+                        {
+                            OrderItemId = 1,
+                            SideDishId = 1
+                        },
+                        new
+                        {
+                            OrderItemId = 2,
+                            SideDishId = 2
+                        },
+                        new
+                        {
+                            OrderItemId = 3,
+                            SideDishId = 1
+                        },
+                        new
+                        {
+                            OrderItemId = 4,
+                            SideDishId = 1
+                        },
+                        new
+                        {
+                            OrderItemId = 5,
+                            SideDishId = 2
+                        },
+                        new
+                        {
+                            OrderItemId = 6,
+                            SideDishId = 4
+                        },
+                        new
+                        {
+                            OrderItemId = 7,
+                            SideDishId = 4
+                        },
+                        new
+                        {
+                            OrderItemId = 8,
+                            SideDishId = 2
+                        },
+                        new
+                        {
+                            OrderItemId = 9,
+                            SideDishId = 1
+                        },
+                        new
+                        {
+                            OrderItemId = 10,
+                            SideDishId = 1
+                        });
                 });
 
             modelBuilder.Entity("e_Delivery.Entities.Restaurant", b =>
@@ -534,6 +3861,295 @@ namespace e_Delivery.Database.Migrations
                     b.HasIndex("ModifiedByUserId");
 
                     b.ToTable("Restaurants");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Address = "Zagrebačka 6",
+                            ClosingTime = new TimeSpan(0, 20, 0, 0, 0),
+                            ContactNumber = "063-123-123",
+                            CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6284),
+                            DeliveryCharge = 2.5,
+                            DeliveryTime = 40,
+                            IsOpen = true,
+                            LocationId = 1,
+                            LogoId = 1,
+                            ModifiedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            Name = "Aldi - Caffe slastičarna",
+                            OpeningTime = new TimeSpan(0, 8, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Address = "Brkića 1a",
+                            ClosingTime = new TimeSpan(0, 22, 0, 0, 0),
+                            ContactNumber = "063-123-124",
+                            CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6290),
+                            DeliveryCharge = 2.0,
+                            DeliveryTime = 30,
+                            IsOpen = true,
+                            LocationId = 2,
+                            LogoId = 2,
+                            ModifiedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            Name = "Porto Pizza Mostar",
+                            OpeningTime = new TimeSpan(0, 8, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Address = "Kraljice Katarine 11a",
+                            ClosingTime = new TimeSpan(0, 21, 0, 0, 0),
+                            ContactNumber = "063-123-125",
+                            CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6294),
+                            DeliveryCharge = 3.0,
+                            DeliveryTime = 45,
+                            IsOpen = true,
+                            LocationId = 3,
+                            LogoId = 3,
+                            ModifiedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            Name = "Restoran Radobolja",
+                            OpeningTime = new TimeSpan(0, 10, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Address = "Bišće Polje, M17",
+                            ClosingTime = new TimeSpan(0, 21, 0, 0, 0),
+                            ContactNumber = "063-123-126",
+                            CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6297),
+                            DeliveryCharge = 3.0,
+                            DeliveryTime = 50,
+                            IsOpen = true,
+                            LocationId = 4,
+                            LogoId = 4,
+                            ModifiedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            Name = "Dva fenjera",
+                            OpeningTime = new TimeSpan(0, 10, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Address = "Husnije Repca 3",
+                            ClosingTime = new TimeSpan(0, 21, 0, 0, 0),
+                            ContactNumber = "063-123-127",
+                            CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6301),
+                            DeliveryCharge = 1.5,
+                            DeliveryTime = 30,
+                            IsOpen = true,
+                            LocationId = 5,
+                            LogoId = 5,
+                            ModifiedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            Name = "Niđe veze",
+                            OpeningTime = new TimeSpan(0, 10, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Address = "Kralja Tomislava 9",
+                            ClosingTime = new TimeSpan(0, 21, 0, 0, 0),
+                            ContactNumber = "063-123-128",
+                            CreatedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(6304),
+                            DeliveryCharge = 2.5,
+                            DeliveryTime = 35,
+                            IsOpen = true,
+                            LocationId = 6,
+                            LogoId = 6,
+                            ModifiedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
+                            Name = "Megi Le Petit",
+                            OpeningTime = new TimeSpan(0, 10, 0, 0, 0)
+                        });
+                });
+
+            modelBuilder.Entity("e_Delivery.Entities.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid?>("CreatedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Grade")
+                        .HasColumnType("float");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid?>("ModifiedByUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("RestaurantId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("ModifiedByUserId");
+
+                    b.HasIndex("RestaurantId");
+
+                    b.ToTable("Reviews");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(7096),
+                            Description = "Great food!",
+                            Grade = 5.0,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(7102),
+                            Description = "Very good food!",
+                            Grade = 4.5,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(7105),
+                            Description = "Solid food!",
+                            Grade = 4.0,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(7108),
+                            Description = "Very good food!",
+                            Grade = 4.5,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(7111),
+                            Description = "Solid food!",
+                            Grade = 4.0,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(7114),
+                            Description = "Very good food!",
+                            Grade = 5.0,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(7148),
+                            Description = "Solid food!",
+                            Grade = 4.5,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(7152),
+                            Description = "Very good food!",
+                            Grade = 3.5,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            RestaurantId = 4
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(7155),
+                            Description = "Solid food!",
+                            Grade = 4.0,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            RestaurantId = 4
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(7158),
+                            Description = "Very good food!",
+                            Grade = 4.5,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(7161),
+                            Description = "Solid food!",
+                            Grade = 2.0,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(7163),
+                            Description = "Very good food!",
+                            Grade = 2.5,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            RestaurantId = 6
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            CreatedDate = new DateTime(2024, 6, 11, 17, 12, 56, 593, DateTimeKind.Local).AddTicks(7166),
+                            Description = "Solid food!",
+                            Grade = 3.0,
+                            IsDeleted = false,
+                            ModifiedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            RestaurantId = 6
+                        });
                 });
 
             modelBuilder.Entity("e_Delivery.Entities.Role", b =>
@@ -568,6 +4184,40 @@ namespace e_Delivery.Database.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("asp_net_roles", "identity");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("353224f4-7950-428d-a141-08dc2a5ba67c"),
+                            ConcurrencyStamp = "662929e8-894a-4209-b5d1-9c502c8e3b87",
+                            IsDeleted = false,
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = new Guid("f57f872c-eaa4-441e-a142-08dc2a5ba67c"),
+                            ConcurrencyStamp = "0f7da838-ce7b-44f5-aed7-952e4dde2392",
+                            IsDeleted = false,
+                            Name = "Desktop",
+                            NormalizedName = "DESKTOP"
+                        },
+                        new
+                        {
+                            Id = new Guid("67c0d30a-d873-4f9b-a143-08dc2a5ba67c"),
+                            ConcurrencyStamp = "76448cd7-5d5d-40b8-8e2d-1b013777dfba",
+                            IsDeleted = false,
+                            Name = "MobileCustomer",
+                            NormalizedName = "MOBILECUSTOMER"
+                        },
+                        new
+                        {
+                            Id = new Guid("7d7168d4-ef7e-4503-a144-08dc2a5ba67c"),
+                            ConcurrencyStamp = "ac1f8291-9c6b-4cf1-9a78-e59ba32ee4b1",
+                            IsDeleted = false,
+                            Name = "MobileDeliveryPerson",
+                            NormalizedName = "MOBILEDELIVERYPERSON"
+                        });
                 });
 
             modelBuilder.Entity("e_Delivery.Entities.SideDish", b =>
@@ -596,6 +4246,256 @@ namespace e_Delivery.Database.Migrations
                     b.HasIndex("RestaurantId");
 
                     b.ToTable("SideDishes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsAvailable = true,
+                            Name = "Mayonnaise",
+                            Price = 1.0,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IsAvailable = true,
+                            Name = "Ketchup",
+                            Price = 1.0,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            IsAvailable = true,
+                            Name = "Tartar sauce",
+                            Price = 1.0,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            IsAvailable = true,
+                            Name = "French fries",
+                            Price = 2.5,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            IsAvailable = true,
+                            Name = "Extra cheese",
+                            Price = 1.5,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 6,
+                            IsAvailable = true,
+                            Name = "Ice cream",
+                            Price = 2.0,
+                            RestaurantId = 1
+                        },
+                        new
+                        {
+                            Id = 7,
+                            IsAvailable = true,
+                            Name = "Mayonnaise",
+                            Price = 1.0,
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 8,
+                            IsAvailable = true,
+                            Name = "Ketchup",
+                            Price = 1.0,
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 9,
+                            IsAvailable = true,
+                            Name = "Tartar sauce",
+                            Price = 1.0,
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 10,
+                            IsAvailable = true,
+                            Name = "Cream",
+                            Price = 0.5,
+                            RestaurantId = 2
+                        },
+                        new
+                        {
+                            Id = 11,
+                            IsAvailable = true,
+                            Name = "French fries",
+                            Price = 2.5,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 12,
+                            IsAvailable = true,
+                            Name = "Mayonnaise",
+                            Price = 1.5,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 13,
+                            IsAvailable = true,
+                            Name = "Ketchup",
+                            Price = 1.5,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 14,
+                            IsAvailable = true,
+                            Name = "Ajvar",
+                            Price = 1.5,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 15,
+                            IsAvailable = true,
+                            Name = "Barbecue sauce",
+                            Price = 2.5,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 16,
+                            IsAvailable = true,
+                            Name = "Soy sauce",
+                            Price = 2.0,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 17,
+                            IsAvailable = true,
+                            Name = "Vinegar",
+                            Price = 2.0,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 18,
+                            IsAvailable = true,
+                            Name = "Hot sauce",
+                            Price = 2.0,
+                            RestaurantId = 3
+                        },
+                        new
+                        {
+                            Id = 19,
+                            IsAvailable = true,
+                            Name = "Prosciutto",
+                            Price = 2.5,
+                            RestaurantId = 4
+                        },
+                        new
+                        {
+                            Id = 20,
+                            IsAvailable = true,
+                            Name = "Kajmak",
+                            Price = 1.5,
+                            RestaurantId = 4
+                        },
+                        new
+                        {
+                            Id = 21,
+                            IsAvailable = true,
+                            Name = "Sour cream",
+                            Price = 1.5,
+                            RestaurantId = 4
+                        },
+                        new
+                        {
+                            Id = 22,
+                            IsAvailable = true,
+                            Name = "Mayonaisse",
+                            Price = 1.5,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 23,
+                            IsAvailable = true,
+                            Name = "Ketchup",
+                            Price = 1.5,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 24,
+                            IsAvailable = true,
+                            Name = "Tartar sauce",
+                            Price = 1.5,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 25,
+                            IsAvailable = true,
+                            Name = "Ice cream",
+                            Price = 1.5,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 26,
+                            IsAvailable = true,
+                            Name = "Whipped cream",
+                            Price = 0.5,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 27,
+                            IsAvailable = true,
+                            Name = "Vinegar",
+                            Price = 1.5,
+                            RestaurantId = 5
+                        },
+                        new
+                        {
+                            Id = 28,
+                            IsAvailable = true,
+                            Name = "Vinegar",
+                            Price = 1.5,
+                            RestaurantId = 6
+                        },
+                        new
+                        {
+                            Id = 29,
+                            IsAvailable = true,
+                            Name = "Mayonnaise",
+                            Price = 1.5,
+                            RestaurantId = 6
+                        },
+                        new
+                        {
+                            Id = 30,
+                            IsAvailable = true,
+                            Name = "Ketchup",
+                            Price = 1.5,
+                            RestaurantId = 6
+                        },
+                        new
+                        {
+                            Id = 31,
+                            IsAvailable = true,
+                            Name = "Extra cheese",
+                            Price = 1.5,
+                            RestaurantId = 6
+                        });
                 });
 
             modelBuilder.Entity("e_Delivery.Entities.User", b =>
@@ -704,6 +4604,373 @@ namespace e_Delivery.Database.Migrations
                     b.HasIndex("RestaurantId");
 
                     b.ToTable("asp_net_users", "identity");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("4325ff27-c4d1-4ee8-8073-518fafba8678"),
+                            AccessFailedCount = 0,
+                            CityId = 1,
+                            ConcurrencyStamp = "323771ac-c745-41ce-8d35-b820846724be",
+                            CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
+                            Email = "edeliveryadmin@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "Admin",
+                            Gender = 1,
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            LastName = "Admin",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "EMPLOYEE@EMPLOYEE.COM",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
+                            PhoneNumber = "061-502-342",
+                            PhoneNumberConfirmed = false,
+                            RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            SecurityStamp = "51f7aaa4-df70-4b66-ada2-ba558338c14f",
+                            TwoFactorEnabled = false,
+                            UserName = "admin"
+                        },
+                        new
+                        {
+                            Id = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
+                            AccessFailedCount = 0,
+                            CityId = 1,
+                            ConcurrencyStamp = "893dd9f8-0ba6-4c7a-b4a0-7adc1e59181f",
+                            CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
+                            Email = "belminedelivery@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "desktop",
+                            Gender = 1,
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            LastName = "User",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "BELMINEDELIVERY@GMAIL.COM",
+                            NormalizedUserName = "DESKTOP",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
+                            PhoneNumber = "061-111-111",
+                            PhoneNumberConfirmed = false,
+                            RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RestaurantId = 1,
+                            SecurityStamp = "acd6ef2e-cffc-4357-a1ea-598fa97507e8",
+                            TwoFactorEnabled = false,
+                            UserName = "desktop"
+                        },
+                        new
+                        {
+                            Id = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
+                            AccessFailedCount = 0,
+                            CityId = 1,
+                            ConcurrencyStamp = "ea60b4f4-02e4-4d5a-9d29-2102ee0bab80",
+                            CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
+                            Email = "desktop1edelivery@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "desktop1",
+                            Gender = 1,
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            LastName = "User1",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "DESKTOP1EDELIVERY@GMAIL.COM",
+                            NormalizedUserName = "DESKTOP1",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
+                            PhoneNumber = "061-111-112",
+                            PhoneNumberConfirmed = false,
+                            RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RestaurantId = 2,
+                            SecurityStamp = "f4098cc8-11e8-4757-81b4-c52f24250a0f",
+                            TwoFactorEnabled = false,
+                            UserName = "desktop1"
+                        },
+                        new
+                        {
+                            Id = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
+                            AccessFailedCount = 0,
+                            CityId = 1,
+                            ConcurrencyStamp = "2c35e1e2-e423-453c-afbe-4b9200434d63",
+                            CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
+                            Email = "desktop2edelivery@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "desktop2",
+                            Gender = 1,
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            LastName = "User2",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "DESKTOP2EDELIVERY@GMAIL.COM",
+                            NormalizedUserName = "DESKTOP2",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
+                            PhoneNumber = "061-111-113",
+                            PhoneNumberConfirmed = false,
+                            RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RestaurantId = 3,
+                            SecurityStamp = "87ac41ee-ed08-460e-ac39-64de34025369",
+                            TwoFactorEnabled = false,
+                            UserName = "desktop2"
+                        },
+                        new
+                        {
+                            Id = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
+                            AccessFailedCount = 0,
+                            CityId = 1,
+                            ConcurrencyStamp = "81f474df-2af7-46ec-9c8c-1a57a67a9cfc",
+                            CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
+                            Email = "desktop3edelivery@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "desktop3",
+                            Gender = 1,
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            LastName = "User3",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "DESKTOP3EDELIVERY@GMAIL.COM",
+                            NormalizedUserName = "DESKTOP3",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
+                            PhoneNumber = "061-111-114",
+                            PhoneNumberConfirmed = false,
+                            RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RestaurantId = 4,
+                            SecurityStamp = "edaf5bf3-ae14-41d0-b8a4-8972f8940d73",
+                            TwoFactorEnabled = false,
+                            UserName = "desktop3"
+                        },
+                        new
+                        {
+                            Id = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
+                            AccessFailedCount = 0,
+                            CityId = 1,
+                            ConcurrencyStamp = "6c2010eb-bf3a-429e-bc18-eae90ecaeb41",
+                            CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
+                            Email = "desktop4edelivery@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "desktop4",
+                            Gender = 1,
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            LastName = "User4",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "DESKTOP4EDELIVERY@GMAIL.COM",
+                            NormalizedUserName = "DESKTOP4",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
+                            PhoneNumber = "123456789",
+                            PhoneNumberConfirmed = false,
+                            RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RestaurantId = 5,
+                            SecurityStamp = "01ac1e29-2c73-4c8e-ac48-f3375993f45c",
+                            TwoFactorEnabled = false,
+                            UserName = "desktop4"
+                        },
+                        new
+                        {
+                            Id = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
+                            AccessFailedCount = 0,
+                            CityId = 1,
+                            ConcurrencyStamp = "7c819953-2c76-4382-ac36-c1b4969505dd",
+                            CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
+                            Email = "desktop5edelivery@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "desktop5",
+                            Gender = 1,
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            LastName = "User5",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "DESKTOP5EDELIVERY@GMAIL.COM",
+                            NormalizedUserName = "DESKTOP5",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
+                            PhoneNumber = "123456789",
+                            PhoneNumberConfirmed = false,
+                            RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RestaurantId = 6,
+                            SecurityStamp = "1a0a9c0f-bc51-46f2-a40c-fc962fd36c96",
+                            TwoFactorEnabled = false,
+                            UserName = "desktop5"
+                        },
+                        new
+                        {
+                            Id = new Guid("d405edf6-6ebf-4c20-861d-077f70fbcfb7"),
+                            AccessFailedCount = 0,
+                            CityId = 1,
+                            ConcurrencyStamp = "050f9b2c-b61d-4eb2-9817-bbf3c74aa337",
+                            CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
+                            Email = "desktop6edelivery@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "desktop6",
+                            Gender = 1,
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            LastName = "User6",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "DESKTOP6EDELIVERY@GMAIL.COM",
+                            NormalizedUserName = "DESKTOP6",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
+                            PhoneNumber = "123456789",
+                            PhoneNumberConfirmed = false,
+                            RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            SecurityStamp = "43507d74-6a28-483c-8f1d-2f462745fa16",
+                            TwoFactorEnabled = false,
+                            UserName = "desktop6"
+                        },
+                        new
+                        {
+                            Id = new Guid("b8396f1d-a29a-4856-a4c1-1312dc97a4a1"),
+                            AccessFailedCount = 0,
+                            CityId = 1,
+                            ConcurrencyStamp = "97dd7d82-2b20-4783-87c5-9d2f61c5cc7c",
+                            CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
+                            Email = "flutterhelpme2@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "Employee",
+                            Gender = 1,
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            LastName = "User",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "EMPLOYEE@EMPLOYEE.COM",
+                            NormalizedUserName = "EMPLOYEE",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
+                            PhoneNumber = "123456789",
+                            PhoneNumberConfirmed = false,
+                            RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RestaurantId = 1,
+                            SecurityStamp = "0534b7c2-7672-4268-9145-c38aec71a50b",
+                            TwoFactorEnabled = false,
+                            UserName = "MobileDeliveryPerson",
+                            WorkFrom = new TimeSpan(0, 10, 0, 0, 0),
+                            WorkUntil = new TimeSpan(0, 18, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = new Guid("b8cd72fb-eac5-40d5-8b22-7e8d601e2760"),
+                            AccessFailedCount = 0,
+                            CityId = 1,
+                            ConcurrencyStamp = "f3d35666-36a1-4e5f-af6e-a83dc3e89f85",
+                            CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
+                            Email = "employee1@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "Employee1",
+                            Gender = 1,
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            LastName = "User1",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "EMPLOYEE1@GMAIL.COM",
+                            NormalizedUserName = "EMPLOYEE1",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
+                            PhoneNumber = "123456789",
+                            PhoneNumberConfirmed = false,
+                            RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RestaurantId = 1,
+                            SecurityStamp = "d9fcd40f-79a3-4d31-8dfa-986dcd0074f0",
+                            TwoFactorEnabled = false,
+                            UserName = "MobileDeliveryPerson1",
+                            WorkFrom = new TimeSpan(0, 10, 0, 0, 0),
+                            WorkUntil = new TimeSpan(0, 18, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = new Guid("1bb03af4-c9c6-42f4-8153-dfd0e427bb43"),
+                            AccessFailedCount = 0,
+                            CityId = 1,
+                            ConcurrencyStamp = "112c85e3-0cad-44de-a19f-f4d724a8508d",
+                            CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
+                            Email = "employee2@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "Employee2",
+                            Gender = 1,
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            LastName = "User2",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "EMPLOYEE2@GMAIL.COM",
+                            NormalizedUserName = "EMPLOYEE2",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
+                            PhoneNumber = "123456789",
+                            PhoneNumberConfirmed = false,
+                            RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RestaurantId = 1,
+                            SecurityStamp = "e81e235f-ebdb-4564-96ae-765b3090119f",
+                            TwoFactorEnabled = false,
+                            UserName = "MobileDeliveryPerson2",
+                            WorkFrom = new TimeSpan(0, 10, 0, 0, 0),
+                            WorkUntil = new TimeSpan(0, 18, 0, 0, 0)
+                        },
+                        new
+                        {
+                            Id = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
+                            AccessFailedCount = 0,
+                            CityId = 1,
+                            ConcurrencyStamp = "f407f428-a30c-4626-ad77-90c0e4ffedc0",
+                            CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
+                            Email = "kupac11111@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "Customer",
+                            Gender = 1,
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            LastName = "User",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "KUPAC11111@GMAIL.COM",
+                            NormalizedUserName = "MOBILECUSTOMER",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
+                            PhoneNumber = "123456789",
+                            PhoneNumberConfirmed = false,
+                            RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            SecurityStamp = "7d34a009-dc54-4f24-b735-345ddf9bb754",
+                            TwoFactorEnabled = false,
+                            UserName = "MobileCustomer"
+                        },
+                        new
+                        {
+                            Id = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
+                            AccessFailedCount = 0,
+                            CityId = 1,
+                            ConcurrencyStamp = "09ee00e3-c4c5-4a59-b1c8-b115c4894bf6",
+                            CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
+                            Email = "mobilecustomer1@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "Customer1",
+                            Gender = 1,
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            LastName = "User1",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "MOBILECUSTOMER1@GMAIL.COM",
+                            NormalizedUserName = "MOBILECUSTOMER1",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
+                            PhoneNumber = "123456789",
+                            PhoneNumberConfirmed = false,
+                            RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            SecurityStamp = "5c9cd85e-52af-49aa-abbd-d69da2d9f8ea",
+                            TwoFactorEnabled = false,
+                            UserName = "MobileCustomer1"
+                        },
+                        new
+                        {
+                            Id = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
+                            AccessFailedCount = 0,
+                            CityId = 1,
+                            ConcurrencyStamp = "f8e8281a-7201-48de-9de4-5b1d9893a890",
+                            CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
+                            Email = "mobilecustomer2@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "Custome2",
+                            Gender = 1,
+                            IsAvailable = true,
+                            IsDeleted = false,
+                            LastName = "User2",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "MOBILECUSTOMER2@GMAIL.COM",
+                            NormalizedUserName = "MOBILECUSTOMER2",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
+                            PhoneNumber = "123456789",
+                            PhoneNumberConfirmed = false,
+                            RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            SecurityStamp = "f8b92d8b-4747-48c1-a1a7-098fda34993d",
+                            TwoFactorEnabled = false,
+                            UserName = "MobileCustomer2"
+                        });
                 });
 
             modelBuilder.Entity("e_Delivery.Entities.Verification", b =>
@@ -730,87 +4997,6 @@ namespace e_Delivery.Database.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Verifications");
-                });
-
-            modelBuilder.Entity("e_Delivery.Entities.FoodItem", b =>
-                {
-                    b.HasBaseType("e_Delivery.Entities.BaseEntity");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsAvailable")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
-
-                    b.Property<int>("RestaurantId")
-                        .HasColumnType("int");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("ModifiedByUserId");
-
-                    b.HasIndex("RestaurantId");
-
-                    b.ToTable("FoodItems");
-                });
-
-            modelBuilder.Entity("e_Delivery.Entities.Location", b =>
-                {
-                    b.HasBaseType("e_Delivery.Entities.BaseEntity");
-
-                    b.Property<int>("CityId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Latitude")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Longitude")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasIndex("CityId");
-
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("ModifiedByUserId");
-
-                    b.ToTable("Locations");
-                });
-
-            modelBuilder.Entity("e_Delivery.Entities.Review", b =>
-                {
-                    b.HasBaseType("e_Delivery.Entities.BaseEntity");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Grade")
-                        .HasColumnType("float");
-
-                    b.Property<int>("RestaurantId")
-                        .HasColumnType("int");
-
-                    b.HasIndex("CreatedByUserId");
-
-                    b.HasIndex("ModifiedByUserId");
-
-                    b.HasIndex("RestaurantId");
-
-                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -869,13 +5055,13 @@ namespace e_Delivery.Database.Migrations
                     b.HasOne("e_Delivery.Entities.User", "UserFrom")
                         .WithMany()
                         .HasForeignKey("UserFromId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("e_Delivery.Entities.User", "UserTo")
                         .WithMany()
                         .HasForeignKey("UserToId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("UserFrom");
@@ -894,6 +5080,37 @@ namespace e_Delivery.Database.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("e_Delivery.Entities.FoodItem", b =>
+                {
+                    b.HasOne("e_Delivery.Entities.Category", "Category")
+                        .WithMany("FoodItems")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("e_Delivery.Entities.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId");
+
+                    b.HasOne("e_Delivery.Entities.User", "ModifiedByUser")
+                        .WithMany()
+                        .HasForeignKey("ModifiedByUserId");
+
+                    b.HasOne("e_Delivery.Entities.Restaurant", "Restaurant")
+                        .WithMany()
+                        .HasForeignKey("RestaurantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("ModifiedByUser");
+
+                    b.Navigation("Restaurant");
+                });
+
             modelBuilder.Entity("e_Delivery.Entities.FoodItemPictures", b =>
                 {
                     b.HasOne("e_Delivery.Entities.FoodItem", "FoodItem")
@@ -910,13 +5127,13 @@ namespace e_Delivery.Database.Migrations
                     b.HasOne("e_Delivery.Entities.FoodItem", "FoodItem")
                         .WithMany("FoodItemSideDishMappings")
                         .HasForeignKey("FoodItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("e_Delivery.Entities.SideDish", "SideDish")
                         .WithMany("FoodItemSideDishMappings")
                         .HasForeignKey("SideDishId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("FoodItem");
@@ -943,6 +5160,29 @@ namespace e_Delivery.Database.Migrations
                     b.Navigation("ModifiedByUser");
 
                     b.Navigation("UserProfilePicture");
+                });
+
+            modelBuilder.Entity("e_Delivery.Entities.Location", b =>
+                {
+                    b.HasOne("e_Delivery.Entities.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("e_Delivery.Entities.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId");
+
+                    b.HasOne("e_Delivery.Entities.User", "ModifiedByUser")
+                        .WithMany()
+                        .HasForeignKey("ModifiedByUserId");
+
+                    b.Navigation("City");
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("ModifiedByUser");
                 });
 
             modelBuilder.Entity("e_Delivery.Entities.Notification", b =>
@@ -1015,13 +5255,13 @@ namespace e_Delivery.Database.Migrations
                     b.HasOne("e_Delivery.Entities.OrderItem", "OrderItem")
                         .WithMany("OrderItemSideDishes")
                         .HasForeignKey("OrderItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("e_Delivery.Entities.SideDish", "SideDish")
                         .WithMany("OrderItemSideDishes")
                         .HasForeignKey("SideDishId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("OrderItem");
@@ -1034,7 +5274,7 @@ namespace e_Delivery.Database.Migrations
                     b.HasOne("e_Delivery.Entities.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("e_Delivery.Entities.Location", "Location")
@@ -1048,7 +5288,7 @@ namespace e_Delivery.Database.Migrations
                     b.HasOne("e_Delivery.Entities.User", "ModifiedByUser")
                         .WithMany()
                         .HasForeignKey("ModifiedByUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("CreatedByUser");
@@ -1058,6 +5298,29 @@ namespace e_Delivery.Database.Migrations
                     b.Navigation("Logo");
 
                     b.Navigation("ModifiedByUser");
+                });
+
+            modelBuilder.Entity("e_Delivery.Entities.Review", b =>
+                {
+                    b.HasOne("e_Delivery.Entities.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId");
+
+                    b.HasOne("e_Delivery.Entities.User", "ModifiedByUser")
+                        .WithMany()
+                        .HasForeignKey("ModifiedByUserId");
+
+                    b.HasOne("e_Delivery.Entities.Restaurant", "Restaurant")
+                        .WithMany("Reviews")
+                        .HasForeignKey("RestaurantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("ModifiedByUser");
+
+                    b.Navigation("Restaurant");
                 });
 
             modelBuilder.Entity("e_Delivery.Entities.SideDish", b =>
@@ -1097,86 +5360,16 @@ namespace e_Delivery.Database.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("e_Delivery.Entities.FoodItem", b =>
-                {
-                    b.HasOne("e_Delivery.Entities.Category", "Category")
-                        .WithMany("FoodItems")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("e_Delivery.Entities.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId");
-
-                    b.HasOne("e_Delivery.Entities.User", "ModifiedByUser")
-                        .WithMany()
-                        .HasForeignKey("ModifiedByUserId");
-
-                    b.HasOne("e_Delivery.Entities.Restaurant", "Restaurant")
-                        .WithMany()
-                        .HasForeignKey("RestaurantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("ModifiedByUser");
-
-                    b.Navigation("Restaurant");
-                });
-
-            modelBuilder.Entity("e_Delivery.Entities.Location", b =>
-                {
-                    b.HasOne("e_Delivery.Entities.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("e_Delivery.Entities.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId");
-
-                    b.HasOne("e_Delivery.Entities.User", "ModifiedByUser")
-                        .WithMany()
-                        .HasForeignKey("ModifiedByUserId");
-
-                    b.Navigation("City");
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("ModifiedByUser");
-                });
-
-            modelBuilder.Entity("e_Delivery.Entities.Review", b =>
-                {
-                    b.HasOne("e_Delivery.Entities.User", "CreatedByUser")
-                        .WithMany()
-                        .HasForeignKey("CreatedByUserId");
-
-                    b.HasOne("e_Delivery.Entities.User", "ModifiedByUser")
-                        .WithMany()
-                        .HasForeignKey("ModifiedByUserId");
-
-                    b.HasOne("e_Delivery.Entities.Restaurant", "Restaurant")
-                        .WithMany("Reviews")
-                        .HasForeignKey("RestaurantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreatedByUser");
-
-                    b.Navigation("ModifiedByUser");
-
-                    b.Navigation("Restaurant");
-                });
-
             modelBuilder.Entity("e_Delivery.Entities.Category", b =>
                 {
                     b.Navigation("FoodItems");
+                });
+
+            modelBuilder.Entity("e_Delivery.Entities.FoodItem", b =>
+                {
+                    b.Navigation("FoodItemPictures");
+
+                    b.Navigation("FoodItemSideDishMappings");
                 });
 
             modelBuilder.Entity("e_Delivery.Entities.Order", b =>
@@ -1199,13 +5392,6 @@ namespace e_Delivery.Database.Migrations
                     b.Navigation("FoodItemSideDishMappings");
 
                     b.Navigation("OrderItemSideDishes");
-                });
-
-            modelBuilder.Entity("e_Delivery.Entities.FoodItem", b =>
-                {
-                    b.Navigation("FoodItemPictures");
-
-                    b.Navigation("FoodItemSideDishMappings");
                 });
 #pragma warning restore 612, 618
         }

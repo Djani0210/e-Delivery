@@ -35,18 +35,18 @@ class Sidebar extends StatelessWidget {
               ],
             ),
           ),
-          _createDrawerItem(icon: Icons.home, text: 'Početna', index: 0),
-          _createDrawerItem(icon: Icons.receipt, text: 'Narudžbe', index: 1),
-          _createDrawerItem(icon: Icons.menu_book, text: 'Meni', index: 2),
+          _createDrawerItem(icon: Icons.home, text: 'Home', index: 0),
+          _createDrawerItem(icon: Icons.receipt, text: 'Orders', index: 1),
+          _createDrawerItem(icon: Icons.menu_book, text: 'Menu', index: 2),
           _createDrawerItem(
-              icon: Icons.person_2, text: "Dostavljači", index: 3),
+              icon: Icons.person_2, text: "Delivery persons", index: 3),
           _createDrawerItem(
-              icon: Icons.settings, text: "Uredi profil", index: 4),
+              icon: Icons.settings, text: "Edit profile", index: 4),
           Divider(),
           // Logout option
           ListTile(
             leading: Icon(Icons.logout),
-            title: Text('Odjavi se'),
+            title: Text('Logout'),
             onTap: () => onLogout(),
           ),
         ],

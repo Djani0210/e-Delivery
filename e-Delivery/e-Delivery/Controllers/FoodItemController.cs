@@ -1,5 +1,5 @@
 ﻿using e_Delivery.Database;
-using e_Delivery.Database.Migrations;
+
 using e_Delivery.Entities;
 using e_Delivery.Model.City;
 using e_Delivery.Model.FoodItem;

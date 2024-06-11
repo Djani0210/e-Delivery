@@ -63,19 +63,12 @@ class _UserPageState extends State<UserPage> {
   Future<void> _loadUserData() async {
     try {
       final jwtToken = await StorageService.storage.read(key: 'jwt');
-      print(jwtToken);
+
       if (jwtToken != null) {
-        print(
-            'JWT Token from secure storage: $jwtToken'); // Print the JWT token to the console
-      } else {
-        print('No JWT token found in secure storage.');
-      }
+      } else {}
       final userId = await StorageService.storage.read(key: 'currentUserId');
       if (userId != null) {
-        print('User ID from secure storage: $userId');
-      } else {
-        print('No user ID found in secure storage.');
-      }
+      } else {}
 
       final userDataJson = await StorageService.storage.read(key: 'userData');
       if (userDataJson != null) {

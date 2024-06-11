@@ -6,32 +6,18 @@ using Microsoft.Extensions.Configuration;
 using e_Delivery;
 
 IHost host = Host.CreateDefaultBuilder(args)
-   .ConfigureAppConfiguration((context, config) =>
-   {
-       config.AddEnvironmentVariables();
-       config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-   })
    .ConfigureServices((hostContext, services) =>
    {
-       var configuration = hostContext.Configuration;
-
-       var rabbitMqSettings = new e_Delivery.RabbitMqSettings
+       // Register the IBus service
+       services.AddSingleton<IBus>(sp =>
        {
-           HostName = configuration["RABBITMQ_HOST"] ?? "localhost",
-           Port = int.Parse(configuration["RABBITMQ_PORT"] ?? "5672"),
-           UserName = configuration["RABBITMQ_USERNAME"] ?? "guest",
-           Password = configuration["RABBITMQ_PASSWORD"] ?? "guest",
-           VirtualHost = configuration["RABBITMQ_VIRTUALHOST"] ?? "/"
-       };
-
-       services.AddSingleton(sp =>
-       {
-           if (rabbitMqSettings == null)
-           {
-               throw new InvalidOperationException("RabbitMQ settings are missing in the configuration.");
-           }
-
-           return RabbitHutch.CreateBus($"host={rabbitMqSettings.HostName};port={rabbitMqSettings.Port};username={rabbitMqSettings.UserName};password={rabbitMqSettings.Password}");
+           var configuration = sp.GetRequiredService<IConfiguration>();
+           var host = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "localhost";
+           var username = Environment.GetEnvironmentVariable("RABBITMQ_USERNAME") ?? "guest";
+           var password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD") ?? "guest";
+           var virtualHost = Environment.GetEnvironmentVariable("RABBITMQ_VIRTUALHOST") ?? "/";
+          
+           return RabbitHutch.CreateBus($"host={host};virtualHost={virtualHost};username={username};password={password}");
        });
 
        services.AddHostedService<Worker>();

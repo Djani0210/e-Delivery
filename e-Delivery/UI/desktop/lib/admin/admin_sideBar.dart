@@ -35,14 +35,14 @@ class Sidebar extends StatelessWidget {
               ],
             ),
           ),
-          _createDrawerItem(icon: Icons.place, text: 'Gradovi', index: 0),
-          _createDrawerItem(icon: Icons.category, text: 'Kategorije', index: 1),
+          _createDrawerItem(icon: Icons.place, text: 'Citites', index: 0),
+          _createDrawerItem(icon: Icons.category, text: 'Categories', index: 1),
           _createDrawerItem(
-              icon: Icons.restaurant_outlined, text: 'Restorani', index: 2),
+              icon: Icons.restaurant_outlined, text: 'Restaurants', index: 2),
           Divider(),
           ListTile(
             leading: Icon(Icons.logout),
-            title: Text('Odjavi se'),
+            title: Text('Logout'),
             onTap: () => onLogout(),
           ),
         ],

@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class OrderService {
-  final String baseUrl = 'https://10.0.2.2:44395';
+  final String baseUrl = 'http://10.0.2.2:44395';
   final storage = FlutterSecureStorage();
 
   Future<String> fetchJwt() async {

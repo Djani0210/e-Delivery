@@ -1,11 +1,10 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:desktop/restaurant/api_calls/order_api_calls.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
+
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -25,7 +24,6 @@ class _OrderReportFormState extends State<OrderReportForm> {
   double _minPrice = 0.0;
   double _maxPrice = 0.0;
   bool _isLoading = false;
-  Uint8List? _pdfData;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -102,10 +100,10 @@ class _OrderReportFormState extends State<OrderReportForm> {
     }
     final price = double.tryParse(value);
     if (price == null) {
-      return 'Molimo unesite validnu vrijednost';
+      return 'Please enter a valid value';
     }
     if (price < 0) {
-      return 'Vrijednost mora biti pozitivna';
+      return 'Value must be positive';
     }
     return null;
   }
@@ -134,7 +132,7 @@ class _OrderReportFormState extends State<OrderReportForm> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Generiši izvještaj za narudžbe',
+                'Generate order report',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -143,7 +141,7 @@ class _OrderReportFormState extends State<OrderReportForm> {
               SizedBox(height: 16),
               Row(
                 children: [
-                  Text('Od:'),
+                  Text('From:'),
                   SizedBox(width: 16),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -155,12 +153,12 @@ class _OrderReportFormState extends State<OrderReportForm> {
                     onPressed: () => _selectDate(context, true),
                     child: Text(
                       _selectedFromDate == null
-                          ? 'Odaberi datum'
+                          ? 'Choose date'
                           : DateFormat('yyyy-MM-dd').format(_selectedFromDate!),
                     ),
                   ),
                   SizedBox(width: 16),
-                  Text('Do:'),
+                  Text('To:'),
                   SizedBox(width: 16),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -172,7 +170,7 @@ class _OrderReportFormState extends State<OrderReportForm> {
                     onPressed: () => _selectDate(context, false),
                     child: Text(
                       _selectedToDate == null
-                          ? 'Odaberi Datum'
+                          ? 'Choose date'
                           : DateFormat('yyyy-MM-dd').format(_selectedToDate!),
                     ),
                   ),
@@ -185,7 +183,7 @@ class _OrderReportFormState extends State<OrderReportForm> {
                     child: TextFormField(
                       controller: _minPriceController,
                       decoration: InputDecoration(
-                        labelText: 'Min cijena',
+                        labelText: 'Min price',
                       ),
                       keyboardType: TextInputType.number,
                       inputFormatters: [
@@ -224,7 +222,7 @@ class _OrderReportFormState extends State<OrderReportForm> {
                     child: TextFormField(
                       controller: _maxPriceController,
                       decoration: InputDecoration(
-                        labelText: 'Max cijena',
+                        labelText: 'Max price',
                       ),
                       keyboardType: TextInputType.number,
                       inputFormatters: [
@@ -237,7 +235,7 @@ class _OrderReportFormState extends State<OrderReportForm> {
                           return error;
                         }
                         if (_maxPrice < _minPrice) {
-                          return 'Max cijena ne može biti manja od min cijene';
+                          return 'Max price cannot be lower than min price';
                         }
                         return null;
                       },
@@ -276,7 +274,7 @@ class _OrderReportFormState extends State<OrderReportForm> {
                   onPressed: _isLoading ? null : _generateReport,
                   child: _isLoading
                       ? CircularProgressIndicator()
-                      : Text('Generiši izvještaj'),
+                      : Text('Generate report'),
                 ),
               ),
             ],

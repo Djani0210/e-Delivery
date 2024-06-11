@@ -4,7 +4,7 @@ import 'package:signalr_netcore/signalr_client.dart';
 import 'package:e_delivery_mobile/notification_service.dart';
 
 class SignalRService {
-  final String _baseUrl = 'https://10.0.2.2:44395';
+  final String _baseUrl = 'http://10.0.2.2:44395';
   late HubConnection _notificationConnection;
   late HubConnection _chatConnection;
 

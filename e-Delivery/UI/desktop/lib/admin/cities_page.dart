@@ -68,7 +68,7 @@ class _CitiesPageState extends State<CitiesPage> {
             child: TextFormField(
               controller: _titleController,
               decoration: InputDecoration(
-                labelText: 'Naziv',
+                labelText: 'Name',
               ),
               maxLength: 20,
               validator: (value) {
@@ -137,7 +137,7 @@ class _CitiesPageState extends State<CitiesPage> {
                           controller: _searchController,
                           onChanged: _filterCities,
                           decoration: InputDecoration(
-                            labelText: 'Pretraži po nazivu',
+                            labelText: 'Search by name',
                             border: OutlineInputBorder(),
                           ),
                         ),
@@ -185,7 +185,7 @@ class _CitiesPageState extends State<CitiesPage> {
                             horizontal: 24.0, vertical: 16.0),
                       ),
                       child: Text(
-                        'Dodaj grad',
+                        'Add city',
                         style: TextStyle(fontSize: 16.0),
                       ),
                     ),
@@ -226,7 +226,7 @@ class _CitiesPageState extends State<CitiesPage> {
                       ),
                       DataColumn(
                         label: Text(
-                          'Uredi',
+                          'Edit',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),

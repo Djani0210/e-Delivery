@@ -1,4 +1,5 @@
-﻿using e_Delivery.Entities;
+﻿using e_Delivery.Database.DataSeed;
+using e_Delivery.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,7 @@ namespace e_Delivery.Database
         public DbSet<Location> Locations { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+
         public DbSet<Restaurant> Restaurants { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<SideDish> SideDishes { get; set; }
@@ -43,7 +45,7 @@ namespace e_Delivery.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<BaseEntity>().UseTpcMappingStrategy();
+            
 
             modelBuilder.Entity<FoodItem>()
             .HasMany(e => e.SideDishes)
@@ -52,26 +54,37 @@ namespace e_Delivery.Database
 
 
             modelBuilder.Entity<OrderItem>()
-            .HasKey(o => o.Id);  
+            .HasKey(o => o.Id);
 
             modelBuilder.Entity<OrderItem>()
                 .Property(o => o.SideDishIds)
                 .HasConversion(
-                    v => string.Join(',', v),           
-                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList() 
+                    v => string.Join(',', v),
+                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList()
                 );
 
+            modelBuilder.Entity<FoodItemSideDishMapping>()
+    .HasOne(m => m.FoodItem)
+    .WithMany(fi => fi.FoodItemSideDishMappings)
+    .HasForeignKey(m => m.FoodItemId)
+    .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<FoodItemSideDishMapping>()
+                .HasOne(m => m.SideDish)
+                .WithMany(sd => sd.FoodItemSideDishMappings)
+                .HasForeignKey(m => m.SideDishId)
+                .OnDelete(DeleteBehavior.NoAction);
 
 
             modelBuilder.Entity<Restaurant>()
             .HasOne(r => r.CreatedByUser)
             .WithMany()
-            .HasForeignKey(r => r.CreatedByUserId);
+            .HasForeignKey(r => r.CreatedByUserId).OnDelete(DeleteBehavior.NoAction); 
 
             modelBuilder.Entity<Restaurant>()
             .HasOne(r => r.ModifiedByUser)
             .WithMany()
-            .HasForeignKey(r => r.ModifiedByUserId);
+            .HasForeignKey(r => r.ModifiedByUserId).OnDelete(DeleteBehavior.NoAction); 
 
 
             modelBuilder.Entity<FoodItem>()
@@ -86,14 +99,28 @@ namespace e_Delivery.Database
             modelBuilder.Entity<OrderItemSideDish>()
                 .HasOne(ois => ois.OrderItem)
                 .WithMany(oi => oi.OrderItemSideDishes)
-                .HasForeignKey(ois => ois.OrderItemId);
+                .HasForeignKey(ois => ois.OrderItemId)
+                .OnDelete(DeleteBehavior.NoAction); 
 
             modelBuilder.Entity<OrderItemSideDish>()
                 .HasOne(ois => ois.SideDish)
                 .WithMany(sd => sd.OrderItemSideDishes)
-                .HasForeignKey(ois => ois.SideDishId);
+                .HasForeignKey(ois => ois.SideDishId).OnDelete(DeleteBehavior.NoAction);
 
-            
+            modelBuilder.Entity<Chat>()
+    .HasOne(c => c.UserFrom)
+    .WithMany()
+    .HasForeignKey(c => c.UserFromId)
+    .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Chat>()
+                .HasOne(c => c.UserTo)
+                .WithMany()
+                .HasForeignKey(c => c.UserToId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+
+
 
             base.OnModelCreating(modelBuilder);
 
@@ -104,6 +131,30 @@ namespace e_Delivery.Database
             modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("asp_net_user_logins", "identity");
             modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("asp_net_role_claims", "identity");
             modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("asp_net_user_tokens", "identity");
+
+
+
+            #region SEED
+            modelBuilder.Entity<Category>().HasData(DefaultCategoryData.Categories);
+            modelBuilder.Entity<City>().HasData(DefaultCityData.Cities);
+            modelBuilder.Entity<User>().HasData(DefaultUserData.Users);
+            modelBuilder.Entity<Role>().HasData(DefaultRoleData.Roles);
+            modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(DefaultUserRoleData.UserRoles);
+            modelBuilder.Entity<Location>().HasData(DefaultLocationData.Locations);
+            modelBuilder.Entity<Image>().HasData(DefaultImageData.Images);
+            modelBuilder.Entity<Restaurant>().HasData(DefaultRestaurantData.Restaurants);
+            modelBuilder.Entity<FoodItem>().HasData(DefaultFoodItemData.FoodItems);
+            modelBuilder.Entity<SideDish>().HasData(DefaultSideDishData.SideDishes);
+            modelBuilder.Entity<FoodItemPictures>().HasData(DefaultFoodItemPicturesData.FoodItemPictures);
+            modelBuilder.Entity<FoodItemSideDishMapping>().HasData(DefaultFoodItemSideDishMappingData.FoodItemSideDishMappings);
+            modelBuilder.Entity<Order>().HasData(DefaultOrderData.Orders);
+            modelBuilder.Entity<OrderItem>().HasData(DefaultOrderItemData.OrderItems);
+            modelBuilder.Entity<OrderItemSideDish>().HasData(DefaultOrderItemSideDishData.OrderItemSideDishes);
+            modelBuilder.Entity<Review>().HasData(DefaultReviewData.Reviews);
+            modelBuilder.Entity<Chat>().HasData(DefaultChatData.Chats);
+            modelBuilder.Entity<Notification>().HasData(DefaultNotificationData.Notifications);
+
+            #endregion
 
         }
     }

@@ -15,7 +15,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:desktop/loginRegistration/login_service.dart';
 
-const String apiBaseUrl = 'https://localhost:44395/api/Auth';
+const String apiBaseUrl = 'http://localhost:44395/api/Auth';
 final storage = FlutterSecureStorage();
 
 class LogInForm extends StatefulWidget {
@@ -93,7 +93,7 @@ class _LogInFormState extends State<LogInForm> {
               duration: Duration(milliseconds: 2000),
               content: Center(
                 child: Text(
-                  'Nemoguće prijavljivanje',
+                  'Login impossible',
                   style: TextStyle(color: Colors.red),
                 ),
               ),

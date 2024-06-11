@@ -4,6 +4,7 @@ import 'package:desktop/restaurant/api_calls/category_api_calls.dart';
 import 'package:desktop/restaurant/api_calls/food_item_api_calls.dart';
 import 'package:desktop/restaurant/api_calls/sidedish_api_calls.dart';
 import 'package:desktop/restaurant/viewmodels/food_item_get_VM.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -21,8 +22,8 @@ class _MenuPageState extends State<MenuPage> {
   final int _perPage = 3;
   String _searchTerm = '';
 
-  String _selectedAvailability = 'Svi';
-  String _selectedCategory = 'Sve';
+  String _selectedAvailability = 'All';
+  String _selectedCategory = 'All';
 
   List<String> _categories = [];
   List<Map<String, dynamic>> _allCategories = [];
@@ -68,7 +69,7 @@ class _MenuPageState extends State<MenuPage> {
     final List<String> fetchedCategories =
         await _categoryApiService.fetchCategoriesWithFoodItems();
     setState(() {
-      _categories = ['Sve', ...fetchedCategories];
+      _categories = ['All', ...fetchedCategories];
     });
   }
 
@@ -107,7 +108,7 @@ class _MenuPageState extends State<MenuPage> {
       itemsPerPage: _perPage,
       isAvailable: isAvailable,
       itemName: name,
-      categoryName: categoryName == 'Sve' ? null : categoryName,
+      categoryName: categoryName == 'All' ? null : categoryName,
     );
     if (response != null && response.statusCode == 200) {
       final Map<String, dynamic> responseBody = json.decode(response.body);
@@ -151,28 +152,28 @@ class _MenuPageState extends State<MenuPage> {
           return StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return AlertDialog(
-                title: Text('Uredi stavku menija'),
+                title: Text('Edit menu item'),
                 content: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextField(
                         controller: _nameController,
-                        decoration: InputDecoration(labelText: 'Naziv'),
+                        decoration: InputDecoration(labelText: 'Name'),
                       ),
                       TextField(
                         controller: _priceController,
-                        decoration: InputDecoration(labelText: 'Cijena'),
+                        decoration: InputDecoration(labelText: 'Price'),
                       ),
                       TextField(
                         controller: _descriptionController,
-                        decoration: InputDecoration(labelText: 'Opis'),
+                        decoration: InputDecoration(labelText: 'Description'),
                       ),
                       SizedBox(height: 16),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Dostupan'),
+                          Text('Available:'),
                           Switch(
                             value: _isAvailable,
                             onChanged: (value) {
@@ -183,7 +184,7 @@ class _MenuPageState extends State<MenuPage> {
                           ),
                         ],
                       ),
-                      Text('Prilozi:'),
+                      Text('Side dishes:'),
                       SizedBox(height: 8),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
@@ -216,7 +217,7 @@ class _MenuPageState extends State<MenuPage> {
                                 builder: (BuildContext context,
                                     StateSetter setState) {
                                   return AlertDialog(
-                                    title: Text('Dodaj priloge'),
+                                    title: Text('Add side dishes'),
                                     content: SingleChildScrollView(
                                       child: ListBody(
                                         children: _sideDishes.map((sideDish) {
@@ -244,14 +245,14 @@ class _MenuPageState extends State<MenuPage> {
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
-                                        child: Text('Otkaži'),
+                                        child: Text('Cancel'),
                                       ),
                                       ElevatedButton(
                                         onPressed: () {
                                           Navigator.of(context)
                                               .pop(tempSelectedSideDishes);
                                         },
-                                        child: Text('Dodaj'),
+                                        child: Text('Add'),
                                       ),
                                     ],
                                   );
@@ -266,7 +267,7 @@ class _MenuPageState extends State<MenuPage> {
                             });
                           }
                         },
-                        child: Text('Dodaj prilog'),
+                        child: Text('Add side dishes'),
                       ),
                     ],
                   ),
@@ -276,7 +277,7 @@ class _MenuPageState extends State<MenuPage> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text('Otkaži'),
+                    child: Text('Cancel'),
                   ),
                   ElevatedButton(
                     onPressed: () async {
@@ -306,7 +307,7 @@ class _MenuPageState extends State<MenuPage> {
                         print('Failed to update food item');
                       }
                     },
-                    child: Text('Sačuvaj'),
+                    child: Text('Save'),
                   ),
                 ],
               );
@@ -325,9 +326,9 @@ class _MenuPageState extends State<MenuPage> {
         TextEditingController(text: _searchTerm);
 
     final List<Map<String, dynamic>> _availabilityOptions = [
-      {'label': 'Svi', 'value': null},
-      {'label': 'Dostupni', 'value': true},
-      {'label': 'Nedostupni', 'value': false},
+      {'label': 'All', 'value': null},
+      {'label': 'Available', 'value': true},
+      {'label': 'Unavailable', 'value': false},
     ];
 
     _searchController.selection = TextSelection.fromPosition(
@@ -337,9 +338,9 @@ class _MenuPageState extends State<MenuPage> {
       setState(() {
         _fetchMenuItems(
           name: _searchTerm,
-          isAvailable: _selectedAvailability == 'Dostupni'
+          isAvailable: _selectedAvailability == 'Available'
               ? true
-              : _selectedAvailability == 'Nedostupni'
+              : _selectedAvailability == 'Unavailable'
                   ? false
                   : null,
           categoryName: _selectedCategory,
@@ -358,7 +359,7 @@ class _MenuPageState extends State<MenuPage> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                labelText: 'Pretraži',
+                labelText: 'Search',
                 border: OutlineInputBorder(),
               ),
               onChanged: (value) {
@@ -428,7 +429,7 @@ class _MenuPageState extends State<MenuPage> {
         Padding(
           padding: EdgeInsets.all(16.0),
           child: Text(
-            'Meni',
+            'Menu',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
         ),
@@ -453,7 +454,7 @@ class _MenuPageState extends State<MenuPage> {
                       child: ElevatedButton(
                           onPressed: () => _showSideDishesDialog(context),
                           child: Text(
-                            'Upravljaj prilozima',
+                            'Manage side dishes',
                             style: TextStyle(color: Colors.black),
                           ),
                           style: ElevatedButton.styleFrom(
@@ -494,7 +495,7 @@ class _MenuPageState extends State<MenuPage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: Text('Dodaj novi proizvod'),
+              title: Text('Add new food item'),
               content: SingleChildScrollView(
                 child: Container(
                   width: 400,
@@ -505,11 +506,11 @@ class _MenuPageState extends State<MenuPage> {
                       children: [
                         TextFormField(
                           decoration: InputDecoration(
-                              labelText: 'Naziv', border: OutlineInputBorder()),
+                              labelText: 'Name', border: OutlineInputBorder()),
                           maxLength: 20,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Molimo unesite naziv';
+                              return 'Please enter a name';
                             }
                             return null;
                           },
@@ -518,12 +519,12 @@ class _MenuPageState extends State<MenuPage> {
                         SizedBox(height: 8),
                         TextFormField(
                           decoration: InputDecoration(
-                              labelText: 'Opis proizvoda',
+                              labelText: 'Item description',
                               border: OutlineInputBorder()),
                           maxLength: 40,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Molimo unesite opis proizvoda';
+                              return 'Please enter a description';
                             }
                             return null;
                           },
@@ -532,16 +533,15 @@ class _MenuPageState extends State<MenuPage> {
                         SizedBox(height: 8),
                         TextFormField(
                           decoration: InputDecoration(
-                              labelText: 'Cijena',
-                              border: OutlineInputBorder()),
+                              labelText: 'Price', border: OutlineInputBorder()),
                           keyboardType:
                               TextInputType.numberWithOptions(decimal: true),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Molimo unesite cijenu';
+                              return 'Please enter a price';
                             }
                             if (double.tryParse(value) == null) {
-                              return 'Molimo unesite validnu cijenu';
+                              return 'Please enter a valid price';
                             }
                             return null;
                           },
@@ -550,7 +550,7 @@ class _MenuPageState extends State<MenuPage> {
                         SizedBox(height: 8),
                         Row(
                           children: [
-                            Text('Dostupno'),
+                            Text('Available'),
                             Switch(
                               value: _isAvailable,
                               onChanged: (value) {
@@ -562,27 +562,49 @@ class _MenuPageState extends State<MenuPage> {
                           ],
                         ),
                         SizedBox(height: 16),
-                        DropdownButtonFormField<int>(
-                          decoration: InputDecoration(labelText: 'Kategorija'),
-                          value: _selectedCategoryId,
-                          onChanged: (value) {
+                        DropdownSearch<Map<String, dynamic>>(
+                          selectedItem: _allCategories.firstWhere(
+                            (category) => category['id'] == _selectedCategoryId,
+                            orElse: () => Map<String, dynamic>.from({}),
+                          ),
+                          onChanged: (Map<String, dynamic>? newValue) {
                             setState(() {
-                              _selectedCategoryId = value!;
+                              _selectedCategoryId = newValue?['id'] ?? 0;
                             });
                           },
-                          items: _allCategories.isEmpty
-                              ? []
-                              : _allCategories.map((category) {
-                                  return DropdownMenuItem<int>(
-                                    value: category['id'],
-                                    child: Text(category['name']),
-                                  );
-                                }).toList(),
+                          items: _allCategories,
+                          itemAsString: (Map<String, dynamic> category) =>
+                              category['name'],
+                          dropdownDecoratorProps: DropDownDecoratorProps(
+                            dropdownSearchDecoration: InputDecoration(
+                              labelText: 'Category',
+                              hintText: 'Search categories...',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                          popupProps: PopupProps.menu(
+                            showSearchBox: true,
+                            searchFieldProps: TextFieldProps(
+                              decoration: InputDecoration(
+                                hintText: 'Search categories...',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            itemBuilder: (context,
+                                    Map<String, dynamic> category,
+                                    isSelected) =>
+                                ListTile(
+                              title: Text(category['name']),
+                              selected: isSelected,
+                            ),
+                            constraints:
+                                BoxConstraints(maxHeight: 300), // Limit height
+                          ),
                         ),
                         SizedBox(height: 16),
                         Row(
                           children: [
-                            Text('Prilozi'),
+                            Text('Side dishes'),
                             IconButton(
                               icon: Icon(_showSideDishes
                                   ? Icons.arrow_drop_up
@@ -626,7 +648,7 @@ class _MenuPageState extends State<MenuPage> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text('Otkaži'),
+                  child: Text('Cancel'),
                 ),
                 ElevatedButton(
                   onPressed: () async {
@@ -661,7 +683,7 @@ class _MenuPageState extends State<MenuPage> {
                       }
                     }
                   },
-                  child: Text('Dodaj'),
+                  child: Text('Add'),
                 ),
               ],
             );
@@ -755,7 +777,7 @@ class _MenuPageState extends State<MenuPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Upravljaj prilozima"),
+          title: Text("Manage side dishes"),
           content: SizedBox(
             width: 400,
             child: SingleChildScrollView(
@@ -768,13 +790,13 @@ class _MenuPageState extends State<MenuPage> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Zatvori'),
+              child: Text('Close'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Dodaj prilog'),
+              child: Text('Add side dishes'),
               onPressed: () {
                 Navigator.of(context).pop();
                 _showAddSideDishForm(context);
@@ -791,16 +813,15 @@ class _MenuPageState extends State<MenuPage> {
   Widget _buildConfirmationDialog(
       BuildContext context, SideDishViewModel sideDish) {
     return AlertDialog(
-      title: Text('Potvrda brisanja'),
-      content: Text(
-          'Da li ste sigurni da želite izbrisati prilog "${sideDish.name}"?'),
+      title: Text('Confirm deletion'),
+      content: Text('Are you sure you want to delete "${sideDish.name}"?'),
       actions: [
         TextButton(
-          child: Text('Ne'),
+          child: Text('No'),
           onPressed: () => Navigator.of(context).pop(false),
         ),
         TextButton(
-          child: Text('Da'),
+          child: Text('Yes'),
           onPressed: () => Navigator.of(context).pop(true),
         ),
       ],
@@ -825,7 +846,7 @@ class _MenuPageState extends State<MenuPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Aktualiziraj prilog"),
+          title: Text("Update side dish"),
           content: Form(
             key: _formKey,
             child: SingleChildScrollView(
@@ -834,16 +855,16 @@ class _MenuPageState extends State<MenuPage> {
                 children: [
                   TextFormField(
                     controller: _nameController,
-                    decoration: InputDecoration(labelText: 'Naziv'),
+                    decoration: InputDecoration(labelText: 'Name'),
                   ),
                   TextFormField(
                     controller: _priceController,
-                    decoration: InputDecoration(labelText: 'Cijena'),
+                    decoration: InputDecoration(labelText: 'Price'),
                     keyboardType:
                         TextInputType.numberWithOptions(decimal: true),
                   ),
                   SwitchListTile(
-                    title: Text("Dostupan"),
+                    title: Text("Available"),
                     value: _isAvailable,
                     onChanged: (bool value) {
                       _isAvailable = value;
@@ -855,13 +876,13 @@ class _MenuPageState extends State<MenuPage> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Otkaži'),
+              child: Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Sačuvaj'),
+              child: Text('Save'),
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
@@ -905,7 +926,7 @@ class _MenuPageState extends State<MenuPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Dodaj novi prilog"),
+          title: Text("Add new side dish"),
           content: Form(
             key: _formKey,
             child: SingleChildScrollView(
@@ -913,10 +934,10 @@ class _MenuPageState extends State<MenuPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextFormField(
-                    decoration: InputDecoration(labelText: 'Naziv'),
+                    decoration: InputDecoration(labelText: 'Name'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Molimo unesite naziv';
+                        return 'Please enter a name';
                       }
                       return null;
                     },
@@ -925,15 +946,15 @@ class _MenuPageState extends State<MenuPage> {
                     },
                   ),
                   TextFormField(
-                    decoration: InputDecoration(labelText: 'Cijena'),
+                    decoration: InputDecoration(labelText: 'Price'),
                     keyboardType:
                         TextInputType.numberWithOptions(decimal: true),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Molimo unesite cijenu';
+                        return 'Please enter a price';
                       }
                       if (double.tryParse(value) == null) {
-                        return 'Molimo unesite validne podatke';
+                        return 'Please enter a valid price';
                       }
                       return null;
                     },
@@ -942,7 +963,7 @@ class _MenuPageState extends State<MenuPage> {
                     },
                   ),
                   SwitchListTile(
-                    title: Text("Dostupnost"),
+                    title: Text("Availability"),
                     value: _isAvailable,
                     onChanged: (bool value) {
                       // Update the state of the _isAvailable variable
@@ -955,13 +976,13 @@ class _MenuPageState extends State<MenuPage> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Otkaži'),
+              child: Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Sačuvaj'),
+              child: Text('Save'),
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
@@ -993,16 +1014,17 @@ class _MenuPageState extends State<MenuPage> {
       ),
       child: Row(
         children: <Widget>[
-          Expanded(flex: 2, child: Text('Slika', textAlign: TextAlign.center)),
+          Expanded(
+              flex: 2, child: Text('Picture', textAlign: TextAlign.center)),
           Expanded(
             flex: 2,
-            child: Center(child: Text('Naziv')),
+            child: Center(child: Text('Name')),
           ),
-          Expanded(flex: 2, child: Center(child: Text('Kategorija'))),
-          Expanded(flex: 2, child: Text('Cijena')),
-          Expanded(flex: 2, child: Text('Dostupnost')),
-          Expanded(flex: 2, child: Text('Uredi', textAlign: TextAlign.center)),
-          Expanded(flex: 2, child: Text('Ukloni', textAlign: TextAlign.center)),
+          Expanded(flex: 2, child: Center(child: Text('Category'))),
+          Expanded(flex: 2, child: Text('Price')),
+          Expanded(flex: 2, child: Text('Availability')),
+          Expanded(flex: 2, child: Text('Edit', textAlign: TextAlign.center)),
+          Expanded(flex: 2, child: Text('Remove', textAlign: TextAlign.center)),
         ],
       ),
     );
@@ -1054,7 +1076,9 @@ class _MenuPageState extends State<MenuPage> {
                         Expanded(
                           flex: 2,
                           child: Text(
-                              menuItem.isAvailable ? 'Dostupno' : 'Nedostupno',
+                              menuItem.isAvailable
+                                  ? 'Available'
+                                  : 'Unavailable',
                               style: TextStyle(
                                   color: menuItem.isAvailable
                                       ? Colors.green
@@ -1065,7 +1089,7 @@ class _MenuPageState extends State<MenuPage> {
                           child: ElevatedButton(
                             onPressed: () =>
                                 _showEditDialog(context, menuItem.id),
-                            child: Text('Uredi'),
+                            child: Text('Edit'),
                             style: ElevatedButton.styleFrom(
                               primary: Colors.yellow, // Background color
                               onPrimary: Colors.white, // Text color
@@ -1080,7 +1104,7 @@ class _MenuPageState extends State<MenuPage> {
                           child: ElevatedButton(
                             onPressed: () =>
                                 _showRemoveDialog(context, menuItem.id),
-                            child: Text('Ukloni'),
+                            child: Text('Remove'),
                             style: ElevatedButton.styleFrom(
                               primary: Colors.red, // Background color
                               onPrimary: Colors.white, // Text color
@@ -1135,7 +1159,7 @@ class _MenuPageState extends State<MenuPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Logo za ${menuItem.name}'),
+          title: Text('Logo for ${menuItem.name}'),
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return Column(
@@ -1155,7 +1179,7 @@ class _MenuPageState extends State<MenuPage> {
                       await pickImage();
                       setState(() {});
                     },
-                    child: Text('Promijenite Logo'),
+                    child: Text('Change Logo'),
                   ),
                 ],
               );
@@ -1164,7 +1188,7 @@ class _MenuPageState extends State<MenuPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Otkaži'),
+              child: Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -1192,7 +1216,7 @@ class _MenuPageState extends State<MenuPage> {
                   }
                 }
               },
-              child: Text('Sačuvaj'),
+              child: Text('Save'),
             ),
           ],
         );
@@ -1274,12 +1298,11 @@ class _MenuPageState extends State<MenuPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Uklanjanje stavke menija'),
-          content:
-              Text('Da li ste sigurni da želite ukloniti ovu stavku menija?'),
+          title: Text('Removing menu item'),
+          content: Text('Are you sure you want to remove this menu item?'),
           actions: <Widget>[
             TextButton(
-              child: Text('Odustani'),
+              child: Text('Cancel'),
               style: TextButton.styleFrom(
                 primary: Colors.grey,
               ),
@@ -1288,7 +1311,7 @@ class _MenuPageState extends State<MenuPage> {
               },
             ),
             TextButton(
-              child: Text('Ukloni'),
+              child: Text('Remove'),
               style: TextButton.styleFrom(
                 primary: Colors.red,
               ),
@@ -1446,21 +1469,21 @@ class _SideDishesTableState extends State<SideDishesTable> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child:
-                  Text('Naziv', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text('Name', style: TextStyle(fontWeight: FontWeight.bold)),
             ),
           ),
           Center(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child:
-                  Text('Cijena', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text('Price', style: TextStyle(fontWeight: FontWeight.bold)),
             ),
           ),
           Center(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child:
-                  Text('Akcije', style: TextStyle(fontWeight: FontWeight.bold)),
+              child: Text('Actions',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
             ),
           ),
         ]),

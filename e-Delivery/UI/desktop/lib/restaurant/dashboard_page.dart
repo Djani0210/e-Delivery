@@ -5,8 +5,6 @@ import 'package:desktop/restaurant/viewmodels/orders_get_VM.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
-import 'package:http/http.dart';
-
 class DashboardPage extends StatefulWidget {
   @override
   _DashboardPageState createState() => _DashboardPageState();
@@ -60,7 +58,7 @@ class _DashboardPageState extends State<DashboardPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: Text(
-                  'Početna',
+                  'Home',
                   style: TextStyle(
                     color: Colors.orange,
                     fontWeight: FontWeight.bold,
@@ -69,7 +67,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
               ),
               StatisticCard(
-                label: "Broj narudžbi za ovaj mjesec:",
+                label: "Number of orders for this month:",
                 value: FutureBuilder<int>(
                   future: _monthlyOrderCountFuture,
                   builder: (context, snapshot) {
@@ -84,7 +82,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
               ),
               StatisticCard(
-                label: "Najcesce narucen proizvod:",
+                label: "Most frequently bought food:",
                 value: FutureBuilder<String>(
                   future: _mostFrequentFoodItemFuture,
                   builder: (context, snapshot) {
@@ -93,13 +91,14 @@ class _DashboardPageState extends State<DashboardPage> {
                     } else if (snapshot.hasError) {
                       return Text("Error");
                     } else {
-                      return Text(snapshot.data ?? "Nemate narucene proizvode");
+                      return Text(
+                          snapshot.data ?? "You don't have any orders yet.");
                     }
                   },
                 ),
               ),
               StatisticCard(
-                label: "Prosječna ocjena restorana:",
+                label: "Average restaurant rating:",
                 value: FutureBuilder<double?>(
                   future: _averageRatingFuture,
                   builder: (context, snapshot) {
@@ -108,14 +107,14 @@ class _DashboardPageState extends State<DashboardPage> {
                     } else if (snapshot.hasError) {
                       return Text("Error");
                     } else {
-                      return Text("${snapshot.data}");
+                      return Text("${snapshot.data?.toStringAsFixed(2)}");
                     }
                   },
                 ),
               ),
               SizedBox(height: 30),
               Text(
-                'Najnovije narudžbe',
+                'Latest orders',
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 20,
@@ -163,9 +162,9 @@ class _DashboardPageState extends State<DashboardPage> {
   String _mapPaymentMethod(int method) {
     switch (method) {
       case 1:
-        return 'Online';
+        return 'Credit card';
       default:
-        return 'Gotovina';
+        return 'Cash';
     }
   }
 }
@@ -224,7 +223,7 @@ class OrderCard extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 10),
       child: ListTile(
         title: Text(address),
-        subtitle: Text('Cijena: $price | Plaćanje: $paymentMethod'),
+        subtitle: Text('Price: $price | Payment method: $paymentMethod'),
         trailing: ElevatedButton(
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
@@ -234,7 +233,7 @@ class OrderCard extends StatelessWidget {
           style: ElevatedButton.styleFrom(
             primary: Colors.orange,
           ),
-          child: Text('Detalji'),
+          child: Text('Details'),
         ),
       ),
     );

@@ -52,7 +52,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
 
   Future<void> sendForgotPasswordRequest(String email) async {
     final response = await http.post(
-      Uri.parse('https://10.0.2.2:44395/api/User/forgot-password'),
+      Uri.parse('http://10.0.2.2:44395/api/User/forgot-password'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'Email': email,
@@ -87,7 +87,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
   Future<void> fetchUserIdFromEmail(String email) async {
     final response = await http.get(
       Uri.parse(
-          'https://10.0.2.2:44395/api/User/get-user-from-email?email=$email'),
+          'http://10.0.2.2:44395/api/User/get-user-from-email?email=$email'),
       headers: {'Content-Type': 'application/json'},
     );
 

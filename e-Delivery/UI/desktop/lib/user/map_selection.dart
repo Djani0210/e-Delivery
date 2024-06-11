@@ -1,9 +1,7 @@
-import 'package:desktop/user/floating_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:material_floating_search_bar_2/material_floating_search_bar_2.dart'; // Import the latlong package
 
 class MapSelection extends StatefulWidget {
   @override
@@ -11,12 +9,12 @@ class MapSelection extends StatefulWidget {
 }
 
 class _MapSelectionState extends State<MapSelection> {
-  List<Marker> markers = []; // Store markers
-  LatLng _selectedLocation =
-      LatLng(43.9159, 17.6791); // Default location in Bosnia and Herzegovina
+  List<Marker> markers = [];
+  LatLng _selectedLocation = LatLng(43.3438, 17.8078);
 
   void _onDoubleTap(LatLng location) {
     setState(() {
+      markers.clear();
       markers.add(
         Marker(
           width: 80.0,
@@ -25,6 +23,9 @@ class _MapSelectionState extends State<MapSelection> {
           child: Icon(Icons.location_pin, color: Colors.red, size: 50),
         ),
       );
+      _selectedLocation = location;
+      print(
+          'Selected Location: Latitude: ${location.latitude}, Longitude: ${location.longitude}');
     });
   }
 
@@ -50,7 +51,9 @@ class _MapSelectionState extends State<MapSelection> {
                           keepAlive: true,
                           initialCenter: _selectedLocation,
                           initialZoom: 8.0,
-                          onPositionChanged: null,
+                          onTap: (TapPosition position, LatLng point) {
+                            _onDoubleTap(point);
+                          },
                           interactiveFlags: InteractiveFlag.drag |
                               InteractiveFlag.pinchZoom |
                               InteractiveFlag.doubleTapZoom,
@@ -64,7 +67,7 @@ class _MapSelectionState extends State<MapSelection> {
                       children: [
                         TileLayer(
                           urlTemplate:
-                              'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                              'http://tile.openstreetmap.org/{z}/{x}/{y}.png',
                           userAgentPackageName: 'com.example.app',
                         ),
                         MarkerLayer(markers: [

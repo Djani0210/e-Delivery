@@ -2,11 +2,15 @@
 
 import 'package:desktop/loginRegistration/log_in_page.dart';
 import 'package:desktop/notifications_service.dart';
+import 'package:flutter/foundation.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:flutter/material.dart';
 
 void main() {
   NotificationService.initialize();
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(const MyApp());
 }
 

@@ -6,7 +6,7 @@ import 'package:http_parser/http_parser.dart';
 
 class FoodItemApiService {
   final _storage = const FlutterSecureStorage();
-  final String _baseUrl = 'https://localhost:44395/api/';
+  final String _baseUrl = 'http://localhost:44395/api/';
 
   Future<String> _fetchJwtToken() async {
     String? jwt = await _storage.read(key: 'jwt');
@@ -123,8 +123,7 @@ class FoodItemApiService {
     try {
       final String jwtToken = await _fetchJwtToken();
       final response = await http.delete(
-        Uri.parse(
-            'https://localhost:44395/api/FoodItem/delete-FoodItem?id=$id'),
+        Uri.parse('http://localhost:44395/api/FoodItem/delete-FoodItem?id=$id'),
         headers: {
           'Authorization': 'Bearer $jwtToken',
           'Content-Type': 'application/json',

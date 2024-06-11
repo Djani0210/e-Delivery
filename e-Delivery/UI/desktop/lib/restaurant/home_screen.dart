@@ -37,16 +37,16 @@ class _HomeScreenState extends State<HomeScreenNew> {
     final confirmation = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Potvrda objave'),
-        content: const Text('Da li ste sigurni da se zelite odjaviti?'),
+        title: const Text('Logout confirmation'),
+        content: const Text('Are you sure you want to log out?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Ne'),
+            child: const Text('No'),
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Da'),
+            child: const Text('Yes'),
           ),
         ],
       ),
@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreenNew> {
 
         // Call the logout endpoint with the JWT token in the Authorization header
         final response = await http.post(
-          Uri.parse('https://localhost:44395/api/Auth/logout'),
+          Uri.parse('http://localhost:44395/api/Auth/logout'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $jwtToken',

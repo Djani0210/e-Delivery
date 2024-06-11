@@ -54,7 +54,7 @@ class _ProfileMenuOptionsState extends State<EmployeeProfileMenuOptions> {
         final jwtToken = await StorageService.storage.read(key: 'jwt');
 
         final response = await http.post(
-          Uri.parse('https://10.0.2.2:44395/api/Auth/logout'),
+          Uri.parse('http://10.0.2.2:44395/api/Auth/logout'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $jwtToken',

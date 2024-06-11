@@ -183,9 +183,6 @@ namespace e_Delivery.Services.Services
                 _logger.LogError(ex, "An error occurred while generating the order report.");
                 throw;
             }
-           
-
-
         }
     }
 }

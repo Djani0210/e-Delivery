@@ -35,7 +35,7 @@ class _ChangePassPageState extends State<ChangePassPage> {
 
     if (userId != null) {
       final response = await http.post(
-        Uri.parse('https://10.0.2.2:44395/api/User/change-password'),
+        Uri.parse('http://10.0.2.2:44395/api/User/change-password'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'Id': userId,
