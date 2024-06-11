@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'package:desktop/globals.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
 class OrderApiService {
   final _storage = const FlutterSecureStorage();
-  final String _baseUrl = 'http://localhost:44395/api/';
+  final String _baseUrl = baseUrl;
 
   Future<String> _fetchJwtToken() async {
     // Adjust 'jwt' as necessary based on how you've stored the token
@@ -108,16 +109,14 @@ class OrderApiService {
   }
 
   Future<String> fetchImageUrl(int foodItemId) async {
-    final jwt = await _fetchJwtToken(); // Fetch the JWT token
-    final url =
-        '${_baseUrl}FoodItemPictures/$foodItemId'; // Use _baseUrl from the class
+    final jwt = await _fetchJwtToken();
+    final url = '${_baseUrl}FoodItemPictures/$foodItemId';
 
     try {
       final response = await http.get(
         Uri.parse(url),
         headers: {
-          'Authorization':
-              'Bearer $jwt', // Include the JWT in the request header
+          'Authorization': 'Bearer $jwt',
         },
       );
 
@@ -125,18 +124,17 @@ class OrderApiService {
         final data = json.decode(response.body);
         if (data['data'] != null && data['data'].isNotEmpty) {
           final String imageUrl = data['data'][0]['fileName'];
-          print("Fetched Image URL: $imageUrl"); // Print the URL
+
           return imageUrl;
         } else {
-          throw Exception('No image data found');
+          return 'assets/images/no-image-found.jpg';
         }
       } else {
         throw Exception(
             'Failed to load image URL with status code ${response.statusCode}');
       }
     } catch (e) {
-      print("Error fetching image URL: $e");
-      throw Exception('Error fetching image URL: $e');
+      throw Exception('Failed to load image URL');
     }
   }
 
@@ -182,30 +180,17 @@ class OrderApiService {
     }
   }
 
-  Future<http.Response?> generateOrderReport({
-    DateTime? fromDate,
-    DateTime? toDate,
-    double? minPrice,
-    double? maxPrice,
-  }) async {
+  Future<http.Response?> generateOrderReport() async {
     try {
-      String jwt =
-          await _fetchJwtToken(); // Assuming you have a method to fetch the JWT token
+      String jwt = await _fetchJwtToken();
 
       final url = Uri.parse('${_baseUrl}OrderReport/order-report');
       final headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $jwt', // Include the JWT token in the headers
+        'Authorization': 'Bearer $jwt',
       };
 
-      final body = json.encode({
-        'FromDate': fromDate?.toIso8601String(),
-        'ToDate': toDate?.toIso8601String(),
-        'MinPrice': minPrice,
-        'MaxPrice': maxPrice,
-      });
-
-      final response = await http.post(url, headers: headers, body: body);
+      final response = await http.post(url, headers: headers);
 
       if (response.statusCode == 200) {
         return response;

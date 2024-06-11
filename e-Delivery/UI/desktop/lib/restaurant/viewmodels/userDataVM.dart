@@ -9,7 +9,7 @@ class UserDataViewModel {
   final String? phoneNumber;
   final String? email;
   final int? tokenExpireDate;
-  final int? gender;
+
   final List<String>? roles;
 
   UserDataViewModel({
@@ -23,7 +23,6 @@ class UserDataViewModel {
     this.phoneNumber,
     this.email,
     this.tokenExpireDate,
-    this.gender,
     this.roles,
   });
 
@@ -39,7 +38,6 @@ class UserDataViewModel {
       phoneNumber: json['phoneNumber'],
       email: json['email'],
       tokenExpireDate: json['tokenExpireDate'],
-      gender: json['gender'],
       roles: List<String>.from(json['roles']),
     );
   }

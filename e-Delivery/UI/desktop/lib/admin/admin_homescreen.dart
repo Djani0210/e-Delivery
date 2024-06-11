@@ -5,6 +5,7 @@ import 'package:desktop/admin/categories_page.dart';
 import 'package:desktop/admin/cities_page.dart';
 import 'package:desktop/admin/restaurants_page.dart';
 import 'package:desktop/components/storage_service.dart';
+import 'package:desktop/globals.dart';
 import 'package:desktop/loginRegistration/log_in_page.dart';
 import 'package:desktop/restaurant/viewmodels/userDataVM.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +89,7 @@ class _HomeScreenAdminState extends State<HomeScreenAdminPage> {
         final jwtToken = await StorageService.storage.read(key: 'jwt');
 
         final response = await http.post(
-          Uri.parse('http://localhost:44395/api/Auth/logout'),
+          Uri.parse('${baseUrl}Auth/logout'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $jwtToken',

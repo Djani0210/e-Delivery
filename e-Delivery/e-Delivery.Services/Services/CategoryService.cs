@@ -96,13 +96,13 @@ namespace e_Delivery.Services.Services
             try
             {
                 var categoriesWithFoodItems = await _dbContext.Categories
-                .Where(c => c.FoodItems.Any(fi => fi.RestaurantId == restaurantId))
-                .Include(c => c.FoodItems)
-                .ThenInclude(foodItem => foodItem.SideDishes)
-                .Include(c => c.FoodItems)
-                .ThenInclude(foodItem => foodItem.FoodItemPictures)
-                .AsQueryable()
-                .ToListAsync();
+                    .Where(c => c.FoodItems.Any(fi => fi.RestaurantId == restaurantId && fi.IsAvailable))
+                    .Include(c => c.FoodItems.Where(fi => fi.RestaurantId == restaurantId && fi.IsAvailable))
+                    .ThenInclude(foodItem => foodItem.SideDishes)
+                    .Include(c => c.FoodItems.Where(fi => fi.RestaurantId == restaurantId && fi.IsAvailable))
+                    .ThenInclude(foodItem => foodItem.FoodItemPictures)
+                    .AsQueryable()
+                    .ToListAsync();
                 var obj = Mapper.Map<List<CategoriesWithFoodItemsGetVM>>(categoriesWithFoodItems);
                 return new Message
                 {
@@ -121,8 +121,6 @@ namespace e_Delivery.Services.Services
                     Status = ExceptionCode.BadRequest
                 };
             }
-
-
         }
 
         public async Task<Message> GetCategoryByIdAsMessageAsync(int id, CancellationToken cancellationToken)

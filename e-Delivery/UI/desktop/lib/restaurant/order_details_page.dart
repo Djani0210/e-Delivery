@@ -24,6 +24,17 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     orderDetailsFuture = fetchOrderDetails();
   }
 
+  Future<void> refreshOrderDetails() async {
+    try {
+      final updatedOrder = await fetchOrderDetails();
+      setState(() {
+        orderDetailsFuture = Future.value(updatedOrder);
+      });
+    } catch (e) {
+      print('Error refreshing order details: $e');
+    }
+  }
+
   Future<OrderViewModel> fetchOrderDetails() async {
     final OrderApiService apiService = OrderApiService();
     final response = await apiService.getOrderById(widget.id);
@@ -43,8 +54,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
           'Order details',
           style: TextStyle(color: Colors.black),
         ),
-        backgroundColor:
-            Colors.yellowAccent, // Updated to yellow color as requested
+        backgroundColor: Colors.yellowAccent,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
@@ -60,7 +70,9 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
           } else if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
           } else if (snapshot.hasData) {
-            return OrderDetailsContent(order: snapshot.data!);
+            return OrderDetailsContent(
+                order: snapshot.data!,
+                refreshOrderDetails: refreshOrderDetails);
           } else {
             return Center(child: Text("Unknown error occurred"));
           }
@@ -72,8 +84,9 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
 
 class OrderDetailsContent extends StatelessWidget {
   final OrderViewModel order;
+  final VoidCallback refreshOrderDetails;
 
-  OrderDetailsContent({required this.order});
+  OrderDetailsContent({required this.order, required this.refreshOrderDetails});
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +95,8 @@ class OrderDetailsContent extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
+          Flexible(
+            flex: 2,
             child: Column(
               children: [
                 OrderInfoHeaderSection(order: order),
@@ -97,7 +111,11 @@ class OrderDetailsContent extends StatelessWidget {
             ),
           ),
           SizedBox(width: 20),
-          OrderSummarySection(order: order),
+          Flexible(
+            flex: 1,
+            child: OrderSummarySection(
+                order: order, refreshOrderDetails: refreshOrderDetails),
+          ),
         ],
       ),
     );
@@ -220,7 +238,6 @@ class OrderItemWidget extends StatelessWidget {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();
                 } else if (snapshot.hasError) {
-                  print('Error fetching image: ${snapshot.error}');
                   return Column(
                     children: [
                       Icon(Icons.error),
@@ -228,12 +245,32 @@ class OrderItemWidget extends StatelessWidget {
                     ],
                   );
                 } else {
-                  return Image.network(
-                    snapshot.data!,
-                    width: 80,
-                    height: 80,
-                    fit: BoxFit.contain,
-                  );
+                  final imageUrl =
+                      snapshot.data ?? 'assets/images/no-image-found.jpg';
+                  final isNetworkImage = imageUrl.startsWith('http') ||
+                      imageUrl.startsWith('https');
+
+                  return isNetworkImage
+                      ? Image.network(
+                          imageUrl,
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              'assets/images/no-image-found.jpg',
+                              width: 80,
+                              height: 80,
+                              fit: BoxFit.contain,
+                            );
+                          },
+                        )
+                      : Image.asset(
+                          imageUrl,
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.contain,
+                        );
                 }
               },
             ),
@@ -251,10 +288,16 @@ class OrderItemWidget extends StatelessWidget {
               child:
                   Text(' ${orderItem.quantity}', textAlign: TextAlign.center)),
           Expanded(
-            child: ElevatedButton(
-              onPressed: () =>
-                  _showSideDishesDialog(context, orderItem.sideDishes),
-              child: Text('Side Dishes'),
+            child: SizedBox(
+              width: 60,
+              child: ElevatedButton(
+                onPressed: () =>
+                    _showSideDishesDialog(context, orderItem.sideDishes),
+                child: Text('Side Dishes'),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(20, 40),
+                ),
+              ),
             ),
           ),
         ],
@@ -271,16 +314,12 @@ void _showSideDishesDialog(
       return AlertDialog(
         title: Text("Side dishes"),
         content: SingleChildScrollView(
-          // Added for better scrolling behavior
           child: Container(
-            // Reducing the width and ensuring the dialog is not too wide
-            width: 300, // Example: 50% of screen width
+            width: 300,
             child: Table(
-              // Adding border to create gridlines
               border: TableBorder.all(color: Colors.grey),
               columnWidths: const {
-                0: FlexColumnWidth(
-                    3), // Adjust the width ratio between name and price
+                0: FlexColumnWidth(3),
                 1: FlexColumnWidth(1),
               },
               children: sideDishes.map((sideDish) {
@@ -313,8 +352,9 @@ void _showSideDishesDialog(
 
 class OrderSummarySection extends StatefulWidget {
   final OrderViewModel order;
+  final VoidCallback refreshOrderDetails;
 
-  OrderSummarySection({required this.order});
+  OrderSummarySection({required this.order, required this.refreshOrderDetails});
 
   @override
   _OrderSummarySectionState createState() => _OrderSummarySectionState();
@@ -402,10 +442,8 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
         await apiService.updateOrderState(orderId, newState: newState);
 
     if (response != null && response.statusCode == 200) {
-      // Update successful, fetch updated order details
       await fetchOrderDetails();
     } else {
-      // Update failed, show an error message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error updating order state'),
@@ -421,7 +459,7 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
           .assignDeliveryPersonToOrder(orderId, employeeId);
       if (success) {
         print('Delivery person assigned successfully');
-        await fetchOrderDetails();
+        widget.refreshOrderDetails();
       } else {
         print('Failed to assign delivery person');
         ScaffoldMessenger.of(context).showSnackBar(
@@ -440,17 +478,15 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
   Widget build(BuildContext context) {
     return Container(
       width: 500,
-      height: 600, // Set the width as requested
-      padding:
-          EdgeInsets.only(top: 20.0), // Aligns vertically with OrderItemSection
+      height: 600,
+      padding: EdgeInsets.only(top: 20.0),
       child: Card(
         shape: RoundedRectangleBorder(
-          borderRadius:
-              BorderRadius.circular(10.0), // Rounded edges for the card
+          borderRadius: BorderRadius.circular(10.0),
         ),
-        color: Colors.grey[200], // Light grey background color for the card
+        color: Colors.grey[200],
         child: Padding(
-          padding: EdgeInsets.all(16.0), // Padding inside the card
+          padding: EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -464,7 +500,7 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
                       style: TextStyle(fontSize: 16)),
                 ],
               ),
-              SizedBox(height: 16.0), // Spacing between the rows
+              SizedBox(height: 16.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -516,12 +552,10 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
                       ? ElevatedButton.icon(
                           onPressed: () =>
                               showAssignDeliveryPersonDialog(context, order.id),
-
-                          icon: Icon(Icons.person_2_outlined), // Employee icon
-                          label: Text('Add delivery person'),
+                          icon: Icon(Icons.person_2_outlined),
+                          label: Text('Add '),
                           style: ElevatedButton.styleFrom(
-                            primary: Colors.blue, // Button background color
-
+                            primary: Colors.blue,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),

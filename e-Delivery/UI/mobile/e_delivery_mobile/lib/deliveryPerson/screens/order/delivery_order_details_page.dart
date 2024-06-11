@@ -318,7 +318,7 @@ class _DeliveryOrderDetailsPageState extends State<DeliveryOrderDetailsPage> {
             (i) => Column(
               children: [
                 _buildOrderItem(order!.orderItems[i]),
-                SizedBox(height: 16), // Add space between items
+                SizedBox(height: 16),
               ],
             ),
           ),
@@ -399,8 +399,12 @@ class _DeliveryOrderDetailsPageState extends State<DeliveryOrderDetailsPage> {
   }
 
   Widget _buildOrderItem(OrderItemDto orderItem) {
-    String imageUrl = orderItem.foodItem.foodItemPictures.first.fileName;
+    String imageUrl = orderItem.foodItem.foodItemPictures.isNotEmpty
+        ? orderItem.foodItem.foodItemPictures.first.fileName
+        : 'assets/images/no-image-found.jpg';
     imageUrl = imageUrl.replaceFirst('localhost', '10.0.2.2');
+    final isNetworkImage =
+        imageUrl.startsWith('http') || imageUrl.startsWith('https');
 
     return Container(
       padding: EdgeInsets.all(16),
@@ -421,12 +425,19 @@ class _DeliveryOrderDetailsPageState extends State<DeliveryOrderDetailsPage> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: Image.network(
-              imageUrl,
-              height: 110,
-              width: 80,
-              fit: BoxFit.cover,
-            ),
+            child: isNetworkImage
+                ? Image.network(
+                    imageUrl,
+                    height: 110,
+                    width: 80,
+                    fit: BoxFit.contain,
+                  )
+                : Image.asset(
+                    imageUrl,
+                    height: 110,
+                    width: 80,
+                    fit: BoxFit.contain,
+                  ),
           ),
           SizedBox(width: 16),
           Expanded(

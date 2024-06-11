@@ -1,9 +1,11 @@
 import 'dart:convert';
-import 'package:desktop/restaurant/order_report_form.dart';
 
 import 'package:intl/intl.dart';
 
 import 'package:desktop/restaurant/api_calls/order_api_calls.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:open_file/open_file.dart';
 
 import 'package:desktop/restaurant/viewmodels/orders_get_VM.dart';
 import 'package:flutter/material.dart';
@@ -258,7 +260,7 @@ class _OrdersPageState extends State<OrdersPage> {
         child: DataTable(
           columnSpacing: 38,
           columns: const <DataColumn>[
-            DataColumn(label: Text('Name')),
+            DataColumn(label: Text('Address')),
             DataColumn(label: Text('Date')),
             DataColumn(label: Text('Cost')),
             DataColumn(label: Text('Status')),
@@ -266,9 +268,9 @@ class _OrdersPageState extends State<OrdersPage> {
           ],
           rows: _orders.map((order) {
             return DataRow(cells: [
-              DataCell(Text(order.location.city.title)),
+              DataCell(Text(order.address)),
               DataCell(Text(formatDateTime(order.createdDate.toString()))),
-              DataCell(Text(order.totalCost.toString())),
+              DataCell(Text(order.totalCost.toStringAsFixed(2) + ' KM')),
               DataCell(Text(order.orderStateText)),
               DataCell(TextButton(
                   onPressed: () => widget.onNavigateToDetails(order.id),
@@ -277,22 +279,6 @@ class _OrdersPageState extends State<OrdersPage> {
           }).toList(),
         ),
       ),
-    );
-  }
-
-  void _showOrderReportDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          child: OrderReportForm(
-            onGenerateReport: (fromDate, toDate, minPrice, maxPrice) {
-              print(
-                  'Report generated from $fromDate to $toDate with min price $minPrice and max price $maxPrice');
-            },
-          ),
-        );
-      },
     );
   }
 
@@ -305,9 +291,67 @@ class _OrdersPageState extends State<OrdersPage> {
           textStyle: TextStyle(fontWeight: FontWeight.bold),
           padding: EdgeInsets.symmetric(horizontal: 35, vertical: 18),
         ),
-        onPressed: _showOrderReportDialog,
+        onPressed: () => _showConfirmationDialog(context),
         child: Text('Print report'),
       ),
     );
+  }
+
+  void _showConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Generate Report'),
+          content: Text('Do you want to generate a report?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Yes'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _generateReport(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _generateReport(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Center(child: CircularProgressIndicator());
+      },
+    );
+
+    final response = await _orderApiService.generateOrderReport();
+
+    Navigator.of(context).pop();
+
+    if (response != null && response.statusCode == 200) {
+      final bytes = response.bodyBytes;
+      final tempDir = await getTemporaryDirectory();
+      final file = File('${tempDir.path}/order_report.pdf');
+      await file.writeAsBytes(bytes);
+
+      OpenFile.open(file.path);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Report generated successfully')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to generate report')),
+      );
+    }
   }
 }

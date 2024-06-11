@@ -78,8 +78,9 @@ namespace e_Delivery.Services.Services
                     RestaurantOwnerEmail = restaurantOwnerEmail,
                     ConfirmationLink = confirmationLink
                 };
-
+               
                 await _bus.PubSub.PublishAsync(emailMessage);
+
                 Console.WriteLine($"Published ApplyMessage to RabbitMQ for restaurantId {restaurantId}");
 
 
@@ -196,7 +197,6 @@ namespace e_Delivery.Services.Services
                     user.PhoneNumber = userCreateVM.PhoneNumber;
                     user.LastName = userCreateVM.LastName;
                     user.FirstName = userCreateVM.FirstName;
-                    user.Gender = userCreateVM.Gender;
                     user.CreatedDate = DateTime.Now;
                     user.IsDeleted = false;
                     user.CityId = userCreateVM.CityId;
@@ -263,10 +263,10 @@ namespace e_Delivery.Services.Services
                 };
                 await _dbContext.Verifications.AddAsync(verification);
                 await _dbContext.SaveChangesAsync(cancellationToken);
-                bool n = _SendMail(verificationCreateDto.Email, "Verifikacijski kod", code);
+                bool n = _SendMail(verificationCreateDto.Email, "Verification code", code);
                 if (n)
                 {
-                    Email Email = new Email { Content = "VERIFIKACIJSKI KOD", Title = code, UserId = user.Id };
+                    Email Email = new Email { Content = "Verification code", Title = code, UserId = user.Id };
                     await _dbContext.AddAsync(Email);
                     await _dbContext.SaveChangesAsync(cancellationToken);
                     return new Message { Info = "Uspješno vraćen kod", IsValid = true, Status = ExceptionCode.Success };
@@ -299,7 +299,7 @@ namespace e_Delivery.Services.Services
                     {
                         Email = user.Email,
                         FirstName = user.FirstName,
-                        Gender = user.Gender,
+                        
                         Id = user.Id,
                         LastName = user.LastName,
                         PhoneNumber = user.PhoneNumber,

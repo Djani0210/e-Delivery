@@ -1,4 +1,5 @@
 import 'package:desktop/components/storage_service.dart';
+import 'package:desktop/globals.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -10,12 +11,11 @@ class RestaurantServiceResult {
 }
 
 class RestaurantService {
-  static const String apiBaseUrl = 'http://localhost:44395/api/Restaurant';
+  static String apiBaseUrl = '${baseUrl}Restaurant';
 
   Future<Map<String, dynamic>?> CreateRestaurant(
     String name,
     String address,
-    bool isOpen,
     String openingTime,
     String closingTime,
     String contactNumber,
@@ -29,22 +29,19 @@ class RestaurantService {
     String? jwtToken = await StorageService.storage.read(key: 'jwt');
 
     if (jwtToken == null) {
-      // Handle the case where the JWT token is not found in storage
       print('JWT token not found in storage');
       return null;
     }
-    // Create the restaurant without uploading the logo
+
     final response = await http.post(
       Uri.parse('$apiBaseUrl/add-Restaurant'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $jwtToken',
-        // Include authentication headers or tokens here
       },
       body: jsonEncode({
         'Name': name,
         'Address': address,
-        'IsOpen': isOpen,
         'OpeningTime': openingTime,
         'ClosingTime': closingTime,
         'ContactNumber': contactNumber,
@@ -60,7 +57,6 @@ class RestaurantService {
       final responseBody = jsonDecode(response.body);
       return responseBody;
     } else {
-      // Log the request object, error code, and message
       print(
           'Request failed with status code ${response.statusCode}: ${response.body}');
       return null;

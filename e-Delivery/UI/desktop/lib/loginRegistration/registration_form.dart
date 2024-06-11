@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:desktop/components/hover_animation.dart';
+import 'package:desktop/globals.dart';
 import 'package:desktop/user/user_page.dart';
 import 'package:flutter/material.dart';
 
@@ -8,9 +9,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:desktop/loginRegistration/login_service.dart';
 
-enum Gender { Male, Female }
-
-const String apiUrl = 'http://localhost:44395/api/User';
+final String apiUrl = '${baseUrl}User';
 
 class UserCreateDTO {
   String? firstName;
@@ -19,7 +18,7 @@ class UserCreateDTO {
   String userName;
   String email;
   String password;
-  int gender;
+
   bool? isAvailable;
   String workFrom;
   String workUntil;
@@ -34,7 +33,6 @@ class UserCreateDTO {
     required this.userName,
     required this.email,
     required this.password,
-    required this.gender,
     this.isAvailable = true,
     required this.workFrom,
     required this.workUntil,
@@ -49,7 +47,6 @@ class UserCreateDTO {
         'UserName': userName,
         'Email': email,
         'Password': password,
-        'Gender': gender,
         'IsAvailable': isAvailable,
         'WorkFrom': workFrom,
         'WorkUntil': workUntil,
@@ -81,7 +78,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
-  Gender? _selectedGender;
 
   @override
   void initState() {
@@ -105,7 +101,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     if (value == null || value.isEmpty) {
       return 'Please enter your username';
     } else if (value.length < 3) {
-      return 'Username must be at least  3 characters long';
+      return 'Username must be at least 3 characters long';
     }
     return null;
   }
@@ -123,7 +119,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
     if (value == null || value.isEmpty) {
       return 'Please enter your password';
     } else if (value.length < 4) {
-      return 'Password must be at least  4 characters long';
+      return 'Password must be at least 4 characters long';
     }
     return null;
   }
@@ -134,41 +130,29 @@ class _RegistrationFormState extends State<RegistrationForm> {
     }
     final RegExp pattern = RegExp(r'^\d{3}-\d{3}-\d{3}$');
     if (!pattern.hasMatch(value)) {
-      return 'Phone number must be in the format example "061-533-444"';
+      return 'Phone number must be inR format "061-533-444"';
     }
     // Additional phone number validation can be done here if needed
     return null;
   }
 
-  String? _validateGender(Gender? value) {
-    if (value == null) {
-      return 'Please select your gender';
-    }
-    return null;
-  }
-
   Future<void> registerUser(String phoneNumber, String userName, String email,
-      String password, int gender) async {
-    // Create the DTO with the form values
+      String password) async {
     UserCreateDTO userCreateDTO = UserCreateDTO(
       phoneNumber: phoneNumber,
       userName: userName,
       email: email,
       password: password,
-      gender: gender,
       workFrom: "01:00",
       workUntil: "23:00",
       userRoles: ["f57f872c-eaa4-441e-a142-08dc2a5ba67c"],
     );
 
-    // Convert the DTO to JSON
     String userCreateJson = jsonEncode(userCreateDTO.toJson());
     print('Request body: $userCreateJson');
 
-    // Make the API call
     final response = await http.post(
-      Uri.parse(
-          '$apiUrl'), // Update the URL to match your backend's registration endpoint
+      Uri.parse('$apiUrl'),
       headers: {'Content-Type': 'application/json'},
       body: userCreateJson,
     );
@@ -177,6 +161,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
       LoginService loginService = LoginService();
       LoginResult result = await loginService.loginUser(userName, password);
       if (result.success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Registration successful!')),
+        );
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const UserPage()),
@@ -188,7 +175,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
         });
       }
     } else {
-      // Handle other responses
       final responseBody = jsonDecode(response.body);
       if (responseBody['info'] != null) {
         setState(() {
@@ -216,7 +202,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 size: const Size(360, 54),
                 hoverColor: Colors.white,
                 bgColor: Colors.white,
-                offset: const Offset(6, 6),
+                offset: const Offset(4, 4),
                 border: Border.all(),
                 child: Padding(
                   padding:
@@ -236,7 +222,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 size: const Size(360, 54),
                 hoverColor: Colors.white,
                 bgColor: Colors.white,
-                offset: const Offset(6, 6),
+                offset: const Offset(4, 4),
                 border: Border.all(),
                 child: Padding(
                   padding:
@@ -257,7 +243,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 size: const Size(360, 54),
                 hoverColor: Colors.white,
                 bgColor: Colors.white,
-                offset: const Offset(6, 6),
+                offset: const Offset(4, 4),
                 border: Border.all(),
                 child: Padding(
                   padding:
@@ -278,45 +264,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 size: const Size(360, 54),
                 hoverColor: Colors.white,
                 bgColor: Colors.white,
-                offset: const Offset(6, 6),
-                border: Border.all(),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  child: DropdownButtonFormField<Gender>(
-                    value: _selectedGender,
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedGender = value;
-                      });
-                    },
-                    validator: _validateGender,
-                    items: [
-                      DropdownMenuItem<Gender>(
-                        value: Gender.Male,
-                        child: SizedBox(
-                          width: 100,
-                          child: Text('Male'),
-                        ),
-                      ),
-                      DropdownMenuItem<Gender>(
-                        value: Gender.Female,
-                        child: SizedBox(
-                          width: 100,
-                          child: Text('Female'),
-                        ),
-                      ),
-                    ],
-                    decoration: const InputDecoration(hintText: "Gender"),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              HoverAnimation(
-                size: const Size(360, 54),
-                hoverColor: Colors.white,
-                bgColor: Colors.white,
-                offset: const Offset(6, 6),
+                offset: const Offset(4, 4),
                 border: Border.all(),
                 child: Padding(
                   padding:
@@ -333,8 +281,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 ),
               ),
               const SizedBox(height: 15),
-              if (_errorMessage !=
-                  null) // This should be inside the Column but outside of any other widgets
+              if (_errorMessage != null)
                 Text(
                   _errorMessage!,
                   style: TextStyle(color: Colors.red),
@@ -355,7 +302,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
                           _usernameController.text,
                           _emailController.text,
                           _passwordController.text,
-                          _selectedGender == Gender.Male ? 1 : 2,
                         );
                       }
                     },

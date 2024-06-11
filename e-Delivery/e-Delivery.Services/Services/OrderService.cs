@@ -384,12 +384,12 @@ namespace e_Delivery.Services.Services
             try
             {
                 var loggedUser = await _authContext.GetLoggedUser();
-                IQueryable<Order> orders =  _dbContext.Orders
+                IQueryable<Order> orders =   _dbContext.Orders
                      .Include(order => order.Location).ThenInclude(o => o.City)
                      .Include(o => o.OrderItems).ThenInclude(oi => oi.FoodItem).ThenInclude(fi => fi.FoodItemPictures)
 
                      .Include(o => o.OrderItems).ThenInclude(oi => oi.OrderItemSideDishes).ThenInclude(ois => ois.SideDish)
-                     .Where(order => order.CreatedByUserId == loggedUser.Id);
+                     .Where(order => order.CreatedByUserId == loggedUser.Id).OrderByDescending(o => o.CreatedDate);
                     
                     
                   
@@ -464,7 +464,7 @@ namespace e_Delivery.Services.Services
                     .Include(o => o.OrderItems).ThenInclude(oi => oi.FoodItem).ThenInclude(fi => fi.FoodItemPictures)
 
                     .Include(o => o.OrderItems).ThenInclude(oi => oi.OrderItemSideDishes).ThenInclude(ois => ois.SideDish)
-                    .Where(order => order.DeliveryPersonAssignedId == loggedUser.Id);
+                    .Where(order => order.DeliveryPersonAssignedId == loggedUser.Id).OrderByDescending(o => o.CreatedDate);
 
 
                 if (filterDto.StartDate.HasValue && filterDto.EndDate.HasValue)

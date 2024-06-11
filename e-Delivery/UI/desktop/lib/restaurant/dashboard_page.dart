@@ -28,7 +28,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Future<List<OrderViewModel>> fetchOrders() async {
     var apiService = OrderApiService();
-    // Assume getOrdersForRestaurant() fetches all orders since no pagination is desired here
+
     var response = await apiService.getOrdersForRestaurant();
     if (response != null && response.statusCode == 200) {
       final Map<String, dynamic> responseBody = json.decode(response.body);
@@ -36,10 +36,8 @@ class _DashboardPageState extends State<DashboardPage> {
       List<OrderViewModel> orders =
           ordersData.map((order) => OrderViewModel.fromJson(order)).toList();
 
-      // Sort orders by createdDate in descending order to get the most recent orders
       orders.sort((a, b) => b.createdDate.compareTo(a.createdDate));
 
-      // Take the top 3 most recent orders
       return orders.take(3).toList();
     } else {
       throw Exception('Failed to load orders');
@@ -139,16 +137,32 @@ class _DashboardPageState extends State<DashboardPage> {
                     return Column(
                       children: recentOrders
                           .map((order) => OrderCard(
-                                address: order.location.city.title,
-                                price: '${order.totalCost} KM',
+                                address: order.address,
+                                price:
+                                    '${order.totalCost.toStringAsFixed(2)} KM',
                                 paymentMethod:
                                     _mapPaymentMethod(order.paymentMethod),
                                 id: order.id,
                               ))
                           .toList(),
                     );
+                  } else if (!snapshot.hasData) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text(
+                          "You don't have any orders yet.",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    );
                   } else {
-                    return Text('No data');
+                    return Center(child: CircularProgressIndicator());
                   }
                 },
               ),

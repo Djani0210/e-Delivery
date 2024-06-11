@@ -44,6 +44,12 @@ class _FoodItemPageState extends State<FoodItemPage> {
 
   @override
   Widget build(BuildContext context) {
+    final imageUrl = widget.foodItem.foodItemPictures.isNotEmpty
+        ? widget.foodItem.foodItemPictures.first.fileName
+        : 'assets/images/no-image-found.jpg';
+    final isNetworkImage =
+        imageUrl.startsWith('http') || imageUrl.startsWith('https');
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.foodItem.name),
@@ -60,14 +66,19 @@ class _FoodItemPageState extends State<FoodItemPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.network(
-                    widget.foodItem.foodItemPictures.isNotEmpty
-                        ? widget.foodItem.foodItemPictures.first.fileName
-                        : 'https://via.placeholder.com/150',
-                    width: double.infinity,
-                    height: 300,
-                    fit: BoxFit.cover,
-                  ),
+                  isNetworkImage
+                      ? Image.network(
+                          imageUrl,
+                          width: double.infinity,
+                          height: 300,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.asset(
+                          imageUrl,
+                          width: double.infinity,
+                          height: 300,
+                          fit: BoxFit.cover,
+                        ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
@@ -227,15 +238,15 @@ class AddOrderItemButton extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          primary: Colors.green[800], // Dark green background
-          onPrimary: Colors.white, // White text
+          primary: Colors.green[800],
+          onPrimary: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 16.0),
           textStyle: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0), // Rounded corners
+            borderRadius: BorderRadius.circular(12.0),
           ),
         ),
         onPressed: onPressed,

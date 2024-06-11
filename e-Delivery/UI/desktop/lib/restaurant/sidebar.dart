@@ -27,7 +27,7 @@ class Sidebar extends StatelessWidget {
                 CircleAvatar(
                   backgroundColor: Colors.white,
                   radius: 30.0,
-                  child: FlutterLogo(size: 30),
+                  backgroundImage: _getLogoImage(),
                 ),
                 SizedBox(height: 15),
                 Text(restaurantData?.name ?? 'Loading...',
@@ -43,7 +43,6 @@ class Sidebar extends StatelessWidget {
           _createDrawerItem(
               icon: Icons.settings, text: "Edit profile", index: 4),
           Divider(),
-          // Logout option
           ListTile(
             leading: Icon(Icons.logout),
             title: Text('Logout'),
@@ -62,5 +61,13 @@ class Sidebar extends StatelessWidget {
       selected: index == selectedIndex,
       onTap: () => onTap(index),
     );
+  }
+
+  ImageProvider _getLogoImage() {
+    if (restaurantData?.logo != null && restaurantData!.logo!.path.isNotEmpty) {
+      return NetworkImage(restaurantData!.logo!.fullImageUrl);
+    } else {
+      return AssetImage('assets/images/no-image-found.jpg');
+    }
   }
 }

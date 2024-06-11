@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:desktop/components/storage_service.dart';
+import 'package:desktop/globals.dart';
 
 import 'package:desktop/loginRegistration/log_in_page.dart';
 import 'package:desktop/restaurant/api_calls/restaurant_api_calls.dart';
@@ -33,6 +34,10 @@ class _HomeScreenState extends State<HomeScreenNew> {
     _fetchRestaurantData();
   }
 
+  void handleProfilePictureUpdated() {
+    _fetchRestaurantData();
+  }
+
   Future<void> _logout() async {
     final confirmation = await showDialog<bool>(
       context: context,
@@ -59,7 +64,7 @@ class _HomeScreenState extends State<HomeScreenNew> {
 
         // Call the logout endpoint with the JWT token in the Authorization header
         final response = await http.post(
-          Uri.parse('http://localhost:44395/api/Auth/logout'),
+          Uri.parse('${baseUrl}Auth/logout'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $jwtToken',
@@ -121,7 +126,7 @@ class _HomeScreenState extends State<HomeScreenNew> {
     }
 
     final Map<String, dynamic> userData = jsonDecode(userDataJson);
-    final int restaurantId = userData['restaurantId'];
+    final int? restaurantId = userData['restaurantId'];
     if (restaurantId == null) {
       print('Restaurant ID not found in user data.');
       return;
@@ -138,7 +143,10 @@ class _HomeScreenState extends State<HomeScreenNew> {
           OrdersPage(onNavigateToDetails: _navigateToDetails),
           MenuPage(),
           EmployeesPage(),
-          RestaurantProfilePage(restaurantViewModel: restaurantViewModel),
+          RestaurantProfilePage(
+            restaurantViewModel: restaurantViewModel,
+            onProfilePictureUpdated: handleProfilePictureUpdated,
+          ),
         ];
       });
     } catch (e) {

@@ -40,7 +40,7 @@ class LogoViewModel {
   // other fields if needed
 
   LogoViewModel({required this.id, required this.path});
-  String get fullImageUrl => 'https://localhost:44395$path';
+  String get fullImageUrl => 'http://localhost:44395$path';
 
   factory LogoViewModel.fromJson(Map<String, dynamic> json) {
     return LogoViewModel(

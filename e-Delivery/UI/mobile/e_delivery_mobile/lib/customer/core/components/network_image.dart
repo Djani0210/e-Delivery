@@ -26,23 +26,30 @@ class NetworkImageWithLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isNetworkImage = src.startsWith('http') || src.startsWith('https');
+
     return ClipRRect(
       borderRadius: borderRadius ?? BorderRadius.all(Radius.circular(radius)),
-      child: FutureBuilder<http.Response>(
-        future: _fetchImage(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Image.memory(
-              snapshot.data!.bodyBytes,
-              fit: fit,
-            );
-          } else if (snapshot.hasError) {
-            return Icon(Icons.error);
-          } else {
-            return Skeleton();
-          }
-        },
-      ),
+      child: isNetworkImage
+          ? FutureBuilder<http.Response>(
+              future: _fetchImage(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Image.memory(
+                    snapshot.data!.bodyBytes,
+                    fit: fit,
+                  );
+                } else if (snapshot.hasError) {
+                  return Icon(Icons.error);
+                } else {
+                  return Skeleton();
+                }
+              },
+            )
+          : Image.asset(
+              "assets/images/no-image-found.jpg",
+              fit: BoxFit.contain,
+            ),
     );
   }
 }

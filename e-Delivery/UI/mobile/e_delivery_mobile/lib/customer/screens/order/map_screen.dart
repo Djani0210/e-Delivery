@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:e_delivery_mobile/customer/screens/order/components/polygon_util.dart';
+import 'package:e_delivery_mobile/globals.dart';
 import 'package:e_delivery_mobile/storage_service.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -35,13 +36,7 @@ class _MapScreenState extends State<MapScreen> {
   };
 
   List<LatLng> bosniaPolygonPoints = [];
-  /* @override
-  void initState() {
-    super.initState();
 
-    _loadKmzFile();
-    _setInitialLocation();
-  } */
   @override
   void initState() {
     super.initState();
@@ -126,7 +121,7 @@ class _MapScreenState extends State<MapScreen> {
       };
 
       final response = await http.get(
-        Uri.parse('http://10.0.2.2:44395/api/City/get-city?id=$cityId'),
+        Uri.parse('${baseUrl}City/get-city?id=$cityId'),
         headers: headers,
       );
 

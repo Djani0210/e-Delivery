@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:e_delivery_mobile/customer/core/constants/app_defaults.dart';
 import 'package:e_delivery_mobile/customer/screens/auth/change_pass_page.dart';
 import 'package:e_delivery_mobile/customer/screens/auth/components/otp_fields.dart';
+import 'package:e_delivery_mobile/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -47,7 +48,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
 
   Future<void> resendCode(String email) async {
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:44395/api/User/forgot-password'),
+      Uri.parse('${baseUrl}User/forgot-password'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'Email': email,
@@ -86,7 +87,7 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
 
   Future<void> checkCode(String email, String code) async {
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:44395/api/User/check-code'),
+      Uri.parse('${baseUrl}User/check-code'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'Email': email,

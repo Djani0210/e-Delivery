@@ -33,14 +33,22 @@ class ItemTileHorizontal extends StatelessWidget {
     return Material(
       child: InkWell(
         onTap: () {
-          // Navigate to the RestaurantDetailsPage with the restaurant ID
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  RestaurantDetails(restaurantId: restaurantId),
-            ),
-          );
+          if (isOpen) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    RestaurantDetails(restaurantId: restaurantId),
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Restaurant is currently closed, try later'),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          }
         },
         borderRadius: AppDefaults.borderRadius,
         child: Padding(

@@ -59,7 +59,7 @@ namespace e_Delivery.Services.Services
 
                     try
                     {
-                        // Your existing code to create a location
+                        
                         var locationCreateVM = new LocationCreateVM
                         {
                             CityId = restaurantCreateVM.CityId,
@@ -86,6 +86,7 @@ namespace e_Delivery.Services.Services
                         obj.LocationId = ((LocationGetVM)locationMessage.Data).Id;
                         obj.OpeningTime = TimeSpan.ParseExact(restaurantCreateVM.OpeningTime, "hh\\:mm", CultureInfo.InvariantCulture);
                         obj.ClosingTime = TimeSpan.ParseExact(restaurantCreateVM.ClosingTime, "hh\\:mm", CultureInfo.InvariantCulture);
+                        obj.IsOpen = false;
 
                         await _dbContext.AddAsync(obj);
                         await _dbContext.SaveChangesAsync(cancellationToken);

@@ -9,8 +9,13 @@ import 'package:desktop/restaurant/viewmodels/restaurant_get_VM.dart';
 
 class RestaurantProfilePage extends StatefulWidget {
   final RestaurantViewModel? restaurantViewModel;
+  final VoidCallback onProfilePictureUpdated;
 
-  RestaurantProfilePage({Key? key, this.restaurantViewModel}) : super(key: key);
+  RestaurantProfilePage(
+      {Key? key,
+      this.restaurantViewModel,
+      required this.onProfilePictureUpdated})
+      : super(key: key);
 
   @override
   _RestaurantProfilePageState createState() => _RestaurantProfilePageState();
@@ -64,7 +69,7 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
       _imagePath = restaurantViewModel.logo?.fullImageUrl;
     });
     _deliveryChargeController.text =
-        restaurantViewModel.deliveryCharge.toString();
+        restaurantViewModel.deliveryCharge.toStringAsFixed(2);
     _deliveryTimeController.text = restaurantViewModel.deliveryTime.toString();
     _isOpen = restaurantViewModel.isOpen;
   }
@@ -78,10 +83,34 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
       } else {
         uploadSuccess = await _imageApiService.postRestaurantLogo(_imagePath!);
       }
+
       if (uploadSuccess) {
-        print("Image successfully uploaded.");
+        widget.onProfilePictureUpdated();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Center(
+              child: Text(
+                'Image uploaded successfully',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 3),
+          ),
+        );
       } else {
-        print("Failed to upload image.");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Center(
+              child: Text(
+                'Failed to upload image',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+          ),
+        );
       }
     }
   }
@@ -345,7 +374,7 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
                           );
                         }
                       },
-                      child: Text('Sačuvaj promjene'),
+                      child: Text('Save changes'),
                     ),
                   ),
                 ),

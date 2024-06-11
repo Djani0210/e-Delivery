@@ -2,6 +2,7 @@ import 'package:e_delivery_mobile/customer/core/constants/app_defaults.dart';
 import 'package:e_delivery_mobile/customer/core/constants/app_icons.dart';
 import 'package:e_delivery_mobile/customer/screens/auth/code_verification_page.dart';
 import 'package:e_delivery_mobile/customer/screens/auth/login_page.dart';
+import 'package:e_delivery_mobile/globals.dart';
 import 'package:e_delivery_mobile/storage_service.dart';
 
 import 'package:flutter/material.dart';
@@ -52,7 +53,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
 
   Future<void> sendForgotPasswordRequest(String email) async {
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:44395/api/User/forgot-password'),
+      Uri.parse('${baseUrl}User/forgot-password'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'Email': email,
@@ -86,8 +87,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
 
   Future<void> fetchUserIdFromEmail(String email) async {
     final response = await http.get(
-      Uri.parse(
-          'http://10.0.2.2:44395/api/User/get-user-from-email?email=$email'),
+      Uri.parse('${baseUrl}User/get-user-from-email?email=$email'),
       headers: {'Content-Type': 'application/json'},
     );
 

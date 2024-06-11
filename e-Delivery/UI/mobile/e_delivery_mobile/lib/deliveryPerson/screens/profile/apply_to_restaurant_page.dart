@@ -1,3 +1,4 @@
+import 'package:e_delivery_mobile/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -40,8 +41,7 @@ class _ApplyToRestaurantPageState extends State<ApplyToRestaurantPage> {
     try {
       String jwt = await _fetchJwtToken();
       final cityId = await _fetchCityId();
-      final url =
-          'http://10.0.2.2:44395/api/Restaurant/get-Restaurants?id=$cityId';
+      final url = '${baseUrl}Restaurant/get-Restaurants?id=$cityId';
       final response = await http
           .get(Uri.parse(url), headers: {'Authorization': 'Bearer $jwt'});
 
@@ -99,7 +99,7 @@ class _ApplyToRestaurantPageState extends State<ApplyToRestaurantPage> {
   Future<void> _applyToRestaurant(int restaurantId) async {
     try {
       String jwt = await _fetchJwtToken();
-      final url = 'http://10.0.2.2:44395/api/User/apply/$restaurantId';
+      final url = '${baseUrl}User/apply/$restaurantId';
       final response = await http
           .post(Uri.parse(url), headers: {'Authorization': 'Bearer $jwt'});
 
@@ -176,6 +176,7 @@ class _ApplyToRestaurantPageState extends State<ApplyToRestaurantPage> {
                       textAlign: TextAlign.center,
                     ),
                   ),
+                  Text("After successful confirmation, please login again."),
                 ],
               ),
             ),

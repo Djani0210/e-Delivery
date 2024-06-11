@@ -67,7 +67,7 @@ class _MapSelectionState extends State<MapSelection> {
                       children: [
                         TileLayer(
                           urlTemplate:
-                              'http://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                              'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                           userAgentPackageName: 'com.example.app',
                         ),
                         MarkerLayer(markers: [

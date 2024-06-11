@@ -15,10 +15,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-using Stripe;
+
 using System.Text;
 using System.Text.Json;
 
@@ -169,7 +170,10 @@ builder.Services.AddSingleton(sp =>
         throw new InvalidOperationException("RabbitMQ settings are missing in the configuration.");
     }
 
-    return RabbitHutch.CreateBus($"host={rabbitMqSettings.HostName};port={rabbitMqSettings.Port};username={rabbitMqSettings.UserName};password={rabbitMqSettings.Password}");
+    return RabbitHutch.CreateBus($"host={rabbitMqSettings.HostName};port={rabbitMqSettings.Port};virtualHost={rabbitMqSettings.VirtualHost};username={rabbitMqSettings.UserName};password={rabbitMqSettings.Password};requestedHeartbeat=60;timeout=60;publisherConfirms=true;persistentMessages=true;prefetchcount=1");
+
+
+   
 });
 
 

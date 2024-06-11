@@ -1,10 +1,8 @@
 import 'package:e_delivery_mobile/customer/core/constants/app_colors.dart';
 import 'package:e_delivery_mobile/customer/screens/chat/api/chat_api.dart';
 import 'package:e_delivery_mobile/customer/screens/chat/components/chat_card.dart';
-
 import 'package:e_delivery_mobile/customer/screens/chat/messages_page.dart';
 import 'package:e_delivery_mobile/customer/screens/profile/api/profile_api.dart';
-
 import 'package:e_delivery_mobile/deliveryPerson/screens/home/dto/delivery_person_get_dto.dart';
 import 'package:flutter/material.dart';
 
@@ -57,21 +55,31 @@ class _ChatsPageState extends State<ChatsPage> {
                         future:
                             _profileService.fetchImageUrl(deliveryPerson.id!),
                         builder: (context, imageSnapshot) {
-                          final imageUrl = imageSnapshot.data ?? '';
-                          return ChatCard(
-                            name: deliveryPerson.userName!,
-                            imageUrl: imageUrl,
-                            press: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MessagesPage(
-                                  deliveryPersonId: deliveryPerson.id!,
-                                  deliveryPersonName: deliveryPerson.userName!,
-                                  deliveryPersonImageUrl: imageUrl,
+                          if (imageSnapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (imageSnapshot.hasError) {
+                            return Center(
+                                child: Text('Error: ${imageSnapshot.error}'));
+                          } else {
+                            final imageUrl = imageSnapshot.data ?? '';
+                            return ChatCard(
+                              name: deliveryPerson.userName!,
+                              imageUrl: imageUrl,
+                              press: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MessagesPage(
+                                    deliveryPersonId: deliveryPerson.id!,
+                                    deliveryPersonName:
+                                        deliveryPerson.userName!,
+                                    deliveryPersonImageUrl: imageUrl,
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
+                            );
+                          }
                         },
                       );
                     },

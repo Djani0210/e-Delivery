@@ -36,7 +36,7 @@ class _OrdersPageState extends State<OrdersPage> {
         orderState: _selectedOrderState == 0 ? null : _selectedOrderState,
         sortBy: _selectedSortBy.isNotEmpty ? _selectedSortBy : null,
         pageNumber: _currentPage,
-        pageSize: 10,
+        pageSize: 5,
       );
       if (!mounted) return;
       if (result['orders'].isNotEmpty) {

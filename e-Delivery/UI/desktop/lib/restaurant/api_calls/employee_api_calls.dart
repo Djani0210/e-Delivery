@@ -1,12 +1,13 @@
 import 'dart:convert';
 
+import 'package:desktop/globals.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:http/http.dart' as http;
 
 class EmployeeApiService {
   final _storage = const FlutterSecureStorage();
-  final String _baseUrl = 'http://localhost:44395/api/';
+  final String _baseUrl = baseUrl;
 
   Future<String> _fetchJwtToken() async {
     String? jwt = await _storage.read(key: 'jwt');

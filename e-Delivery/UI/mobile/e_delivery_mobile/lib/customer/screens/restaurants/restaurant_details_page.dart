@@ -280,7 +280,7 @@ class _RestaurantDetailsState extends State<RestaurantDetails> {
     );
   }
 
-  Widget _buildFoodItemRow(FoodItemViewModel foodItem) {
+  /* Widget _buildFoodItemRow(FoodItemViewModel foodItem) {
     itemQuantities.putIfAbsent(foodItem.id, () => 0);
     return Column(
       children: [
@@ -297,6 +297,69 @@ class _RestaurantDetailsState extends State<RestaurantDetails> {
                 height: 80,
                 fit: BoxFit.cover,
               ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(foodItem.name,
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold)),
+                      Text(foodItem.description),
+                    ],
+                  ),
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text('KM ${foodItem.price.toStringAsFixed(2)}',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  IconButton(
+                    icon: Icon(Icons.add),
+                    onPressed: () {
+                      _navigateToFoodItemPage(foodItem);
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        Divider(),
+      ],
+    );
+  } */
+  Widget _buildFoodItemRow(FoodItemViewModel foodItem) {
+    itemQuantities.putIfAbsent(foodItem.id, () => 0);
+    final imageUrl = foodItem.foodItemPictures.isNotEmpty
+        ? foodItem.foodItemPictures.first.fileName
+        : 'assets/images/no-image-found.jpg';
+    final isNetworkImage =
+        imageUrl.startsWith('http') || imageUrl.startsWith('https');
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              isNetworkImage
+                  ? Image.network(
+                      imageUrl,
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.cover,
+                    )
+                  : Image.asset(
+                      imageUrl,
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.cover,
+                    ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -454,14 +517,26 @@ class _RestaurantDetailsState extends State<RestaurantDetails> {
   }
 
   Widget _buildImageSection() {
+    final imageUrl =
+        _restaurant?.logo?.fullImageUrl ?? 'assets/images/no-image-found.jpg';
+    final isNetworkImage =
+        imageUrl.startsWith('http') || imageUrl.startsWith('https');
+
     return Stack(
       children: [
-        Image.network(
-          _restaurant!.logo?.fullImageUrl ?? '',
-          height: MediaQuery.of(context).size.height * 0.25,
-          width: MediaQuery.of(context).size.width,
-          fit: BoxFit.cover,
-        ),
+        isNetworkImage
+            ? Image.network(
+                imageUrl,
+                height: MediaQuery.of(context).size.height * 0.25,
+                width: MediaQuery.of(context).size.width,
+                fit: BoxFit.cover,
+              )
+            : Image.asset(
+                imageUrl,
+                height: MediaQuery.of(context).size.height * 0.25,
+                width: MediaQuery.of(context).size.width,
+                fit: BoxFit.contain,
+              ),
         Positioned(
           bottom: 10,
           left: 10,

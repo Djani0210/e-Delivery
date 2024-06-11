@@ -127,7 +127,7 @@ namespace e_Delivery.Services.Services
                     CityId = x.CityId,
                     PhoneNumber = x.PhoneNumber,
                     Email = x.Email,
-                    Gender = x.Gender,
+                    
                 })
                 .FirstOrDefaultAsync(x => x.UserId == userId, cancellationToken);
 
@@ -146,7 +146,7 @@ namespace e_Delivery.Services.Services
                 CityId = websiteUser.CityId,
                 PhoneNumber = websiteUser.PhoneNumber,
                 Email = websiteUser.Email,
-                Gender = websiteUser.Gender,
+               
                 Roles = stringRoles,
 
             };

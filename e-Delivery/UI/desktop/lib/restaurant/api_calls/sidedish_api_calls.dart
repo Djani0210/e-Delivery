@@ -1,11 +1,11 @@
 import 'dart:convert';
+import 'package:desktop/globals.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:desktop/restaurant/viewmodels/food_item_get_VM.dart';
 
 class SideDishApiService {
   final _storage = const FlutterSecureStorage();
-  final String _baseUrl = 'http://localhost:44395/api/';
 
   Future<String> _fetchJwtToken() async {
     String? jwt = await _storage.read(key: 'jwt');
@@ -14,7 +14,7 @@ class SideDishApiService {
 
   Future<List<SideDishViewModel>> getSideDishes() async {
     String jwt = await _fetchJwtToken();
-    final url = '${_baseUrl}SideDish/get-SideDishes';
+    final url = '${baseUrl}SideDish/get-SideDishes';
     final response = await http
         .get(Uri.parse(url), headers: {'Authorization': 'Bearer $jwt'});
 
@@ -30,7 +30,7 @@ class SideDishApiService {
 
   Future<SideDishViewModel> getSideDishById(int id) async {
     String jwt = await _fetchJwtToken();
-    final url = '${_baseUrl}SideDish/get-SideDish-By-Id?id=$id';
+    final url = '${baseUrl}SideDish/get-SideDish-By-Id?id=$id';
     final response = await http
         .get(Uri.parse(url), headers: {'Authorization': 'Bearer $jwt'});
 
@@ -44,7 +44,7 @@ class SideDishApiService {
 
   Future<void> deleteSideDish(int id) async {
     String jwt = await _fetchJwtToken();
-    final url = '${_baseUrl}SideDish/delete-SideDish?id=$id';
+    final url = '${baseUrl}SideDish/delete-SideDish?id=$id';
     final response = await http.delete(
       Uri.parse(url),
       headers: {'Authorization': 'Bearer $jwt'},
@@ -63,7 +63,7 @@ class SideDishApiService {
   Future<void> updateSideDish(
       int id, String name, double price, bool isAvailable) async {
     String jwt = await _fetchJwtToken();
-    final url = '${_baseUrl}SideDish/update-SideDish?id=$id';
+    final url = '${baseUrl}SideDish/update-SideDish?id=$id';
     final response = await http.put(
       Uri.parse(url),
       headers: {
@@ -87,7 +87,7 @@ class SideDishApiService {
   Future<void> createSideDish(
       String name, double price, bool isAvailable) async {
     String jwt = await _fetchJwtToken();
-    final url = '${_baseUrl}SideDish/add-SideDish';
+    final url = '${baseUrl}SideDish/add-SideDish';
     final response = await http.post(
       Uri.parse(url),
       headers: {

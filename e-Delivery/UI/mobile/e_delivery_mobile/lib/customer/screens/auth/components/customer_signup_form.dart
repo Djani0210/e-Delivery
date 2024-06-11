@@ -85,8 +85,8 @@ class _CustomerSignupFormState extends State<CustomerSignupForm> {
     if (value == null || value.isEmpty) {
       return 'Please enter a password';
     }
-    if (value.length < 6) {
-      return 'Password must be at least 6 characters long';
+    if (value.length < 4) {
+      return 'Password must be at least 4 characters long';
     }
     return null;
   }

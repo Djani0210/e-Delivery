@@ -19,7 +19,7 @@ namespace e_Delivery.Model.Auth
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
         public long TokenExpireDate { get; set; }
-        public Gender? Gender { get; set; }
+       
         public List<string> Roles { get; set; }
         
     }

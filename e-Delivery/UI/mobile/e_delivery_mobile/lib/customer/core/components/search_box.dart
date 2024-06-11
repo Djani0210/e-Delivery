@@ -47,13 +47,6 @@ class _SearchBoxState extends State<SearchBox> {
     }
   }
 
-  /* List<RestaurantViewModel> get filteredRestaurants {
-    return widget.restaurants
-        .where((restaurant) => restaurant.name
-            .toLowerCase()
-            .startsWith(_searchQuery.toLowerCase()))
-        .toList();
-  } */
   List<RestaurantViewModel> get filteredRestaurants {
     return widget.restaurants
         .where((restaurant) =>

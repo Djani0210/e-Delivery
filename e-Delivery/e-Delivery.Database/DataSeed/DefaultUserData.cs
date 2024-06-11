@@ -21,7 +21,7 @@ namespace e_Delivery.Database.DataSeed
                     IsAvailable = true,
                     FirstName = "Admin",
                     LastName = "Admin",
-                    Gender = (Gender)1,
+                    
                     CityId = 1,
                     UserName = "admin",
                     NormalizedUserName = "ADMIN",
@@ -46,7 +46,7 @@ namespace e_Delivery.Database.DataSeed
                     IsAvailable = true,
                     FirstName = "desktop",
                     LastName = "User",
-                    Gender = (Gender)1,
+                    
                     CityId = 1,
                     UserName = "desktop",
                     NormalizedUserName = "DESKTOP",
@@ -73,7 +73,7 @@ namespace e_Delivery.Database.DataSeed
                     IsAvailable = true,
                     FirstName = "desktop1",
                     LastName = "User1",
-                    Gender = (Gender)1,
+                    
                     CityId = 1,
                     UserName = "desktop1",
                     NormalizedUserName = "DESKTOP1",
@@ -99,7 +99,7 @@ namespace e_Delivery.Database.DataSeed
                     IsAvailable = true,
                     FirstName = "desktop2",
                     LastName = "User2",
-                    Gender = (Gender)1,
+                    
                     CityId = 1,
                     UserName = "desktop2",
                     NormalizedUserName = "DESKTOP2",
@@ -126,7 +126,7 @@ namespace e_Delivery.Database.DataSeed
                     IsAvailable = true,
                     FirstName = "desktop3",
                     LastName = "User3",
-                    Gender = (Gender)1,
+                    
                     CityId = 1,
                     UserName = "desktop3",
                     NormalizedUserName = "DESKTOP3",
@@ -152,7 +152,7 @@ namespace e_Delivery.Database.DataSeed
                     IsAvailable = true,
                     FirstName = "desktop4",
                     LastName = "User4",
-                    Gender = (Gender)1,
+                    
                     CityId = 1,
                     UserName = "desktop4",
                     NormalizedUserName = "DESKTOP4",
@@ -178,7 +178,7 @@ namespace e_Delivery.Database.DataSeed
                     IsAvailable = true,
                     FirstName = "desktop5",
                     LastName = "User5",
-                    Gender = (Gender)1,
+                    
                     CityId = 1,
                     UserName = "desktop5",
                     NormalizedUserName = "DESKTOP5",
@@ -204,7 +204,7 @@ namespace e_Delivery.Database.DataSeed
                     IsAvailable = true,
                     FirstName = "desktop6",
                     LastName = "User6",
-                    Gender = (Gender)1,
+                    
                     CityId = 1,
                     UserName = "desktop6",
                     NormalizedUserName = "DESKTOP6",
@@ -229,7 +229,7 @@ namespace e_Delivery.Database.DataSeed
                     IsAvailable = true,
                     FirstName = "Employee",
                     LastName = "User",
-                    Gender = (Gender)1,
+                    
                     CityId = 1,
                     UserName = "MobileDeliveryPerson",
                     NormalizedUserName = "EMPLOYEE",
@@ -257,7 +257,7 @@ namespace e_Delivery.Database.DataSeed
                     IsAvailable = true,
                     FirstName = "Employee1",
                     LastName = "User1",
-                    Gender = (Gender)1,
+                    
                     CityId = 1,
                     UserName = "MobileDeliveryPerson1",
                     NormalizedUserName = "EMPLOYEE1",
@@ -285,7 +285,7 @@ namespace e_Delivery.Database.DataSeed
                     IsAvailable = true,
                     FirstName = "Employee2",
                     LastName = "User2",
-                    Gender = (Gender)1,
+                    
                     CityId = 1,
                     UserName = "MobileDeliveryPerson2",
                     NormalizedUserName = "EMPLOYEE2",
@@ -313,7 +313,7 @@ namespace e_Delivery.Database.DataSeed
                     IsAvailable = true,
                     FirstName = "Customer",
                     LastName = "User",
-                    Gender = (Gender)1,
+                    
                     CityId = 1,
                     UserName = "MobileCustomer",
                     NormalizedUserName = "MOBILECUSTOMER",
@@ -338,7 +338,7 @@ namespace e_Delivery.Database.DataSeed
                    IsAvailable = true,
                     FirstName = "Customer1",
                     LastName = "User1",
-                    Gender = (Gender)1,
+                    
                     CityId = 1,
                     UserName = "MobileCustomer1",
                     NormalizedUserName = "MOBILECUSTOMER1",
@@ -363,7 +363,7 @@ namespace e_Delivery.Database.DataSeed
                     IsAvailable = true,
                     FirstName = "Custome2",
                     LastName = "User2",
-                    Gender = (Gender)1,
+                    
                     CityId = 1,
                     UserName = "MobileCustomer2",
                     NormalizedUserName = "MOBILECUSTOMER2",

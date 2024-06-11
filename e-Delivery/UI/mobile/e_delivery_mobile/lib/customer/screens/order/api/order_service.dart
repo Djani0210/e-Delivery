@@ -1,13 +1,13 @@
+import 'package:e_delivery_mobile/globals.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class OrderService {
-  final String baseUrl = 'http://10.0.2.2:44395';
+  final String _baseUrl = baseUrl;
   final storage = FlutterSecureStorage();
 
   Future<String> fetchJwt() async {
-    // Retrieve the JWT token from secure storage
     String? jwtToken = await storage.read(key: 'jwt');
     return jwtToken ?? '';
   }
@@ -15,12 +15,12 @@ class OrderService {
   Future<List<String>> getSideDishNames(List<int> sideDishIds) async {
     String jwtToken = await fetchJwt();
     final response = await http.post(
-      Uri.parse('$baseUrl/api/SideDish/sideDishes/names'),
+      Uri.parse('${_baseUrl}SideDish/sideDishes/names'),
       headers: <String, String>{
         'Authorization': 'Bearer $jwtToken',
         'Content-Type': 'application/json',
       },
-      body: jsonEncode(sideDishIds), // Convert the list of IDs to a JSON string
+      body: jsonEncode(sideDishIds),
     );
 
     if (response.statusCode == 200) {
@@ -36,7 +36,7 @@ class OrderService {
   Future<String> getFoodItemNameById(int foodItemId) async {
     String jwtToken = await fetchJwt();
     final response = await http.get(
-      Uri.parse('$baseUrl/api/FoodItem/get-by-name$foodItemId'),
+      Uri.parse('${_baseUrl}FoodItem/get-by-name$foodItemId'),
       headers: <String, String>{
         'Authorization': 'Bearer $jwtToken',
       },
@@ -52,7 +52,7 @@ class OrderService {
   Future<void> createOrder(Map<String, dynamic> orderData) async {
     String jwtToken = await fetchJwt();
     final response = await http.post(
-      Uri.parse('$baseUrl/api/Order/create-Order'),
+      Uri.parse('${_baseUrl}Order/create-Order'),
       headers: <String, String>{
         'Authorization': 'Bearer $jwtToken',
         'Content-Type': 'application/json',

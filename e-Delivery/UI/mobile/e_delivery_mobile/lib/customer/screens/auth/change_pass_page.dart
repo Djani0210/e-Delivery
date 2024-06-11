@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:e_delivery_mobile/customer/core/constants/app_defaults.dart';
 import 'package:e_delivery_mobile/customer/core/constants/app_icons.dart';
 import 'package:e_delivery_mobile/customer/screens/auth/password_changed_page.dart';
+import 'package:e_delivery_mobile/globals.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
@@ -35,7 +36,7 @@ class _ChangePassPageState extends State<ChangePassPage> {
 
     if (userId != null) {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:44395/api/User/change-password'),
+        Uri.parse('${baseUrl}User/change-password'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'Id': userId,

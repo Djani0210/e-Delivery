@@ -1,3 +1,4 @@
+import 'package:desktop/globals.dart';
 import 'package:desktop/loginRegistration/log_in_page.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
     if (userId != null) {
       final response = await http.post(
-        Uri.parse('http://localhost:44395/api/User/change-password'),
+        Uri.parse('${baseUrl}User/change-password'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'Id': userId,

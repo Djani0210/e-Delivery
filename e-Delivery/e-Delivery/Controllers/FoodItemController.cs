@@ -44,20 +44,22 @@ namespace e_Delivery.Controllers
             var restaurantId = loggedUser.RestaurantId;
 
             var mostFrequentItem = await _dbContext.OrderItems
-                .Where(oi => oi.FoodItem.RestaurantId == restaurantId) // Ensure the FoodItem belongs to the same restaurant
+                .Where(oi => oi.FoodItem.RestaurantId == restaurantId)
                 .Include(oi => oi.FoodItem)
                 .GroupBy(oi => oi.FoodItemId)
                 .OrderByDescending(g => g.Count())
-                .Select(g => g.First().FoodItem) // Use First() instead of FirstOrDefault() to avoid potential null issues in grouping
+                .Select(g => g.First().FoodItem)
                 .FirstOrDefaultAsync();
 
             if (mostFrequentItem == null)
             {
-                return NotFound();
+                return NotFound(new { message = "No items have been ordered yet" });
             }
 
             return Ok(mostFrequentItem);
         }
+
+
 
 
         [HttpPatch("{foodItemId}/removesidedishes"), Authorize(Roles = "Desktop")]

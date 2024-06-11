@@ -10,7 +10,6 @@ namespace e_Delivery.Model.Restaurant
     {
         public string Name { get; set; }
         public string Address { get; set; }
-        public bool IsOpen { get; set; }
         public string OpeningTime { get; set; }
         public string ClosingTime { get; set; }
         public string ContactNumber { get; set; }

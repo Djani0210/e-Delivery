@@ -91,24 +91,28 @@ namespace e_Delivery.Services.Services
 
         public async Task<Message> GetAllAsMessageAsync(int id)
         {
-            var entity =  await _dbContext.FoodItemPictures.Where(x=> x.FoodItemId == id).ToListAsync();
-            if (entity is null)
+            var entity = await _dbContext.FoodItemPictures.Where(x => x.FoodItemId == id).ToListAsync();
+
+           
+            if (entity == null || !entity.Any())
             {
                 return new Message
                 {
-                    IsValid = false,
-                    Info = "Entitet nije pronađen",
-                    Status = ExceptionCode.NotFound,
+                    IsValid = true,
+                    Info = "No pictures found",
+                    Status = ExceptionCode.Success,
+                    Data = new List<FoodItemPictures>() 
                 };
             }
 
             return new Message
             {
                 IsValid = true,
-                Info = "Entitet pronađen",
+                Info = "Entity found",
                 Status = ExceptionCode.Success,
                 Data = entity
             };
         }
+
     }
 }

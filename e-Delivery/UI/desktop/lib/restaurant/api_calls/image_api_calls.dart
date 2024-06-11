@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:desktop/globals.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -7,7 +8,7 @@ import 'dart:convert';
 
 class ImageApiService {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
-  final String _baseUrl = 'http://localhost:44395/api/';
+  final String _baseUrl = baseUrl;
 
   Future<String> _fetchJwtToken() async {
     // Adjust 'jwt' as necessary based on how you've stored the token

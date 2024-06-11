@@ -15,7 +15,7 @@ namespace e_Delivery.Model.User
         public string UserName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public Gender? Gender { get; set; }
+       
          public bool? IsAvailable { get; set; }
         public string? WorkFrom { get; set; }
         public string? WorkUntil { get; set; }

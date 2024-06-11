@@ -40,8 +40,8 @@ services:
       - ConnectionStrings:DefaultConnection=Server=edelivery-sql,1433;Database=190058;User=sa;Password=Password1234!;ConnectRetryCount=0; TrustServerCertificate=True
       - ASPNETCORE_ENVIRONMENT=Development
       - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_USERNAME=username
-      - RABBITMQ_PASSWORD=test
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
       - RABBITMQ_VIRTUALHOST=/
 
     ports:
@@ -50,6 +50,7 @@ services:
       - edeliverynet2024
     depends_on:
       - edelivery-sql
+   
 
   mailing-service:
     restart: on-failure
@@ -57,10 +58,9 @@ services:
       context: .
       dockerfile: Dockerfile.mailservice
     environment:
-
       - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_USERNAME=username
-      - RABBITMQ_PASSWORD=test
+      - RABBITMQ_USERNAME=guest
+      - RABBITMQ_PASSWORD=guest
       - RABBITMQ_VIRTUALHOST=/
     depends_on:
       - rabbitmq
@@ -70,6 +70,7 @@ services:
       - edeliverynet2024
     ports:
       - 7101:80
+    
       
 networks:
   edeliverynet2024:

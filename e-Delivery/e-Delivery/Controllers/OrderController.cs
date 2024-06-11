@@ -28,7 +28,7 @@ namespace e_Delivery.Controllers
             _authContext = authContext;
         }
 
-        [HttpPost("create-Order"), Authorize(Roles = "MobileClient")]
+        [HttpPost("create-Order"), Authorize(Roles = "MobileCustomer")]
         public async Task<IActionResult> CreateOrder(CreateOrderVM createOrderVm, CancellationToken cancellationToken)
         {
             var message = await _orderService.CreateOrderAsMessageAsync(createOrderVm, cancellationToken);

@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:desktop/globals.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class CategoryService {
   final _storage = const FlutterSecureStorage();
-  final String _baseUrl = 'http://localhost:44395/api/';
 
   Future<String?> _fetchJwtToken() async {
     String? jwt = await _storage.read(key: 'jwt');
@@ -22,7 +22,7 @@ class CategoryService {
     };
 
     final response = await http.post(
-      Uri.parse('${_baseUrl}Category/add-category'),
+      Uri.parse('${baseUrl}Category/add-category'),
       headers: headers,
       body: jsonEncode(categoryCreateVM.toJson()),
     );
@@ -45,7 +45,7 @@ class CategoryService {
       'Authorization': 'Bearer $jwtToken',
     };
 
-    Uri uri = Uri.parse('${_baseUrl}Category/get-categories-for-admin')
+    Uri uri = Uri.parse('${baseUrl}Category/get-categories-for-admin')
         .replace(queryParameters: queryParams);
     if (name != null) {
       uri = uri.replace(queryParameters: {'name': name});
@@ -64,7 +64,7 @@ class CategoryService {
     };
 
     final response = await http.get(
-      Uri.parse('${_baseUrl}Category/get-category-by-id?id=$id'),
+      Uri.parse('${baseUrl}Category/get-category-by-id?id=$id'),
       headers: headers,
     );
 
@@ -80,7 +80,7 @@ class CategoryService {
 
     try {
       final response = await http.put(
-        Uri.parse('${_baseUrl}Category/update-category?id=$id'),
+        Uri.parse('${baseUrl}Category/update-category?id=$id'),
         headers: headers,
         body: jsonEncode({'Name': name}), // Change this line
       );

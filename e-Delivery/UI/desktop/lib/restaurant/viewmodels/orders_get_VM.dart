@@ -24,9 +24,9 @@ class OrderViewModel {
     required this.location,
     required this.orderItems,
     required this.orderState,
-    this.userName, // Added
-    required this.address, // Added
-    this.deliveryPersonId, // Modified to be nullable
+    this.userName,
+    required this.address,
+    this.deliveryPersonId,
     this.deliveryPersonName,
     required this.deliveryCost,
   });
@@ -59,13 +59,13 @@ class OrderViewModel {
   String get orderStateText {
     switch (orderState) {
       case 1:
-        return 'U pripremi';
+        return 'In progress';
       case 2:
-        return 'Na dostavi';
+        return 'In Delivery';
       case 3:
-        return 'Dostavljeno';
+        return 'Delivered';
       case 4:
-        return 'Otkazano';
+        return 'Cancelled';
       default:
         return 'Unknown';
     }
@@ -74,9 +74,9 @@ class OrderViewModel {
   String get paymentMethodText {
     switch (paymentMethod) {
       case 1:
-        return 'Kreditna kartica';
+        return 'Credit card';
       case 2:
-        return 'Keš';
+        return 'Cash';
 
       default:
         return 'Unknown';

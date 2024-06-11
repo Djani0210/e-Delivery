@@ -52,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
 
         if (!mounted) return;
 
-        if (roles.contains('MobileClient')) {
+        if (roles.contains('MobileCustomer')) {
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (context) => CustomerEntryPoint()),
             (Route<dynamic> route) => false,
@@ -212,8 +212,8 @@ class LoginForm extends StatelessWidget {
               if (value == null || value.isEmpty) {
                 return 'Please enter your password';
               }
-              if (value.length < 6) {
-                return 'Password must be at least 6 characters long';
+              if (value.length < 4) {
+                return 'Password must be at least 4 characters long';
               }
               return null;
             },

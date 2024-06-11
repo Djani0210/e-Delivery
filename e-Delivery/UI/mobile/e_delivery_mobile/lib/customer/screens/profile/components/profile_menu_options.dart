@@ -5,6 +5,7 @@ import 'package:e_delivery_mobile/customer/screens/profile/help_page.dart';
 import 'package:e_delivery_mobile/customer/screens/profile/notification_page.dart';
 import 'package:e_delivery_mobile/customer/screens/profile/orders_page.dart';
 import 'package:e_delivery_mobile/customer/screens/profile/update_profile_page.dart';
+import 'package:e_delivery_mobile/globals.dart';
 import 'package:e_delivery_mobile/signalr_service.dart';
 
 import 'package:e_delivery_mobile/storage_service.dart';
@@ -59,7 +60,7 @@ class _ProfileMenuOptionsState extends State<ProfileMenuOptions> {
         final jwtToken = await StorageService.storage.read(key: 'jwt');
 
         final response = await http.post(
-          Uri.parse('http://10.0.2.2:44395/api/Auth/logout'),
+          Uri.parse('${baseUrl}Auth/logout'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $jwtToken',

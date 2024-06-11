@@ -5,8 +5,8 @@ import 'package:e_delivery_mobile/notification_service.dart';
 
 class SignalRService {
   final String _baseUrl = 'http://10.0.2.2:44395';
-  late HubConnection _notificationConnection;
-  late HubConnection _chatConnection;
+  HubConnection? _notificationConnection;
+  HubConnection? _chatConnection;
 
   final _storage = const FlutterSecureStorage();
   bool notificationConnectionIsOpen = false;
@@ -22,11 +22,11 @@ class SignalRService {
                   accessTokenFactory: () async => await _fetchJwtToken()))
           .build();
 
-      _chatConnection.onclose(({error}) {
+      _chatConnection?.onclose(({error}) {
         print("Chat connection failed: $error");
       });
 
-      _chatConnection.on('ReceiveMessage', (message) {
+      _chatConnection?.on('ReceiveMessage', (message) {
         if (message != null && message.isNotEmpty) {
           final Map<String, dynamic> messageMap =
               Map<String, dynamic>.from(message[0] as Map);
@@ -37,7 +37,7 @@ class SignalRService {
         }
       });
 
-      await _chatConnection.start();
+      await _chatConnection?.start();
       print('SignalR chat connection established.');
       chatConnectionIsOpen = true;
     } catch (e) {
@@ -46,7 +46,11 @@ class SignalRService {
   }
 
   Future<void> disconnectFromChat() async {
-    await _chatConnection.stop();
+    if (_chatConnection != null) {
+      await _chatConnection?.stop();
+      _chatConnection = null;
+      chatConnectionIsOpen = false;
+    }
   }
 
   Future<void> sendMessage(String userToId, String content) async {
@@ -58,8 +62,10 @@ class SignalRService {
         'isDeleted': false,
         'createdDate': DateTime.now().toIso8601String(),
       };
-      await _chatConnection.invoke('SendMessage', args: [chat]);
-    } else {}
+      await _chatConnection?.invoke('SendMessage', args: [chat]);
+    } else {
+      print('Chat connection is not open.');
+    }
   }
 
   Future<String> _fetchUserId() async {
@@ -75,16 +81,16 @@ class SignalRService {
                   accessTokenFactory: () async => await _fetchJwtToken()))
           .build();
 
-      _notificationConnection.onclose(({error}) {
+      _notificationConnection?.onclose(({error}) {
         print("Notification connection failed: $error");
       });
 
-      _notificationConnection.on('ReceiveNotification', (message) {
+      _notificationConnection?.on('ReceiveNotification', (message) {
         print('Received notification: $message');
         NotificationService.display('Order Update', message![0].toString());
       });
 
-      await _notificationConnection.start();
+      await _notificationConnection?.start();
       print('SignalR notification connection established.');
       notificationConnectionIsOpen = true;
     } catch (e) {
@@ -93,7 +99,11 @@ class SignalRService {
   }
 
   Future<void> disconnectFromNotifications() async {
-    await _notificationConnection.stop();
+    if (_notificationConnection != null) {
+      await _notificationConnection?.stop();
+      _notificationConnection = null;
+      notificationConnectionIsOpen = false;
+    }
   }
 
   Future<String> _fetchJwtToken() async {

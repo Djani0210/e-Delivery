@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'package:desktop/globals.dart';
 import 'package:http/http.dart' as http;
 import 'package:desktop/components/storage_service.dart'; // Import the StorageService file
 
 class LoginService {
-  static const String apiBaseUrl = 'http://localhost:44395/api/Auth';
+  static String apiBaseUrl = '${baseUrl}Auth';
 
   Future<LoginResult> loginUser(String username, String password) async {
     try {

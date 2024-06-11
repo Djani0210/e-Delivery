@@ -14,18 +14,12 @@ namespace e_Delivery.EmailSubscriber
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
-        private readonly string _host;
-        private readonly string _username;
-        private readonly string _password;
-        private readonly string _virtualHost;
+        private readonly IBus _bus;
 
-        public Worker(ILogger<Worker> logger, IConfiguration configuration)
+        public Worker(ILogger<Worker> logger, IBus bus)
         {
             _logger = logger;
-            _host = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "localhost";
-            _username = Environment.GetEnvironmentVariable("RABBITMQ_USERNAME") ?? "guest";
-            _password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD") ?? "guest";
-            _virtualHost = Environment.GetEnvironmentVariable("RABBITMQ_VIRTUALHOST") ?? "/";
+            _bus = bus;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -34,27 +28,42 @@ namespace e_Delivery.EmailSubscriber
             {
                 try
                 {
-                    using (var bus = RabbitHutch.CreateBus($"host={_host};virtualHost={_virtualHost};username={_username};password={_password}"))
-                    {
-                        await bus.PubSub.SubscribeAsync<ApplyMessage>("email_subscriber", message =>
-                        {
-                            _logger.LogInformation($"Received message for {message.RestaurantOwnerEmail}");
-                            // Implement your message handling logic here
-                        }, config => config.WithTopic("your_topic"), stoppingToken);
-
-                        _logger.LogInformation("Connected and listening for messages.");
-                        await Task.Delay(Timeout.Infinite, stoppingToken);
-                    }
+                    await ConnectToRabbitMQWithRetry(stoppingToken);
+                    _logger.LogInformation("Connected and listening for messages.");
+                    await Task.Delay(Timeout.Infinite, stoppingToken);
                 }
                 catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
                 {
                     _logger.LogInformation("Operation canceled.");
-                    break; // Exit the loop if a cancellation is requested
+                    break;
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "An error occurred while subscribing to RabbitMQ.");
-                    await Task.Delay(5000, stoppingToken); // Wait before reconnecting
+                    await Task.Delay(5000, stoppingToken);
+                }
+            }
+        }
+
+        private async Task ConnectToRabbitMQWithRetry(CancellationToken stoppingToken)
+        {
+            int retryCount = 0;
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                try
+                {
+                    await _bus.PubSub.SubscribeAsync<ApplyMessage>("email_subscriber", async message =>
+                    {
+                        _logger.LogInformation($"Received message for {message.RestaurantOwnerEmail}");
+                        await SendEmailAsync(message.RestaurantOwnerEmail, message.DeliveryPersonEmail, message.ConfirmationLink);
+                    }, cancellationToken: stoppingToken);
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    retryCount++;
+                    _logger.LogWarning($"Failed to connect to RabbitMQ. Retry attempt {retryCount}. Error: {ex.Message}");
+                    await Task.Delay(5000, stoppingToken);
                 }
             }
         }
@@ -62,7 +71,7 @@ namespace e_Delivery.EmailSubscriber
         public override void Dispose()
         {
             base.Dispose();
-            // Dispose any other resources if necessary
+           
         }
 
         private async Task SendEmailAsync(string toEmail, string fromEmail, string confirmationLink)
@@ -90,7 +99,7 @@ namespace e_Delivery.EmailSubscriber
                     await client.SendAsync(emailMessage);
                     await client.DisconnectAsync(true);
                 }
-                Console.WriteLine($"Email sent successfully to {toEmail}");
+                Console.WriteLine($"Email sent  successfully to {toEmail}");
             }
             catch (Exception ex)
             {

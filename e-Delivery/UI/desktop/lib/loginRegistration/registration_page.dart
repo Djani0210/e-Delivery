@@ -24,8 +24,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             alignment: Alignment.topCenter,
             child: Container(
               constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width *
-                    0.8, // Limit the maximum width to  80% of the screen width
+                maxWidth: MediaQuery.of(context).size.width * 0.8,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -40,8 +39,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   const SizedBox(height: 40),
                   Expanded(
-                    child:
-                        RegistrationForm(), // Use Expanded to fill available space
+                    child: RegistrationForm(),
                   ),
                 ],
               ),

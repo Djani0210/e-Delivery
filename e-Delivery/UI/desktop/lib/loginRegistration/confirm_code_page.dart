@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:desktop/globals.dart';
 import 'package:desktop/loginRegistration/reset_password.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -21,7 +22,7 @@ class _ConfirmCodePageState extends State<ConfirmCodePage> {
 
   Future<void> checkCode(String email, String code) async {
     final response = await http.post(
-      Uri.parse('http://localhost:44395/api/User/check-code'),
+      Uri.parse('${baseUrl}User/check-code'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'Email': widget.email,

@@ -3,13 +3,14 @@ import 'dart:convert';
 import 'package:e_delivery_mobile/customer/screens/chat/dto/chat_get_dto.dart';
 import 'package:e_delivery_mobile/customer/screens/profile/dto/customer_get_dto.dart';
 import 'package:e_delivery_mobile/deliveryPerson/screens/home/dto/delivery_person_get_dto.dart';
+import 'package:e_delivery_mobile/globals.dart';
 import 'package:e_delivery_mobile/signalr_service.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class ChatService {
-  static const String baseUrl = 'http://10.0.2.2:44395/api';
+  static String _baseUrl = baseUrl;
 
   final _storage = const FlutterSecureStorage();
   final SignalRService _signalRService = SignalRService();
@@ -25,7 +26,7 @@ class ChatService {
 
   Future<List<DeliveryPersonGetDTO>> fetchDeliveryPersons() async {
     final jwt = await _fetchJwtToken();
-    final apiUrl = '$baseUrl/Chat/connected-delivery-persons';
+    final apiUrl = '${_baseUrl}Chat/connected-delivery-persons';
 
     try {
       final response = await http.get(
@@ -57,7 +58,7 @@ class ChatService {
 
   Future<List<CustomerGetDto>> fetchCustomersForChat() async {
     final jwt = await _fetchJwtToken();
-    final apiUrl = '$baseUrl/Chat/connected-customers';
+    final apiUrl = '${_baseUrl}Chat/connected-customers';
 
     try {
       final response = await http.get(
@@ -89,7 +90,7 @@ class ChatService {
 
   Future<List<ChatGetDto>> fetchChatHistory(String deliveryPersonId) async {
     final jwt = await _fetchJwtToken();
-    final apiUrl = '$baseUrl/Chat/chat-history/$deliveryPersonId';
+    final apiUrl = '${_baseUrl}Chat/chat-history/$deliveryPersonId';
 
     try {
       final response = await http.get(
@@ -120,7 +121,7 @@ class ChatService {
   Future<ChatGetDto?> sendMessage(
       String deliveryPersonId, String content) async {
     final jwt = await _fetchJwtToken();
-    final apiUrl = '$baseUrl/Chat/send-message';
+    final apiUrl = '${_baseUrl}Chat/send-message';
 
     try {
       final response = await http.post(
@@ -157,7 +158,7 @@ class ChatService {
 
   Future<void> deleteMessage(String messageId) async {
     final jwt = await _fetchJwtToken();
-    final apiUrl = '$baseUrl/Chat/delete-message/$messageId';
+    final apiUrl = '${_baseUrl}Chat/delete-message/$messageId';
 
     try {
       final response = await http.delete(

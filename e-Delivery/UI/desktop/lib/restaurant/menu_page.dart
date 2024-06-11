@@ -140,8 +140,8 @@ class _MenuPageState extends State<MenuPage> {
         context: context,
         builder: (BuildContext context) {
           final _nameController = TextEditingController(text: foodItem.name);
-          final _priceController =
-              TextEditingController(text: foodItem.price.toString() + ' KM');
+          final _priceController = TextEditingController(
+              text: foodItem.price.toStringAsFixed(2) + ' KM');
           final _descriptionController =
               TextEditingController(text: foodItem.description);
 
@@ -706,7 +706,7 @@ class _MenuPageState extends State<MenuPage> {
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(sideDish.price.toString() + ' KM'),
+                    child: Text(sideDish.price.toStringAsFixed(2) + ' KM'),
                   ),
                 ),
                 Padding(
@@ -839,7 +839,7 @@ class _MenuPageState extends State<MenuPage> {
     final TextEditingController _nameController =
         TextEditingController(text: sideDish.name);
     final TextEditingController _priceController =
-        TextEditingController(text: sideDish.price.toString());
+        TextEditingController(text: sideDish.price.toStringAsFixed(2));
     bool _isAvailable = sideDish.isAvailable;
 
     showDialog(
@@ -1071,7 +1071,8 @@ class _MenuPageState extends State<MenuPage> {
                         ),
                         Expanded(
                           flex: 2,
-                          child: Text('${menuItem.price} KM'),
+                          child:
+                              Text('${menuItem.price.toStringAsFixed(2)} KM'),
                         ),
                         Expanded(
                           flex: 2,
@@ -1396,7 +1397,7 @@ class _SideDishesTableState extends State<SideDishesTable> {
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text(sideDish.price.toString() + ' KM'),
+                    child: Text(sideDish.price.toStringAsFixed(2) + ' KM'),
                   ),
                 ),
                 Padding(
@@ -1460,7 +1461,7 @@ class _SideDishesTableState extends State<SideDishesTable> {
       border: TableBorder.all(color: Colors.grey),
       columnWidths: const {
         0: FlexColumnWidth(2),
-        1: FlexColumnWidth(1),
+        1: FlexColumnWidth(2),
         2: FlexColumnWidth(3),
       },
       children: [

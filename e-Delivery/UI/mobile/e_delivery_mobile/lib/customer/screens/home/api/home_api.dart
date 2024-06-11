@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'package:e_delivery_mobile/customer/screens/home/dto/recommended_restaurant_get_dto.dart';
 import 'package:e_delivery_mobile/customer/screens/home/dto/restaurant_get_dto.dart';
+import 'package:e_delivery_mobile/globals.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class RestaurantService {
-  static const String baseUrl = 'http://10.0.2.2:44395/api';
-
   final _storage = const FlutterSecureStorage();
 
   Future<String> _fetchJwtToken() async {
@@ -17,7 +16,7 @@ class RestaurantService {
   Future<List<RestaurantViewModel>> fetchRestaurants(
       int cityId, String? name) async {
     String jwt = await _fetchJwtToken();
-    final url = '$baseUrl/Restaurant/get-Restaurants?id=$cityId&name=$name';
+    final url = '${baseUrl}Restaurant/get-Restaurants?id=$cityId&name=$name';
     final response = await http
         .get(Uri.parse(url), headers: {'Authorization': 'Bearer $jwt'});
 
@@ -39,7 +38,7 @@ class RestaurantService {
   Future<List<RecommendedRestaurantViewModel>>
       fetchRecommendedRestaurants() async {
     String jwt = await _fetchJwtToken();
-    const url = '$baseUrl/Restaurant/get-recommended-restaurants';
+    var url = '${baseUrl}Restaurant/get-recommended-restaurants';
     final response = await http
         .get(Uri.parse(url), headers: {'Authorization': 'Bearer $jwt'});
 

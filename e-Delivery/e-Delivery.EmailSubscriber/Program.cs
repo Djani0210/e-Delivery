@@ -12,12 +12,14 @@ IHost host = Host.CreateDefaultBuilder(args)
        services.AddSingleton<IBus>(sp =>
        {
            var configuration = sp.GetRequiredService<IConfiguration>();
-           var host = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "localhost";
+           var host = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "rabbitmq";
            var username = Environment.GetEnvironmentVariable("RABBITMQ_USERNAME") ?? "guest";
            var password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD") ?? "guest";
            var virtualHost = Environment.GetEnvironmentVariable("RABBITMQ_VIRTUALHOST") ?? "/";
-          
-           return RabbitHutch.CreateBus($"host={host};virtualHost={virtualHost};username={username};password={password}");
+           var connectionString = $"host={host};virtualHost={virtualHost};username={username}" +
+     $";password={password};requestedHeartbeat=60;timeout=60;publisherConfirms=true;persistentMessages=true;prefetchcount=1";
+           return RabbitHutch.CreateBus(connectionString);
+           //return RabbitHutch.CreateBus($"host={host};virtualHost={virtualHost};username={username};password={password} requestedHeartbeat = 60, timeout = 60");
        });
 
        services.AddHostedService<Worker>();

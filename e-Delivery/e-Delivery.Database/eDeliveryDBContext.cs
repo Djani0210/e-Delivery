@@ -153,6 +153,9 @@ namespace e_Delivery.Database
             modelBuilder.Entity<Review>().HasData(DefaultReviewData.Reviews);
             modelBuilder.Entity<Chat>().HasData(DefaultChatData.Chats);
             modelBuilder.Entity<Notification>().HasData(DefaultNotificationData.Notifications);
+            modelBuilder.Entity<Email>().HasData(DefaultEmailData.Emails);
+            modelBuilder.Entity<Verification>().HasData(DefaultVerificationData.Verifications);
+
 
             #endregion
 

@@ -9,6 +9,6 @@ namespace e_Delivery.Services.Interfaces
 {
     public interface IOrderReportService
     {
-        public Task<byte[]> GenerateOrderReportData(OrderReportParameters parameters);
+        public Task<byte[]> GenerateOrderReportData();
     }
 }

@@ -1,12 +1,13 @@
 import 'dart:convert';
-import 'package:desktop/restaurant/viewmodels/food_item_get_VM.dart';
+
+import 'package:desktop/globals.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
 class FoodItemApiService {
   final _storage = const FlutterSecureStorage();
-  final String _baseUrl = 'http://localhost:44395/api/';
+  final String _baseUrl = baseUrl;
 
   Future<String> _fetchJwtToken() async {
     String? jwt = await _storage.read(key: 'jwt');
@@ -24,8 +25,8 @@ class FoodItemApiService {
       final decodedBody = json.decode(response.body);
       return decodedBody['name'];
     } else if (response.statusCode == 404) {
-      // Handle 404 Not Found case and return a default value
-      return "Nemate narucene proizvode";
+      final decodedBody = json.decode(response.body);
+      return decodedBody['message']; // Use the custom message from the backend
     } else {
       throw Exception("Failed to fetch most frequent food item");
     }
@@ -123,7 +124,7 @@ class FoodItemApiService {
     try {
       final String jwtToken = await _fetchJwtToken();
       final response = await http.delete(
-        Uri.parse('http://localhost:44395/api/FoodItem/delete-FoodItem?id=$id'),
+        Uri.parse('${baseUrl}FoodItem/delete-FoodItem?id=$id'),
         headers: {
           'Authorization': 'Bearer $jwtToken',
           'Content-Type': 'application/json',

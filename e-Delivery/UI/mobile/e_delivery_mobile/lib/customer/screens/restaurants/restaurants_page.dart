@@ -117,7 +117,20 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
   }
 
   void _onRestaurantSelected(RestaurantViewModel restaurant) {
-    print('Selected restaurant: ${restaurant.name}');
+    if (restaurant.isOpen) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => RestaurantDetails(restaurantId: restaurant.id),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Restaurant is currently closed, try later'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   @override
@@ -164,17 +177,26 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
                 final restaurant = _restaurants[index];
                 return InkWell(
                   onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            RestaurantDetails(restaurantId: restaurant.id),
-                      ),
-                    );
+                    if (restaurant.isOpen) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              RestaurantDetails(restaurantId: restaurant.id),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content:
+                              Text('Restaurant is currently closed, try later'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    }
                   },
                   child: ItemTilesVertical(
                     restaurantName: restaurant.name,
-                    imageUrl: restaurant.logo?.fullImageUrl ??
-                        'https://via.placeholder.com/150',
+                    imageUrl: _getRestaurantImageUrl(restaurant),
                     address: restaurant.address,
                     deliveryCharge: restaurant.deliveryCharge,
                     deliveryTime: restaurant.deliveryTime,
@@ -194,5 +216,13 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
         ),
       ),
     );
+  }
+
+  String _getRestaurantImageUrl(RestaurantViewModel restaurant) {
+    if (restaurant.logo != null && restaurant.logo!.path.isNotEmpty) {
+      return restaurant.logo!.fullImageUrl;
+    } else {
+      return 'assets/images/no-image-found.jpg';
+    }
   }
 }

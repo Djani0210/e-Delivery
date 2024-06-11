@@ -148,17 +148,15 @@ class _EmployeesPageState extends State<EmployeesPage> {
         SizedBox(height: 16),
         _buildSearchAndFilter(),
         Expanded(
-          // This will ensure the list and pagination occupy the remaining space
           child: Column(
             children: [
               Expanded(
-                // Allows the employee list to take up all available space
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
                   child: _buildEmployeesList(),
                 ),
               ),
-              _buildPagination(), // Keeps pagination at the bottom
+              _buildPagination(),
             ],
           ),
         ),
@@ -167,12 +165,11 @@ class _EmployeesPageState extends State<EmployeesPage> {
   }
 
   Widget _buildEmployeesList() {
-    // Header row with labels
     Widget labelSection = Container(
       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.blueGrey[100], // Slightly different color for the header
+        color: Colors.blueGrey[100],
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey.shade400),
       ),
@@ -218,8 +215,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
                     Expanded(
                       flex: 3,
                       child: Center(
-                        child: Text(
-                            '${employee.firstName} ${employee.lastName}',
+                        child: Text('${employee.userName} ',
                             style: TextStyle(fontWeight: FontWeight.bold)),
                       ),
                     ),

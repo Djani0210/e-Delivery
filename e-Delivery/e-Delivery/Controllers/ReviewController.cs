@@ -17,7 +17,7 @@ namespace e_Delivery.Controllers
             _reviewService = reviewService;
         }
 
-        [HttpPost("add-Review"), Authorize(Roles = "MobileClient")]
+        [HttpPost("add-Review"), Authorize(Roles = "MobileCustomer")]
         public async Task<IActionResult> AddReview(CreateOrUpdateReviewVM createOrUpdateReviewVM, CancellationToken cancellationToken)
         {
             var message = await _reviewService.CreateOrUpdateReviewAsMessageAsync(createOrUpdateReviewVM, cancellationToken);
@@ -27,7 +27,7 @@ namespace e_Delivery.Controllers
             }
             return Ok(message);
         }
-        [HttpDelete("delete-Review"), Authorize(Roles = "MobileClient")]
+        [HttpDelete("delete-Review"), Authorize(Roles = "MobileCustomer")]
         public async Task<IActionResult> DeleteReview(int id, CancellationToken cancellationToken)
         {
             var message = await _reviewService.DeleteReviewAsMessageAsync(id, cancellationToken);
@@ -60,7 +60,7 @@ namespace e_Delivery.Controllers
 
         }
 
-        [HttpGet("get-Review-Score-For-Restaurant-Mobile"), Authorize(Roles = "MobileClient")]
+        [HttpGet("get-Review-Score-For-Restaurant-Mobile"), Authorize(Roles = "MobileCustomer")]
         public async Task<IActionResult> GetReviewScoreForRestaurantMobile(int id,CancellationToken cancellationToken)
         {
             try

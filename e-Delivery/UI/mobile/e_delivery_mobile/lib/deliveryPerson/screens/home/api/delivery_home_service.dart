@@ -2,13 +2,14 @@ import 'dart:convert';
 
 import 'package:e_delivery_mobile/customer/screens/profile/dto/order_get_dto.dart';
 import 'package:e_delivery_mobile/deliveryPerson/screens/Home/dto/delivery_person_get_dto.dart';
+import 'package:e_delivery_mobile/globals.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:http/http.dart' as http;
 
 class DeliveryHomeService {
   final _storage = const FlutterSecureStorage();
-  final String _baseUrl = 'http://10.0.2.2:44395/api/';
+  final String _baseUrl = baseUrl;
 
   Future<String> _fetchJwtToken() async {
     String? jwt = await _storage.read(key: 'jwt');

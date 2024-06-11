@@ -2,12 +2,11 @@ import 'dart:convert';
 import 'package:e_delivery_mobile/customer/screens/home/dto/restaurant_get_dto.dart';
 import 'package:e_delivery_mobile/customer/screens/restaurants/dto/category_get_dto.dart';
 import 'package:e_delivery_mobile/customer/screens/restaurants/dto/category_with_fooditems.dart';
+import 'package:e_delivery_mobile/globals.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class RestaurantsService {
-  static const String baseUrl = 'http://10.0.2.2:44395/api';
-
   final _storage = const FlutterSecureStorage();
 
   Future<String> _fetchJwtToken() async {
@@ -18,7 +17,7 @@ class RestaurantsService {
   Future<List<RestaurantViewModel>> fetchRestaurants(
       int cityId, String? name, int? categoryId) async {
     String jwt = await _fetchJwtToken();
-    final url = '$baseUrl/Restaurant/get-Restaurants?id=$cityId&name=$name' +
+    final url = '${baseUrl}Restaurant/get-Restaurants?id=$cityId&name=$name' +
         (categoryId != null ? '&categoryId=$categoryId' : '');
     final response = await http
         .get(Uri.parse(url), headers: {'Authorization': 'Bearer $jwt'});
@@ -43,7 +42,7 @@ class RestaurantsService {
   Future<String> addOrUpdateReview(
       double grade, String description, int restaurantId) async {
     String jwt = await _fetchJwtToken();
-    final url = '$baseUrl/Review/add-Review';
+    final url = '${baseUrl}Review/add-Review';
     final response = await http.post(
       Uri.parse(url),
       headers: {
@@ -71,7 +70,7 @@ class RestaurantsService {
 
   Future<RestaurantViewModel> fetchRestaurantById(int restaurantId) async {
     String jwt = await _fetchJwtToken();
-    final url = '$baseUrl/Restaurant/get-RestaurantById?id=$restaurantId';
+    final url = '${baseUrl}Restaurant/get-RestaurantById?id=$restaurantId';
     final response = await http
         .get(Uri.parse(url), headers: {'Authorization': 'Bearer $jwt'});
 
@@ -90,7 +89,7 @@ class RestaurantsService {
 
   Future<List<CategoryViewModel>> fetchCategories() async {
     String jwt = await _fetchJwtToken();
-    final url = '$baseUrl/Category/get-categories';
+    final url = '${baseUrl}Category/get-categories';
     final response = await http
         .get(Uri.parse(url), headers: {'Authorization': 'Bearer $jwt'});
 
@@ -115,7 +114,7 @@ class RestaurantsService {
       int restaurantId) async {
     String jwt = await _fetchJwtToken();
     final url =
-        '$baseUrl/Category/get-categories-with-foodItems?restaurantId=$restaurantId';
+        '${baseUrl}Category/get-categories-with-foodItems?restaurantId=$restaurantId';
     final response = await http
         .get(Uri.parse(url), headers: {'Authorization': 'Bearer $jwt'});
 
@@ -140,7 +139,8 @@ class RestaurantsService {
 
   Future<double?> getReviewScoreForRestaurantMobile(int id) async {
     String jwt = await _fetchJwtToken();
-    final url = '$baseUrl/Review/get-Review-Score-For-Restaurant-Mobile?id=$id';
+    final url =
+        '${baseUrl}Review/get-Review-Score-For-Restaurant-Mobile?id=$id';
     final response = await http
         .get(Uri.parse(url), headers: {'Authorization': 'Bearer $jwt'});
 
@@ -161,7 +161,7 @@ class RestaurantsService {
 
   Future<String> deleteReview(int reviewId) async {
     String jwt = await _fetchJwtToken();
-    final url = '$baseUrl/Review/delete-Review?id=$reviewId';
+    final url = '${baseUrl}Review/delete-Review?id=$reviewId';
     final response = await http.delete(
       Uri.parse(url),
       headers: {

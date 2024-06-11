@@ -8,6 +8,7 @@ WORKDIR /src
 COPY . .
 
 
+
 FROM build AS publish
 RUN dotnet publish "e-Delivery/e-Delivery.csproj" -c Release -o /app
 FROM base AS final

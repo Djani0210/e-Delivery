@@ -1,11 +1,11 @@
 import 'dart:async';
 
+import 'package:desktop/globals.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class RestaurantAdminService {
   final _storage = const FlutterSecureStorage();
-  final String _baseUrl = 'http://localhost:44395/api/';
 
   Future<String?> _fetchJwtToken() async {
     String? jwt = await _storage.read(key: 'jwt');
@@ -25,7 +25,7 @@ class RestaurantAdminService {
       };
 
       Uri uri =
-          Uri.parse('${_baseUrl}Restaurant/delete-Restaurant?id=$restaurantId');
+          Uri.parse('${baseUrl}Restaurant/delete-Restaurant?id=$restaurantId');
 
       var response = await http.delete(uri, headers: headers);
 
@@ -60,7 +60,7 @@ class RestaurantAdminService {
         'Authorization': 'Bearer $jwt',
       };
 
-      Uri uri = Uri.parse('${_baseUrl}Restaurant/get-Restaurants-For-Admin')
+      Uri uri = Uri.parse('${baseUrl}Restaurant/get-Restaurants-For-Admin')
           .replace(queryParameters: queryParams);
 
       if (name != null && name.isNotEmpty) {
@@ -91,7 +91,7 @@ class RestaurantAdminService {
       'Authorization': 'Bearer $jwtToken',
     };
 
-    Uri uri = Uri.parse('${_baseUrl}City/get-cities');
+    Uri uri = Uri.parse('${baseUrl}City/get-cities');
 
     final response = await http.get(uri, headers: headers);
 

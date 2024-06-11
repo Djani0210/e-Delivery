@@ -15,7 +15,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:desktop/loginRegistration/login_service.dart';
 
-const String apiBaseUrl = 'http://localhost:44395/api/Auth';
 final storage = FlutterSecureStorage();
 
 class LogInForm extends StatefulWidget {

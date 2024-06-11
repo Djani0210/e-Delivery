@@ -59,7 +59,7 @@ dependencies:
   signalr_netcore: ^1.3.7
   msgpack_dart: ^1.0.1
   flutter_local_notifications: ^17.0.0
-
+ 
 
 dev_dependencies:
   flutter_test:
@@ -96,6 +96,7 @@ flutter:
     - assets/images/
     - assets/gadm41_BIH_0.kmz
     - assets/chat/
+    
 
   # To add assets to your application, add an assets section, like this:
   # assets:

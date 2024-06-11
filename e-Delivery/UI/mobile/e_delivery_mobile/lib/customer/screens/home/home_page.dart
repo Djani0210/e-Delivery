@@ -7,6 +7,7 @@ import 'package:e_delivery_mobile/customer/screens/home/components/home_suggesti
 import 'package:e_delivery_mobile/customer/screens/home/dto/recommended_restaurant_get_dto.dart';
 import 'package:e_delivery_mobile/customer/screens/home/dto/restaurant_get_dto.dart';
 import 'package:e_delivery_mobile/customer/screens/home/dto/user_data_dto.dart';
+import 'package:e_delivery_mobile/customer/screens/restaurants/restaurant_details_page.dart';
 
 import 'package:e_delivery_mobile/storage_service.dart';
 import 'package:flutter/material.dart';
@@ -114,7 +115,20 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onRestaurantSelected(RestaurantViewModel restaurant) {
-    print('Selected restaurant: ${restaurant.name}');
+    if (restaurant.isOpen) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => RestaurantDetails(restaurantId: restaurant.id),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Restaurant is currently closed, try later'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   @override

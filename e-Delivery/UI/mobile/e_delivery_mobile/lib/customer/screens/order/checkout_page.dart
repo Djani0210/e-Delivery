@@ -574,7 +574,7 @@ class StripePaymentHandle {
       };
 
       var response = await http.post(
-        Uri.parse('http://api.stripe.com/v1/payment_intents'),
+        Uri.parse('https://api.stripe.com/v1/payment_intents'),
         headers: {
           'Authorization': 'Bearer $stripeSk',
           'Content-Type': 'application/x-www-form-urlencoded'

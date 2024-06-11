@@ -21,11 +21,11 @@ namespace e_Delivery.Controllers
         }
 
         [HttpPost("order-report"), Authorize(Roles = "Desktop")]
-        public async Task<IActionResult> GenerateOrderReport([FromBody] OrderReportParameters parameters)
+        public async Task<IActionResult> GenerateOrderReport()
         {
             try
             {
-                byte[] reportData = await _orderReportService.GenerateOrderReportData(parameters);
+                byte[] reportData = await _orderReportService.GenerateOrderReportData();
 
                 return File(reportData, "application/pdf", "report.pdf");
             }

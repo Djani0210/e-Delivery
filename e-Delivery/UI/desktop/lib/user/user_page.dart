@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:desktop/globals.dart';
 import 'package:desktop/loginRegistration/log_in_page.dart';
 import 'package:desktop/restaurant/api_calls/restaurant_api_calls.dart';
 
@@ -7,7 +8,6 @@ import 'package:desktop/restaurant/restaurant_dashboard.dart';
 import 'package:desktop/restaurant/viewmodels/restaurant_get_VM.dart';
 import 'package:desktop/restaurant/viewmodels/userDataVM.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -48,16 +48,13 @@ class _UserPageState extends State<UserPage> {
   }
 
   Future<void> _fetchCities() async {
-    final response = await http
-        .get(Uri.parse('https://localhost:44395/api/City/get-cities'));
+    final response = await http.get(Uri.parse('${baseUrl}City/get-cities'));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       setState(() {
         _cities = List<City>.from(data['data'].map((x) => City.fromJson(x)));
       });
-    } else {
-      // Handle error
-    }
+    } else {}
   }
 
   Future<void> _loadUserData() async {
@@ -98,7 +95,6 @@ class _UserPageState extends State<UserPage> {
   }
 
   Future<void> _logout() async {
-    // Show a confirmation dialog
     final confirmation = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -119,12 +115,10 @@ class _UserPageState extends State<UserPage> {
 
     if (confirmation == true) {
       try {
-        // Retrieve the JWT token from secure storage
         final jwtToken = await StorageService.storage.read(key: 'jwt');
 
-        // Call the logout endpoint with the JWT token in the Authorization header
         final response = await http.post(
-          Uri.parse('https://localhost:44395/api/Auth/logout'),
+          Uri.parse('${baseUrl}Auth/logout'),
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer $jwtToken',
@@ -132,20 +126,17 @@ class _UserPageState extends State<UserPage> {
         );
 
         if (response.statusCode == 200) {
-          // Delete the user data from secure storage
           await Future.wait([
             StorageService.storage.delete(key: 'jwt'),
             StorageService.storage.delete(key: 'currentUserId'),
             StorageService.storage.delete(key: 'userData'),
           ]);
 
-          // Navigate to the login page
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => LogInPage()),
           );
         } else {
-          // Handle logout failure
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               duration: Duration(milliseconds: 2000),
@@ -159,7 +150,6 @@ class _UserPageState extends State<UserPage> {
           );
         }
       } catch (e) {
-        // Handle any exceptions that occur during the request
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             duration: Duration(milliseconds: 2000),
@@ -181,7 +171,6 @@ class _UserPageState extends State<UserPage> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            // Allow scrolling if content overflows
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -195,28 +184,25 @@ class _UserPageState extends State<UserPage> {
                           fontSize: 45,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Raleway'),
-                      textAlign: TextAlign.center, // Center the text
+                      textAlign: TextAlign.center,
                     )
                   else
                     const CircularProgressIndicator(),
-                  SizedBox(
-                      height:
-                          20), // Add some space between the welcome text and the card
+                  SizedBox(height: 20),
                   if (_userDataViewModel?.restaurantId == null)
                     Card(
                       elevation: 4,
                       shadowColor: Colors.black,
                       color: Colors.orange[100],
                       child: SizedBox(
-                        width: 450, // Fixed width
-                        height: 450, // Fixed height
+                        width: 450,
+                        height: 450,
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: Column(
                             children: [
                               CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                    "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjvEpCXqfI3Fi0zddojWTVmbgQSJHG-giWZZit4DTPxMuLinymyciv6LZo-Qrudd-XUYNQjnuEhcG7OY2joF79379KyKznxgAw_bTL4DQ0t-hNXu0aO0ZeYEzKEigJY2pq0N6UVN2iBJWWm2XGo3CCWdUXp8Wc_8f5f4GzgdbPoaj8HZt11c1Lg9RjDVA/s16000/restaurant%20logo.png"), // Placeholder image
+                                backgroundImage: _getBackgroundImage(),
                                 radius: 100,
                               ),
                               const SizedBox(height: 10),
@@ -227,8 +213,7 @@ class _UserPageState extends State<UserPage> {
                                   color: Colors.orange[900],
                                   fontWeight: FontWeight.w500,
                                 ),
-                                overflow: TextOverflow
-                                    .ellipsis, // Handle overflow for long text
+                                overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(height: 10),
                               Text(
@@ -237,12 +222,11 @@ class _UserPageState extends State<UserPage> {
                                   fontSize: 15,
                                   color: Colors.orange,
                                 ),
-                                overflow: TextOverflow
-                                    .ellipsis, // Handle overflow for long text
+                                overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(height: 10),
                               SizedBox(
-                                width: 400, // Smaller width for the button
+                                width: 400,
                                 child: ElevatedButton(
                                   onPressed: () {
                                     showDialog(
@@ -281,7 +265,6 @@ class _UserPageState extends State<UserPage> {
                       ),
                     )
                   else
-                    // This is the new card for users who have a restaurant
                     Card(
                       elevation: 4,
                       shadowColor: Colors.black,
@@ -294,17 +277,8 @@ class _UserPageState extends State<UserPage> {
                           child: Column(
                             children: [
                               CircleAvatar(
-                                backgroundImage: _imagePath != null
-                                    ? NetworkImage(_imagePath!)
-                                    : null,
+                                backgroundImage: _getBackgroundImage(),
                                 radius: 100,
-                                child: _imagePath == null
-                                    ? Icon(
-                                        Icons.person,
-                                        size: 100,
-                                        color: Colors.white,
-                                      )
-                                    : null,
                               ),
                               const SizedBox(height: 10),
                               Text(
@@ -353,9 +327,7 @@ class _UserPageState extends State<UserPage> {
                         ),
                       ),
                     ),
-                  SizedBox(
-                      height:
-                          24), // Adjusted from Spacer to SizedBox for fixed space
+                  SizedBox(height: 24),
                   TextButton(
                     onPressed: _logout,
                     child: Text(
@@ -381,5 +353,13 @@ class _UserPageState extends State<UserPage> {
         ),
       ),
     );
+  }
+
+  ImageProvider _getBackgroundImage() {
+    if (_userDataViewModel?.restaurantId != null && _imagePath != null) {
+      return NetworkImage(_imagePath!);
+    } else {
+      return const AssetImage('assets/images/no-image-found.jpg');
+    }
   }
 }

@@ -1,26 +1,24 @@
-﻿using e_Delivery.Database;
-using e_Delivery.Entities;
-using e_Delivery.Model.Report;
-using e_Delivery.Services.Interfaces;
-using iTextSharp.text;
-using iTextSharp.text.log;
-using iTextSharp.text.pdf;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Stripe;
-using System;
-using System.Collections.Generic;
+﻿using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Layout.Properties;
+using iText.Kernel.Colors;
+using iText.Kernel.Geom;
+using iText.Kernel.Font;
+using iText.IO.Font.Constants;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using e_Delivery.Database;
+using e_Delivery.Entities;
+using e_Delivery.Services.Interfaces;
+using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace e_Delivery.Services.Services
 {
     public class OrderReportService : IOrderReportService
     {
-        public readonly eDeliveryDBContext _dbContext;
-        public IAuthContext _authContext { get; set; }
-
+        private readonly eDeliveryDBContext _dbContext;
+        private readonly IAuthContext _authContext;
         private readonly ILogger<OrderReportService> _logger;
 
         public OrderReportService(eDeliveryDBContext dbContext, IAuthContext authContext, ILogger<OrderReportService> logger)
@@ -30,159 +28,109 @@ namespace e_Delivery.Services.Services
             _logger = logger;
         }
 
-        public async Task<byte[]> GenerateOrderReportData(OrderReportParameters parameters)
+        public async Task<byte[]> GenerateOrderReportData()
         {
-
-
             try
             {
-                using (var stream = new MemoryStream())
+                var loggedUser = await _authContext.GetLoggedUser();
+
+                var orders = await _dbContext.Orders
+                    .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.FoodItem)
+                    .Where(order => order.RestaurantId == loggedUser.RestaurantId)
+                    .OrderByDescending(order => order.CreatedDate)
+                    .ToListAsync();
+
+                using (MemoryStream ms = new MemoryStream())
                 {
-                    var document = new Document();
-                    var writer = PdfWriter.GetInstance(document, stream);
-                    document.Open();
+                    PdfWriter writer = new PdfWriter(ms);
+                    PdfDocument pdf = new PdfDocument(writer);
+                    Document document = new Document(pdf, PageSize.A4);
 
-                    BaseFont font = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-                    Font bigFont = new Font(font, 36, Font.BOLD);
+                    // Add title
+                    document.Add(new Paragraph("eDelivery Order Report")
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetFontSize(20)
+                        .SetBold());
 
-                    Paragraph header = new Paragraph("eDelivery", bigFont);
-                    header.Alignment = Element.ALIGN_CENTER;
-                    document.Add(header);
+                    // Add date
+                    document.Add(new Paragraph($"Generated on: {DateTime.Now}")
+                        .SetTextAlignment(TextAlignment.CENTER)
+                        .SetFontSize(12));
 
-                    Paragraph title = new Paragraph("Izvještaj za narudžbe generisan: " + DateTime.Now);
-                    document.Add(title);
+                    // Most ordered food items
+                    AddMostOrderedFoodItems(document, orders);
 
-                    PdfPTable table = new PdfPTable(7);
-                    table.SpacingBefore = 10;
-                    float totalWidth = 1100f;
-                    table.TotalWidth = totalWidth;
-
-                    float[] columnWidths = { 25f, 30f, 35f, 30f, 60f, 30f, 50f };
-                    table.SetWidths(columnWidths);
-                    table.WidthPercentage = 100f;
-
-                    Font boldFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12f);
-                    Font smallerFont = FontFactory.GetFont(FontFactory.HELVETICA, 10f);
-                    int cellPadding = 5;
-
-                    PdfPCell header1 = new PdfPCell(new Phrase("ID", boldFont)) { Padding = cellPadding };
-                    PdfPCell header2 = new PdfPCell(new Phrase("Kupac", boldFont)) { Padding = cellPadding };
-                    PdfPCell header3 = new PdfPCell(new Phrase("Datum narudžbe", boldFont)) { Padding = cellPadding };
-                    PdfPCell header4 = new PdfPCell(new Phrase("Ukupna cijena", boldFont)) { Padding = cellPadding };
-                    PdfPCell header5 = new PdfPCell(new Phrase("Stavke narudžbe", boldFont)) { Padding = cellPadding };
-                    PdfPCell header6 = new PdfPCell(new Phrase("Prilozi", boldFont)) { Padding = cellPadding };
-                    PdfPCell header7 = new PdfPCell(new Phrase("Adresa dostave", boldFont)) { Padding = cellPadding };
-
-
-                    table.AddCell(header1);
-                    table.AddCell(header2);
-                    table.AddCell(header3);
-                    table.AddCell(header4);
-                    table.AddCell(header5);
-                    table.AddCell(header6);
-                    table.AddCell(header7);
-
-                    var loggedUser = await _authContext.GetLoggedUser();
-
-                    IQueryable<Order> ordersQuery = _dbContext.Orders
-                        .Include(o => o.CreatedByUser)
-                        .Include(o => o.OrderItems)
-                        .ThenInclude(oi => oi.FoodItem)
-                        .Include(o => o.OrderItems)
-                        .ThenInclude(oi => oi.OrderItemSideDishes)
-                        .ThenInclude(oisd => oisd.SideDish)
-                                    .Where(order => order.RestaurantId == loggedUser.RestaurantId).OrderByDescending(order => order.CreatedDate);
-
-
-                    if (parameters != null)
-                    {
-                        if (parameters.FromDate.HasValue && parameters.ToDate.HasValue)
-                        {
-                            DateTime fromDate = parameters.FromDate.Value.Date;
-                            DateTime toDate = parameters.ToDate.Value.Date.AddDays(1);
-                            ordersQuery = ordersQuery.Where(o => o.CreatedDate >= fromDate && o.CreatedDate <= toDate);
-                        }
-                        if (parameters.MinPrice.HasValue)
-                        {
-                            ordersQuery = ordersQuery.Where(o => o.TotalCost >= parameters.MinPrice.Value);
-                        }
-                        if (parameters.MaxPrice.HasValue)
-                        {
-                            ordersQuery = ordersQuery.Where(o => o.TotalCost <= parameters.MaxPrice.Value);
-                        }
-                    }
-                    else
-                    {
-                        ordersQuery = ordersQuery;
-                    }
-
-                    List<Order> orders = await ordersQuery.ToListAsync();
-
-                    foreach (var order in orders)
-                    {
-                        foreach (var orderItem in order.OrderItems)
-                        {
-                           
-                            foreach (var orderItemSideDish in orderItem.OrderItemSideDishes)
-                            {
-                                _logger.LogInformation($"OrderItemSideDish ID: {orderItemSideDish.OrderItem?.Id}, " +
-                                    $"SideDish ID: {orderItemSideDish.SideDish?.Id}, SideDish Name: {orderItemSideDish.SideDish?.Name}");
-                            }
-                            orderItem.SideDishes = orderItem.OrderItemSideDishes.Select(ois => ois.SideDish).ToList();
-                        }
-                    }
-
-
-                    foreach (Order order in orders)
-                    {
-                        StringBuilder foodItemText = new StringBuilder();
-                        StringBuilder sideDishText = new StringBuilder();
-
-
-                        foreach (var item in order.OrderItems)
-                        {
-                            FoodItem foodItem = item.FoodItem;
-
-                            if (foodItem != null)
-                            {
-                                string foodItemInfo = $"{foodItem.Name}, Qty: {item.Quantity}, Price: {item.Cost} KM ,\n";
-                                foodItemText.Append(foodItemInfo);
-
-                                var sideDishes = item.SideDishes?.Select(sd => sd.Name);
-                                string sideDishInfo = sideDishes != null ? string.Join(", ", sideDishes) : "";
-                                sideDishText.Append(sideDishInfo + "\n");
-                            }
-                        }
-
-                        PdfPCell orderIdCell = new PdfPCell(new Phrase(order.Id.ToString()));
-                        PdfPCell customerCell = new PdfPCell(new Phrase($"{order.CreatedByUser?.FirstName} {order.CreatedByUser?.LastName}"));
-                        PdfPCell orderDateCell = new PdfPCell(new Phrase(order.CreatedDate.ToString()));
-                        PdfPCell totalPriceCell = new PdfPCell(new Phrase(order.TotalCost.ToString() + " KM"));
-                        PdfPCell foodItemCell = new PdfPCell(new Phrase(foodItemText.ToString()));
-                        PdfPCell sideDishesCell = new PdfPCell(new Phrase(sideDishText.ToString()));
-                        PdfPCell shippingAddressCell = new PdfPCell(new Phrase(order.Address));
-
-                        table.AddCell(orderIdCell);
-                        table.AddCell(customerCell);
-                        table.AddCell(orderDateCell);
-                        table.AddCell(totalPriceCell);
-                        table.AddCell(foodItemCell);
-                        table.AddCell(sideDishesCell);
-                        table.AddCell(shippingAddressCell);
-                    }
-                    document.Add(table);
+                    // Monthly earnings
+                    AddMonthlyEarnings(document, orders);
 
                     document.Close();
-                    byte[] reportData = stream.ToArray();
-                    return reportData;
+                    return ms.ToArray();
                 }
-
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while generating the order report.");
                 throw;
             }
+        }
+
+        private void AddMostOrderedFoodItems(Document document, List<Order> orders)
+        {
+            var foodItemCounts = orders.SelectMany(o => o.OrderItems)
+                .GroupBy(oi => oi.FoodItem.Name)
+                .Select(g => new { FoodItem = g.Key, Count = g.Sum(oi => oi.Quantity) })
+                .OrderByDescending(x => x.Count)
+                .Take(10)
+                .ToList();
+
+            document.Add(new Paragraph("Top 10 Most Ordered Food Items")
+                .SetBold()
+                .SetFontSize(14)
+                .SetTextAlignment(TextAlignment.CENTER));
+
+            Table table = new Table(2).UseAllAvailableWidth();
+            table.AddCell(new Cell().Add(new Paragraph("Food Item").SetBold()));
+            table.AddCell(new Cell().Add(new Paragraph("Order Count").SetBold()));
+
+            foreach (var item in foodItemCounts)
+            {
+                table.AddCell(new Cell().Add(new Paragraph(item.FoodItem)));
+                table.AddCell(new Cell().Add(new Paragraph(item.Count.ToString())));
+            }
+
+            document.Add(table);
+        }
+
+        private void AddMonthlyEarnings(Document document, List<Order> orders)
+        {
+            var monthlyEarnings = orders
+                .GroupBy(o => new { o.CreatedDate.Year, o.CreatedDate.Month })
+                .Select(g => new
+                {
+                    Date = new DateTime(g.Key.Year, g.Key.Month, 1),
+                    Earnings = g.Sum(o => o.TotalCost)
+                })
+                .OrderBy(x => x.Date)
+                .Take(12)
+                .ToList();
+
+            document.Add(new Paragraph("Monthly Earnings (Last 12 Months)")
+                .SetBold()
+                .SetFontSize(14)
+                .SetTextAlignment(TextAlignment.CENTER));
+
+            Table table = new Table(2).UseAllAvailableWidth();
+            table.AddCell(new Cell().Add(new Paragraph("Month").SetBold()));
+            table.AddCell(new Cell().Add(new Paragraph("Earnings").SetBold()));
+
+            foreach (var item in monthlyEarnings)
+            {
+                table.AddCell(new Cell().Add(new Paragraph(item.Date.ToString("MMM yyyy"))));
+                table.AddCell(new Cell().Add(new Paragraph(item.Earnings.ToString() + " KM")));
+            }
+
+            document.Add(table);
         }
     }
 }

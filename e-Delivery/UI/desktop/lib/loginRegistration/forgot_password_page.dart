@@ -1,3 +1,4 @@
+import 'package:desktop/globals.dart';
 import 'package:flutter/material.dart';
 import '../components/hover_animation.dart'; // Assuming HoverAnimation is in a separate file
 import 'confirm_code_page.dart';
@@ -19,7 +20,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   Future<void> sendForgotPasswordRequest(String email) async {
     final response = await http.post(
-      Uri.parse('http://localhost:44395/api/User/forgot-password'),
+      Uri.parse('${baseUrl}User/forgot-password'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'Email': email,
@@ -50,8 +51,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   Future<void> fetchUserIdFromEmail(String email) async {
     final response = await http.get(
-      Uri.parse(
-          'http://localhost:44395/api/User/get-user-from-email?email=$email'),
+      Uri.parse('${baseUrl}User/get-user-from-email?email=$email'),
       headers: {'Content-Type': 'application/json'},
     );
 

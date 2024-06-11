@@ -5,7 +5,7 @@ class EmployeeViewModel {
   final String phoneNumber;
   final String userName;
   final String email;
-  final int? gender;
+
   final String? role;
   final String? company;
   final bool isAvailable;
@@ -19,7 +19,6 @@ class EmployeeViewModel {
     required this.phoneNumber,
     required this.userName,
     required this.email,
-    required this.gender,
     this.role,
     this.company,
     required this.isAvailable,
@@ -35,7 +34,6 @@ class EmployeeViewModel {
       phoneNumber: json['phoneNumber'],
       userName: json['userName'],
       email: json['email'],
-      gender: json['gender'],
       role: json['role'],
       company: json['company'],
       isAvailable: json['isAvailable'],

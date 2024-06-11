@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:desktop/globals.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class CityApiService {
   final _storage = const FlutterSecureStorage();
-  final String _baseUrl = 'http://localhost:44395/api/';
 
   Future<String?> _fetchJwtToken() async {
     String? jwt = await _storage.read(key: 'jwt');
@@ -22,7 +22,7 @@ class CityApiService {
     };
 
     final response = await http.post(
-      Uri.parse('${_baseUrl}City/add-city'),
+      Uri.parse('${baseUrl}City/add-city'),
       headers: headers,
       body: jsonEncode(cityCreateVM.toJson()),
     );
@@ -45,7 +45,7 @@ class CityApiService {
       'Authorization': 'Bearer $jwtToken',
     };
 
-    Uri uri = Uri.parse('${_baseUrl}City/get-cities-filtered')
+    Uri uri = Uri.parse('${baseUrl}City/get-cities-filtered')
         .replace(queryParameters: queryParams);
     if (title != null) {
       uri = uri.replace(queryParameters: {'title': title});
@@ -64,7 +64,7 @@ class CityApiService {
     };
 
     final response = await http.get(
-      Uri.parse('${_baseUrl}City/get-city/$id'),
+      Uri.parse('${baseUrl}City/get-city/$id'),
       headers: headers,
     );
 
@@ -80,7 +80,7 @@ class CityApiService {
 
     try {
       final response = await http.put(
-        Uri.parse('${_baseUrl}City/update-city?id=$id'),
+        Uri.parse('${baseUrl}City/update-city?id=$id'),
         headers: headers,
         body: jsonEncode({'Title': title}), // Change this line
       );
