@@ -59,8 +59,8 @@ flutter run --dart-define stripePublishableKey=yourStripePublishableKey --dart-d
 - Test card number: 4242 4242 4242 4242
 
 ### RabbitMq 
-RabbitMQ is implemented in the way that whe a deliveryPerson searches for restaurants he can apply to. When he chooses a restaurant and applies, an email is sent to the owner of that restaurant. The owner then clicks the confirmation button which makes the deliveryPerson part of his restaurant.
-The credentials to the desktop user emails are the following
+RabbitMQ is implemented in the way that when a deliveryPerson searches for restaurants he can apply to. When he chooses a restaurant and applies, an email is sent to the owner of that restaurant ie. desktop user. The owner then clicks the confirmation button which makes the deliveryPerson part of his restaurant.
+The credentials to the  user emails are the following (mobile 
 user: desktop
 gmail : belminedelivery@gmail.com
 
