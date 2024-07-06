@@ -144,7 +144,7 @@ namespace e_Delivery.Services.Services
 
                 var obj = Mapper.Map<Order>(createOrderVM);
                 obj.CreatedByUserId = loggedUser.Id;
-                obj.CreatedDate = DateTime.UtcNow;
+                obj.CreatedDate = DateTime.Now;
                 obj.OrderState = OrderState.Created;
                 obj.LocationId = ((LocationGetVM)locationMessage.Data).Id;
 
@@ -227,7 +227,7 @@ namespace e_Delivery.Services.Services
             {
                 var order = await _dbContext.Orders
                     .Include(o => o.OrderItems)
-                    .Where(o => o.Id == orderId)
+                    .Where(o => o.Id == orderId && !o.IsDeleted)
                     .FirstOrDefaultAsync(cancellationToken);
 
                 if (order == null)
@@ -236,24 +236,22 @@ namespace e_Delivery.Services.Services
                     {
                         IsValid = false,
                         Status = ExceptionCode.NotFound,
-                        Info = "Order not found."
+                        Info = "Order not found or already deleted."
                     };
                 }
 
                
-                _dbContext.OrderItems.RemoveRange(order.OrderItems);
+                order.IsDeleted = true;
 
                 
-                _dbContext.Orders.Remove(order);
 
-              
                 await _dbContext.SaveChangesAsync(cancellationToken);
 
                 return new Message
                 {
                     IsValid = true,
                     Status = ExceptionCode.Success,
-                    Info = "Order and associated items deleted successfully."
+                    Info = "Order and associated items soft deleted successfully."
                 };
             }
             catch (Exception ex)
@@ -332,7 +330,8 @@ namespace e_Delivery.Services.Services
                     .Include(order => order.Location).ThenInclude(o => o.City)
                     .Include(o => o.OrderItems).ThenInclude(oi => oi.FoodItem).ThenInclude(fi => fi.FoodItemPictures)
                     .Include(o => o.OrderItems).ThenInclude(oi => oi.OrderItemSideDishes).ThenInclude(ois => ois.SideDish)
-                    .Where(order => order.RestaurantId == loggedUser.RestaurantId).OrderByDescending(order => order.CreatedDate)
+                    .Where(order => order.RestaurantId == loggedUser.RestaurantId && !order.IsDeleted)
+                    .OrderByDescending(order => order.CreatedDate)
                     .AsQueryable();
                 if (startDate.HasValue)
                 {

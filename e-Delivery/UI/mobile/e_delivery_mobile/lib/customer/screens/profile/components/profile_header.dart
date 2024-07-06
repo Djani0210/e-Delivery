@@ -107,30 +107,33 @@ class UserData extends StatelessWidget {
 
         return Padding(
           padding: const EdgeInsets.all(AppDefaults.padding),
-          child: Row(
-            children: [
-              const SizedBox(width: AppDefaults.padding),
-              imageWidget,
-              const SizedBox(width: AppDefaults.padding),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    userDataViewModel.userName,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Contact: ${userDataViewModel.phoneNumber}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge
-                        ?.copyWith(color: Colors.white),
-                  ),
-                ],
-              )
-            ],
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                const SizedBox(width: AppDefaults.padding),
+                imageWidget,
+                const SizedBox(width: AppDefaults.padding),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      userDataViewModel.userName,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Contact: ${userDataViewModel.phoneNumber}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyLarge
+                          ?.copyWith(color: Colors.white),
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         );
       },

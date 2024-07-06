@@ -29,7 +29,7 @@ class _DeliveryHomePageState extends State<DeliveryHomePage> {
   Future<void> _fetchOrders() async {
     try {
       final result = await _deliveryHomeService.fetchOrders();
-      if (!mounted) return; // Check if the widget is still mounted
+      if (!mounted) return;
       if (result['orders'] != null) {
         setState(() {
           _orders = result['orders'];
@@ -43,7 +43,7 @@ class _DeliveryHomePageState extends State<DeliveryHomePage> {
         });
       }
     } catch (e) {
-      if (!mounted) return; // Check if the widget is still mounted
+      if (!mounted) return;
       setState(() {
         _errorMessage = 'Error fetching orders: $e';
         _isLoading = false;
@@ -166,7 +166,7 @@ class _DeliveryHomePageState extends State<DeliveryHomePage> {
                         );
                       }).toList()
                     else
-                      Text("No orders available"),
+                      const Center(child: Text("No orders found")),
                   ],
                 ),
               ),

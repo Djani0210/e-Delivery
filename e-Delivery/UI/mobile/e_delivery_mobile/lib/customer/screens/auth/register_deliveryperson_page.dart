@@ -19,7 +19,7 @@ class RegisterDeliveryPersonAccountPage extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(AppDefaults.padding),
                   child: Text(
-                    'Registruj\nNov racun dostavljaca',
+                    'Register\nNew delivery person account',
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
                 ),

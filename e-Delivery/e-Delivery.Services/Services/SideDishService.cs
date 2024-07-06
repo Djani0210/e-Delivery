@@ -37,6 +37,7 @@ namespace e_Delivery.Services.Services
                 var obj = Mapper.Map<SideDish>(createSideDishVM);
 
                 obj.RestaurantId = resId;
+                obj.IsDeleted = false;
                 await _dbContext.AddAsync(obj);
                 await _dbContext.SaveChangesAsync(cancellationToken);
 
@@ -69,11 +70,25 @@ namespace e_Delivery.Services.Services
             {
                 var sideDish = await _dbContext.SideDishes.FindAsync(id);
 
+                if (sideDish == null)
+                {
+                    return new Message
+                    {
+                        IsValid = false,
+                        Info = "SideDish not found.",
+                        Status = ExceptionCode.NotFound,
+                    };
+                }
+
+                
+                sideDish.IsDeleted = true;
+
+                
                 var sideDishMappings = _dbContext.FoodItemSideDishMappings
-                .Where(mapping => mapping.SideDishId == sideDish.Id);
+                    .Where(mapping => mapping.SideDishId == sideDish.Id);
 
                 _dbContext.FoodItemSideDishMappings.RemoveRange(sideDishMappings);
-                _dbContext.Remove(sideDish);
+
                 await _dbContext.SaveChangesAsync(cancellationToken);
 
                 return new Message
@@ -101,7 +116,7 @@ namespace e_Delivery.Services.Services
                 var loggedUser = await authContext.GetLoggedUser();
                 var restaurant = await _dbContext.Restaurants.Where(x=>x.Id == loggedUser.RestaurantId).FirstOrDefaultAsync();
 
-                var sideDishes = await _dbContext.SideDishes.Where(x => x.RestaurantId == restaurant.Id).ToListAsync();
+                var sideDishes = await _dbContext.SideDishes.Where(x => x.RestaurantId == restaurant.Id && x.IsDeleted==false).ToListAsync();
 
                 var obj = Mapper.Map<List<GetSideDishVM>>(sideDishes);
 

@@ -176,14 +176,11 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
                   bool deleted = await RestaurantAdminService()
                       .deleteRestaurantAndRelatedEntities(restaurant.id);
                   if (deleted) {
-                    // Restaurant deleted successfully
-                    // Refresh the list of restaurants
                     setState(() {
                       _restaurants.remove(restaurant);
                     });
                   }
                 } catch (e) {
-                  // Handle exception
                   print('Error deleting restaurant: $e');
                 }
               }

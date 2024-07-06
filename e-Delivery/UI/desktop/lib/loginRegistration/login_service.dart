@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:desktop/globals.dart';
 import 'package:http/http.dart' as http;
-import 'package:desktop/components/storage_service.dart'; // Import the StorageService file
+import 'package:desktop/components/storage_service.dart';
 
 class LoginService {
   static String apiBaseUrl = '${baseUrl}Auth';
@@ -23,7 +23,6 @@ class LoginService {
         final userId = responseBody['userId'];
         final userDataJson = jsonEncode(responseBody);
 
-        // Store the JWT token and UserId securely
         try {
           await Future.wait([
             StorageService.storage.write(key: 'jwt', value: token),
@@ -59,7 +58,6 @@ class LoginService {
         return LoginResult.failure('Failed to load login data');
       }
     } catch (e) {
-      // Handle the error
       print('An error occurred during login: $e');
       return LoginResult.failure('An error occurred during login');
     }

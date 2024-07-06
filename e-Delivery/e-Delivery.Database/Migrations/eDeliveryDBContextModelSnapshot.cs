@@ -22,75 +22,6 @@ namespace e_Delivery.Database.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("asp_net_role_claims", "identity");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("asp_net_user_claims", "identity");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
-                {
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("LoginProvider", "ProviderKey");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("asp_net_user_logins", "identity");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -178,25 +109,6 @@ namespace e_Delivery.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId", "LoginProvider", "Name");
-
-                    b.ToTable("asp_net_user_tokens", "identity");
-                });
-
             modelBuilder.Entity("e_Delivery.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -223,77 +135,77 @@ namespace e_Delivery.Database.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1683),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2721),
                             IsDeleted = false,
                             Name = "Burger"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1715),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2754),
                             IsDeleted = false,
                             Name = "Pizza"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1717),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2756),
                             IsDeleted = false,
                             Name = "Pasta"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1718),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2758),
                             IsDeleted = false,
                             Name = "Sea Food"
                         },
                         new
                         {
                             Id = 5,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1720),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2759),
                             IsDeleted = false,
                             Name = "Grill"
                         },
                         new
                         {
                             Id = 6,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1723),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2762),
                             IsDeleted = false,
                             Name = "Vegetarian"
                         },
                         new
                         {
                             Id = 7,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1725),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2764),
                             IsDeleted = false,
                             Name = "Vegan"
                         },
                         new
                         {
                             Id = 8,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1727),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2765),
                             IsDeleted = false,
                             Name = "Sandwich"
                         },
                         new
                         {
                             Id = 9,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1728),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2767),
                             IsDeleted = false,
                             Name = "Cooked dishes"
                         },
                         new
                         {
                             Id = 10,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1730),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2769),
                             IsDeleted = false,
                             Name = "Cakes"
                         },
                         new
                         {
                             Id = 11,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1732),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2771),
                             IsDeleted = false,
                             Name = "Pancakes"
                         });
@@ -331,27 +243,27 @@ namespace e_Delivery.Database.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("67d91632-def7-4165-b218-9e235c2af588"),
+                            Id = new Guid("fd0054cd-56d9-4bdb-82df-81e380fef40f"),
                             Content = "Hello I have your order here!",
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3507),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4663),
                             IsDeleted = false,
                             UserFromId = new Guid("b8396f1d-a29a-4856-a4c1-1312dc97a4a1"),
                             UserToId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045")
                         },
                         new
                         {
-                            Id = new Guid("88594f69-fd4b-4ab2-81f9-febe80aa9ca4"),
+                            Id = new Guid("c59237ad-7fc5-4c69-8a8d-3e78dbf7371c"),
                             Content = "Hello your order is right outside!",
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3511),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4669),
                             IsDeleted = false,
                             UserFromId = new Guid("b8cd72fb-eac5-40d5-8b22-7e8d601e2760"),
                             UserToId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045")
                         },
                         new
                         {
-                            Id = new Guid("a7554815-cb48-425c-9a9e-6b825a438d34"),
+                            Id = new Guid("dbb2687b-961c-46c5-a180-ed1858c2dbff"),
                             Content = "Hello, where is your apartment?",
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3514),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4672),
                             IsDeleted = false,
                             UserFromId = new Guid("1bb03af4-c9c6-42f4-8153-dfd0e427bb43"),
                             UserToId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045")
@@ -384,224 +296,224 @@ namespace e_Delivery.Database.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1814),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2933),
                             IsDeleted = false,
                             Title = "Mostar"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1819),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2939),
                             IsDeleted = false,
                             Title = "Sarajevo"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1820),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2940),
                             IsDeleted = false,
                             Title = "Zenica"
                         },
                         new
                         {
                             Id = 4,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1822),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2942),
                             IsDeleted = false,
                             Title = "Tuzla"
                         },
                         new
                         {
                             Id = 5,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1824),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2943),
                             IsDeleted = false,
                             Title = "Banja Luka"
                         },
                         new
                         {
                             Id = 6,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1826),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2946),
                             IsDeleted = false,
                             Title = "Bihać"
                         },
                         new
                         {
                             Id = 7,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1828),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2947),
                             IsDeleted = false,
                             Title = "Bijeljina"
                         },
                         new
                         {
                             Id = 8,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1829),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2949),
                             IsDeleted = false,
                             Title = "Brčko"
                         },
                         new
                         {
                             Id = 9,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1831),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2950),
                             IsDeleted = false,
                             Title = "Cazin"
                         },
                         new
                         {
                             Id = 10,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1833),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2953),
                             IsDeleted = false,
                             Title = "Čapljina"
                         },
                         new
                         {
                             Id = 11,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1834),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2954),
                             IsDeleted = false,
                             Title = "Derventa"
                         },
                         new
                         {
                             Id = 12,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1836),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2956),
                             IsDeleted = false,
                             Title = "Doboj"
                         },
                         new
                         {
                             Id = 13,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1838),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2957),
                             IsDeleted = false,
                             Title = "Goražde"
                         },
                         new
                         {
                             Id = 14,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1840),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2959),
                             IsDeleted = false,
                             Title = "Gračanica"
                         },
                         new
                         {
                             Id = 15,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1841),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2960),
                             IsDeleted = false,
                             Title = "Gradačac"
                         },
                         new
                         {
                             Id = 16,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1842),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2962),
                             IsDeleted = false,
                             Title = "Gradiška"
                         },
                         new
                         {
                             Id = 17,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1844),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2963),
                             IsDeleted = false,
                             Title = "Konjic"
                         },
                         new
                         {
                             Id = 18,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1846),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2965),
                             IsDeleted = false,
                             Title = "Laktaši"
                         },
                         new
                         {
                             Id = 19,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1847),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2967),
                             IsDeleted = false,
                             Title = "Livno"
                         },
                         new
                         {
                             Id = 20,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1849),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2968),
                             IsDeleted = false,
                             Title = "Lukavac"
                         },
                         new
                         {
                             Id = 21,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1850),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2970),
                             IsDeleted = false,
                             Title = "Ljubuški"
                         },
                         new
                         {
                             Id = 22,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1852),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2971),
                             IsDeleted = false,
                             Title = "Orašje"
                         },
                         new
                         {
                             Id = 23,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1853),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2973),
                             IsDeleted = false,
                             Title = "Prijedor"
                         },
                         new
                         {
                             Id = 24,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1855),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2974),
                             IsDeleted = false,
                             Title = "Prnjavor"
                         },
                         new
                         {
                             Id = 25,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1856),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2976),
                             IsDeleted = false,
                             Title = "Srebrenik"
                         },
                         new
                         {
                             Id = 26,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1858),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2977),
                             IsDeleted = false,
                             Title = "Stolac"
                         },
                         new
                         {
                             Id = 27,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1859),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2979),
                             IsDeleted = false,
                             Title = "Široki Brijeg"
                         },
                         new
                         {
                             Id = 28,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1861),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2980),
                             IsDeleted = false,
                             Title = "Trebinje"
                         },
                         new
                         {
                             Id = 29,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1862),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2982),
                             IsDeleted = false,
                             Title = "Visoko"
                         },
                         new
                         {
                             Id = 30,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1863),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2983),
                             IsDeleted = false,
                             Title = "Zavidovići"
                         },
                         new
                         {
                             Id = 31,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1865),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2985),
                             IsDeleted = false,
                             Title = "Zvornik"
                         },
                         new
                         {
                             Id = 32,
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(1866),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(2986),
                             IsDeleted = false,
                             Title = "Živinice"
                         });
@@ -714,7 +626,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 1,
                             CategoryId = 1,
                             CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2620),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3710),
                             Description = "Juicy beef patty with tomato, salad, onions",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -728,7 +640,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 2,
                             CategoryId = 1,
                             CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2626),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3718),
                             Description = "Juicy beef patty with tomato, salad, onions and cheese",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -742,7 +654,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 3,
                             CategoryId = 2,
                             CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2630),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3721),
                             Description = "Regular pizza with Gauda cheese",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -756,7 +668,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 4,
                             CategoryId = 2,
                             CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2633),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3724),
                             Description = "Pizza with salami and mushrooms",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -770,7 +682,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 5,
                             CategoryId = 2,
                             CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2636),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3728),
                             Description = "Pizza with mushrooms",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -784,7 +696,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 6,
                             CategoryId = 5,
                             CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2640),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3734),
                             Description = "Grilled chicken 100g",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -798,7 +710,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 7,
                             CategoryId = 5,
                             CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2642),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3738),
                             Description = "Lamb sausages 100g",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -812,7 +724,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 8,
                             CategoryId = 8,
                             CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2645),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3777),
                             Description = "Salami-cheese sandwich with tomato, lettuce and onions",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -826,7 +738,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 9,
                             CategoryId = 8,
                             CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2648),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3780),
                             Description = "Chicken sandwich with tomato, lettuce and onions",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -840,7 +752,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 10,
                             CategoryId = 8,
                             CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2652),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3784),
                             Description = "Pepperoni sandwich with tomato, lettuce and onions",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -854,7 +766,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 11,
                             CategoryId = 10,
                             CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2655),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3787),
                             Description = "Homemade chocolate cake, original recipe",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -868,7 +780,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 12,
                             CategoryId = 10,
                             CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2658),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3790),
                             Description = "Homemade baklava, original recipe",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -882,7 +794,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 13,
                             CategoryId = 11,
                             CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2661),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3793),
                             Description = "Nutella filled pancakakes",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -896,7 +808,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 14,
                             CategoryId = 11,
                             CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2664),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3798),
                             Description = "Strawberry jam filled pancakakes",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -910,7 +822,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 15,
                             CategoryId = 2,
                             CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2667),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3800),
                             Description = "Regular pizza with cheese",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -924,7 +836,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 16,
                             CategoryId = 2,
                             CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2670),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3804),
                             Description = "Pizza with salami and mushrooms",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -938,7 +850,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 17,
                             CategoryId = 2,
                             CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2673),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3807),
                             Description = "Pizza with mushrooms",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -952,7 +864,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 18,
                             CategoryId = 2,
                             CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2677),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3811),
                             Description = "Pizza with pepperoni sausage",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -966,7 +878,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 19,
                             CategoryId = 5,
                             CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2680),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3814),
                             Description = "Chicken grilled fillets 100g",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -980,7 +892,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 20,
                             CategoryId = 5,
                             CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2683),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3817),
                             Description = "5 ćevapi with bread and onions",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -994,7 +906,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 21,
                             CategoryId = 5,
                             CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2686),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3821),
                             Description = "10 ćevapi with bread and onions",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1008,7 +920,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 22,
                             CategoryId = 6,
                             CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2689),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3824),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1022,7 +934,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 23,
                             CategoryId = 7,
                             CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2692),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3827),
                             Description = "Tomato and onions",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1036,7 +948,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 24,
                             CategoryId = 7,
                             CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2695),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3830),
                             Description = "Lettuce, tomato and onions",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1050,7 +962,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 25,
                             CategoryId = 8,
                             CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2698),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3833),
                             Description = "Salami and cheese with lettuce, tomato and onions",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1064,7 +976,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 26,
                             CategoryId = 8,
                             CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2701),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3836),
                             Description = "Chicken and cheese with lettuce, tomato and onions",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1078,7 +990,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 27,
                             CategoryId = 11,
                             CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2704),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3839),
                             Description = "Pancakes filled with nutella",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1092,7 +1004,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 28,
                             CategoryId = 4,
                             CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2706),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3842),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1106,7 +1018,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 29,
                             CategoryId = 4,
                             CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2709),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3845),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1120,7 +1032,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 30,
                             CategoryId = 4,
                             CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2712),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3848),
                             Description = "Filled with cream",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1134,7 +1046,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 31,
                             CategoryId = 4,
                             CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2715),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3851),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1148,7 +1060,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 32,
                             CategoryId = 5,
                             CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2718),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3854),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1162,7 +1074,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 33,
                             CategoryId = 5,
                             CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2721),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3857),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1176,7 +1088,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 34,
                             CategoryId = 5,
                             CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2756),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3861),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1190,7 +1102,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 35,
                             CategoryId = 5,
                             CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2759),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3865),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1204,7 +1116,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 36,
                             CategoryId = 5,
                             CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2762),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3868),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1218,7 +1130,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 37,
                             CategoryId = 7,
                             CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2765),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3871),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1232,7 +1144,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 38,
                             CategoryId = 7,
                             CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2768),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3874),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1246,7 +1158,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 39,
                             CategoryId = 6,
                             CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2772),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3912),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1260,7 +1172,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 40,
                             CategoryId = 11,
                             CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2775),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3915),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1274,7 +1186,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 41,
                             CategoryId = 10,
                             CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2778),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3918),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1288,7 +1200,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 42,
                             CategoryId = 5,
                             CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2781),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3921),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1302,7 +1214,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 43,
                             CategoryId = 5,
                             CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2784),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3924),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1316,7 +1228,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 44,
                             CategoryId = 5,
                             CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2787),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3927),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1330,7 +1242,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 45,
                             CategoryId = 11,
                             CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2790),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3930),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1344,7 +1256,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 46,
                             CategoryId = 10,
                             CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2793),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3933),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1358,7 +1270,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 47,
                             CategoryId = 9,
                             CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2796),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3936),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1372,7 +1284,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 48,
                             CategoryId = 9,
                             CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2799),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3939),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1386,7 +1298,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 49,
                             CategoryId = 9,
                             CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2802),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3943),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1400,7 +1312,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 50,
                             CategoryId = 9,
                             CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2805),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3946),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1414,7 +1326,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 51,
                             CategoryId = 1,
                             CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2808),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3949),
                             Description = "Juicy beef patty with tomato, salad, onions",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1428,7 +1340,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 52,
                             CategoryId = 1,
                             CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2811),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3952),
                             Description = "Juicy beef patty with tomato, salad, onions and cheese",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1442,7 +1354,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 53,
                             CategoryId = 2,
                             CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2814),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3954),
                             Description = "Regular pizza with Gauda cheese",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1456,7 +1368,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 54,
                             CategoryId = 2,
                             CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2818),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3957),
                             Description = "Pizza with salami and mushrooms",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1470,7 +1382,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 55,
                             CategoryId = 6,
                             CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2821),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3960),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1484,7 +1396,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 56,
                             CategoryId = 5,
                             CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2823),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3963),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1498,7 +1410,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 57,
                             CategoryId = 8,
                             CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2827),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3966),
                             Description = "Salami and cheese with lettuce, tomato and onions",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1512,7 +1424,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 58,
                             CategoryId = 8,
                             CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2829),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3969),
                             Description = "Chicken and cheese with lettuce, tomato and onions",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1526,7 +1438,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 59,
                             CategoryId = 10,
                             CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2832),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3972),
                             Description = "Homemade baklava, original recipe",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1540,7 +1452,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 60,
                             CategoryId = 11,
                             CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2835),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3975),
                             Description = "Nutella filled pancakakes",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1554,7 +1466,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 61,
                             CategoryId = 11,
                             CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2838),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3978),
                             Description = "Strawberry jam filled pancakakes",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1568,7 +1480,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 62,
                             CategoryId = 2,
                             CreatedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2841),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3981),
                             Description = "Regular pizza with Gauda cheese",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1582,7 +1494,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 63,
                             CategoryId = 2,
                             CreatedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2844),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3984),
                             Description = "Pizza with salami and mushrooms",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1596,7 +1508,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 64,
                             CategoryId = 3,
                             CreatedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2849),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3987),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1610,7 +1522,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 65,
                             CategoryId = 3,
                             CreatedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2852),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3989),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1624,7 +1536,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 66,
                             CategoryId = 3,
                             CreatedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2911),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3993),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1638,7 +1550,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 67,
                             CategoryId = 3,
                             CreatedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2914),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3996),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1652,7 +1564,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 68,
                             CategoryId = 10,
                             CreatedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2917),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3999),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -1666,7 +1578,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 69,
                             CategoryId = 11,
                             CreatedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2920),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4002),
                             Description = "",
                             IsAvailable = true,
                             IsDeleted = false,
@@ -2741,7 +2653,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 1,
                             CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2466),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3594),
                             IsDeleted = false,
                             Path = "/Uploads/Images/f4af967c-1d73-4f02-a576-75e72d542411.jpg"
                         },
@@ -2749,7 +2661,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 2,
                             CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2472),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3599),
                             IsDeleted = false,
                             Path = "/Uploads/Images/a38064f5-960d-43ce-9597-ed27fd588419.jpg"
                         },
@@ -2757,7 +2669,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 3,
                             CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2474),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3602),
                             IsDeleted = false,
                             Path = "/Uploads/Images/radobolja.jpg"
                         },
@@ -2765,7 +2677,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 4,
                             CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2477),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3604),
                             IsDeleted = false,
                             Path = "/Uploads/Images/dva-fenjera.jpg"
                         },
@@ -2773,7 +2685,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 5,
                             CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2480),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3606),
                             IsDeleted = false,
                             Path = "/Uploads/Images/48d82799-50bb-46c7-a655-f6860c8877a9.jpg"
                         },
@@ -2781,7 +2693,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 6,
                             CreatedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2483),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3608),
                             IsDeleted = false,
                             Path = "/Uploads/Images/megi.jpg"
                         },
@@ -2789,7 +2701,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 7,
                             CreatedByUserId = new Guid("b8396f1d-a29a-4856-a4c1-1312dc97a4a1"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2486),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3611),
                             IsDeleted = false,
                             Path = "/Uploads/Images/9c3affff-791b-4680-8168-13d0b632cf8e.jpg",
                             UserProfilePictureId = new Guid("b8396f1d-a29a-4856-a4c1-1312dc97a4a1")
@@ -2798,7 +2710,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 8,
                             CreatedByUserId = new Guid("b8cd72fb-eac5-40d5-8b22-7e8d601e2760"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2489),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3613),
                             IsDeleted = false,
                             Path = "/Uploads/Images/ed3a87b4-3710-4484-893d-ae4751014dab.jpg",
                             UserProfilePictureId = new Guid("b8cd72fb-eac5-40d5-8b22-7e8d601e2760")
@@ -2807,7 +2719,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 9,
                             CreatedByUserId = new Guid("1bb03af4-c9c6-42f4-8153-dfd0e427bb43"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2492),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3616),
                             IsDeleted = false,
                             Path = "/Uploads/Images/employee4.jpg",
                             UserProfilePictureId = new Guid("1bb03af4-c9c6-42f4-8153-dfd0e427bb43")
@@ -2816,7 +2728,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 10,
                             CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2496),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3620),
                             IsDeleted = false,
                             Path = "/Uploads/Images/customer.jpg",
                             UserProfilePictureId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045")
@@ -2825,7 +2737,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 11,
                             CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2499),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3623),
                             IsDeleted = false,
                             Path = "/Uploads/Images/customer1.jpg",
                             UserProfilePictureId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9")
@@ -2834,7 +2746,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 12,
                             CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2502),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3625),
                             IsDeleted = false,
                             Path = "/Uploads/Images/customer2.jpg",
                             UserProfilePictureId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257")
@@ -2888,7 +2800,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 1,
                             CityId = 1,
                             CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2335),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3462),
                             IsDeleted = false,
                             Latitude = "43.34205",
                             Longitude = "17.80042"
@@ -2898,7 +2810,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 2,
                             CityId = 1,
                             CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2344),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3470),
                             IsDeleted = false,
                             Latitude = "43.34042",
                             Longitude = "17.81526"
@@ -2908,7 +2820,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 3,
                             CityId = 1,
                             CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2347),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3472),
                             IsDeleted = false,
                             Latitude = "43.33947",
                             Longitude = "17.80315"
@@ -2918,7 +2830,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 4,
                             CityId = 1,
                             CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2383),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3474),
                             IsDeleted = false,
                             Latitude = "43.31130",
                             Longitude = "17.83038"
@@ -2928,7 +2840,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 5,
                             CityId = 1,
                             CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2387),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3477),
                             IsDeleted = false,
                             Latitude = "43.33823",
                             Longitude = "17.81019"
@@ -2938,7 +2850,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 6,
                             CityId = 1,
                             CreatedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2390),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3479),
                             IsDeleted = false,
                             Latitude = "43.35016",
                             Longitude = "17.80079"
@@ -2948,7 +2860,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 7,
                             CityId = 1,
                             CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2394),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3482),
                             IsDeleted = false,
                             Latitude = "43.34731",
                             Longitude = "17.81352"
@@ -2958,7 +2870,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 8,
                             CityId = 1,
                             CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2397),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3484),
                             IsDeleted = false,
                             Latitude = "43.34745",
                             Longitude = "17.81166"
@@ -2968,7 +2880,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 9,
                             CityId = 1,
                             CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2400),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3487),
                             IsDeleted = false,
                             Latitude = "43.34666",
                             Longitude = "17.80534"
@@ -2978,7 +2890,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 10,
                             CityId = 1,
                             CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2403),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3489),
                             IsDeleted = false,
                             Latitude = "43.34988",
                             Longitude = "17.80171"
@@ -2988,7 +2900,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 11,
                             CityId = 1,
                             CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2406),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3491),
                             IsDeleted = false,
                             Latitude = "43.33786",
                             Longitude = "17.81581"
@@ -2998,7 +2910,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 12,
                             CityId = 1,
                             CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2409),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3494),
                             IsDeleted = false,
                             Latitude = "43.34458",
                             Longitude = "17.81346"
@@ -3008,7 +2920,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 13,
                             CityId = 1,
                             CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2411),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3496),
                             IsDeleted = false,
                             Latitude = "43.34731",
                             Longitude = "17.81352"
@@ -3018,7 +2930,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 14,
                             CityId = 1,
                             CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2414),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3498),
                             IsDeleted = false,
                             Latitude = "43.34745",
                             Longitude = "17.81166"
@@ -3028,7 +2940,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 15,
                             CityId = 1,
                             CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2417),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3500),
                             IsDeleted = false,
                             Latitude = "43.34666",
                             Longitude = "17.80534"
@@ -3038,7 +2950,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 16,
                             CityId = 1,
                             CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2420),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3552),
                             IsDeleted = false,
                             Latitude = "43.34988",
                             Longitude = "17.80171"
@@ -3048,7 +2960,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 17,
                             CityId = 1,
                             CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2423),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3555),
                             IsDeleted = false,
                             Latitude = "43.33786",
                             Longitude = "17.81581"
@@ -3058,7 +2970,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 18,
                             CityId = 1,
                             CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2426),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3558),
                             IsDeleted = false,
                             Latitude = "43.34458",
                             Longitude = "17.81346"
@@ -3068,7 +2980,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 19,
                             CityId = 1,
                             CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2429),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3560),
                             IsDeleted = false,
                             Latitude = "43.34731",
                             Longitude = "17.81352"
@@ -3078,7 +2990,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 20,
                             CityId = 1,
                             CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2432),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3562),
                             IsDeleted = false,
                             Latitude = "43.34745",
                             Longitude = "17.81166"
@@ -3088,7 +3000,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 21,
                             CityId = 1,
                             CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2434),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3564),
                             IsDeleted = false,
                             Latitude = "43.34666",
                             Longitude = "17.80534"
@@ -3098,7 +3010,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 22,
                             CityId = 1,
                             CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2437),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3566),
                             IsDeleted = false,
                             Latitude = "43.34988",
                             Longitude = "17.80171"
@@ -3108,7 +3020,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 23,
                             CityId = 1,
                             CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2440),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3569),
                             IsDeleted = false,
                             Latitude = "43.33786",
                             Longitude = "17.81581"
@@ -3118,7 +3030,7 @@ namespace e_Delivery.Database.Migrations
                             Id = 24,
                             CityId = 1,
                             CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2443),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3571),
                             IsDeleted = false,
                             Latitude = "43.34458",
                             Longitude = "17.81346"
@@ -3165,7 +3077,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 1,
                             Content = "Your order has been delivered.",
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3576),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4692),
                             IsDeleted = false,
                             RestaurantName = "Aldi - Caffe slastičarna",
                             SentByUserId = new Guid("b8396f1d-a29a-4856-a4c1-1312dc97a4a1"),
@@ -3175,7 +3087,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 2,
                             Content = "Your order has been delivered.",
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3582),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4697),
                             IsDeleted = false,
                             RestaurantName = "Aldi - Caffe slastičarna",
                             SentByUserId = new Guid("b8cd72fb-eac5-40d5-8b22-7e8d601e2760"),
@@ -3185,7 +3097,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 3,
                             Content = "Your order has been delivered.",
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3585),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4700),
                             IsDeleted = false,
                             RestaurantName = "Aldi - Caffe slastičarna",
                             SentByUserId = new Guid("1bb03af4-c9c6-42f4-8153-dfd0e427bb43"),
@@ -3195,7 +3107,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 4,
                             Content = "You have been assigned to an order.",
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3587),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4703),
                             IsDeleted = false,
                             RestaurantName = "Aldi - Caffe slastičarna",
                             SentByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
@@ -3264,7 +3176,7 @@ namespace e_Delivery.Database.Migrations
                             Address = "123 Main St",
                             Allergies = "None",
                             CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3246),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4391),
                             IsDeleted = false,
                             IsPaid = true,
                             LocationId = 7,
@@ -3279,7 +3191,7 @@ namespace e_Delivery.Database.Migrations
                             Address = "123 Main St",
                             Allergies = "Some nuts",
                             CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3255),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4401),
                             DeliveryPersonAssignedId = new Guid("b8396f1d-a29a-4856-a4c1-1312dc97a4a1"),
                             IsDeleted = false,
                             IsPaid = true,
@@ -3295,7 +3207,7 @@ namespace e_Delivery.Database.Migrations
                             Address = "123 Main St",
                             Allergies = "None",
                             CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3259),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4406),
                             IsDeleted = false,
                             IsPaid = true,
                             LocationId = 9,
@@ -3310,7 +3222,7 @@ namespace e_Delivery.Database.Migrations
                             Address = "123 Main St",
                             Allergies = "Some nuts",
                             CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3261),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4408),
                             DeliveryPersonAssignedId = new Guid("b8cd72fb-eac5-40d5-8b22-7e8d601e2760"),
                             IsDeleted = false,
                             IsPaid = true,
@@ -3326,7 +3238,7 @@ namespace e_Delivery.Database.Migrations
                             Address = "123 Main St",
                             Allergies = "Maybe a little cream is bad",
                             CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3265),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4412),
                             IsDeleted = false,
                             IsPaid = true,
                             LocationId = 11,
@@ -3341,7 +3253,7 @@ namespace e_Delivery.Database.Migrations
                             Address = "123 Main St",
                             Allergies = "Some berries",
                             CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3269),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4415),
                             DeliveryPersonAssignedId = new Guid("1bb03af4-c9c6-42f4-8153-dfd0e427bb43"),
                             IsDeleted = false,
                             IsPaid = true,
@@ -3357,7 +3269,7 @@ namespace e_Delivery.Database.Migrations
                             Address = "6th street",
                             Allergies = "None",
                             CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3273),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4419),
                             IsDeleted = false,
                             IsPaid = true,
                             LocationId = 13,
@@ -3372,7 +3284,7 @@ namespace e_Delivery.Database.Migrations
                             Address = "6th street",
                             Allergies = "None",
                             CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3276),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4425),
                             IsDeleted = false,
                             IsPaid = true,
                             LocationId = 14,
@@ -3387,7 +3299,7 @@ namespace e_Delivery.Database.Migrations
                             Address = "6th street",
                             Allergies = "None",
                             CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3278),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4427),
                             IsDeleted = false,
                             IsPaid = true,
                             LocationId = 15,
@@ -3402,7 +3314,7 @@ namespace e_Delivery.Database.Migrations
                             Address = "6th street",
                             Allergies = "None",
                             CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3282),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4431),
                             IsDeleted = false,
                             IsPaid = true,
                             LocationId = 16,
@@ -3417,7 +3329,7 @@ namespace e_Delivery.Database.Migrations
                             Address = "6th street",
                             Allergies = "None",
                             CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3285),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4433),
                             IsDeleted = false,
                             IsPaid = true,
                             LocationId = 17,
@@ -3432,7 +3344,7 @@ namespace e_Delivery.Database.Migrations
                             Address = "6th street",
                             Allergies = "None",
                             CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3288),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4436),
                             IsDeleted = false,
                             IsPaid = true,
                             LocationId = 18,
@@ -3447,7 +3359,7 @@ namespace e_Delivery.Database.Migrations
                             Address = "6th street",
                             Allergies = "None",
                             CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3291),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4439),
                             IsDeleted = false,
                             IsPaid = true,
                             LocationId = 19,
@@ -3462,7 +3374,7 @@ namespace e_Delivery.Database.Migrations
                             Address = "6th street",
                             Allergies = "None",
                             CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3294),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4441),
                             IsDeleted = false,
                             IsPaid = true,
                             LocationId = 20,
@@ -3477,7 +3389,7 @@ namespace e_Delivery.Database.Migrations
                             Address = "6th street",
                             Allergies = "None",
                             CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3296),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4444),
                             IsDeleted = false,
                             IsPaid = true,
                             LocationId = 21,
@@ -3492,7 +3404,7 @@ namespace e_Delivery.Database.Migrations
                             Address = "6th street",
                             Allergies = "None",
                             CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3299),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4447),
                             IsDeleted = false,
                             IsPaid = true,
                             LocationId = 22,
@@ -3507,7 +3419,7 @@ namespace e_Delivery.Database.Migrations
                             Address = "6th street",
                             Allergies = "None",
                             CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3302),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4450),
                             IsDeleted = false,
                             IsPaid = true,
                             LocationId = 23,
@@ -3522,7 +3434,7 @@ namespace e_Delivery.Database.Migrations
                             Address = "6th street",
                             Allergies = "None",
                             CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3305),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4453),
                             IsDeleted = false,
                             IsPaid = true,
                             LocationId = 24,
@@ -3893,7 +3805,7 @@ namespace e_Delivery.Database.Migrations
                             ClosingTime = new TimeSpan(0, 20, 0, 0, 0),
                             ContactNumber = "063-123-123",
                             CreatedByUserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2522),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3653),
                             DeliveryCharge = 2.5,
                             DeliveryTime = 40,
                             IsOpen = true,
@@ -3910,7 +3822,7 @@ namespace e_Delivery.Database.Migrations
                             ClosingTime = new TimeSpan(0, 22, 0, 0, 0),
                             ContactNumber = "063-123-124",
                             CreatedByUserId = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2529),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3661),
                             DeliveryCharge = 2.0,
                             DeliveryTime = 30,
                             IsOpen = true,
@@ -3927,7 +3839,7 @@ namespace e_Delivery.Database.Migrations
                             ClosingTime = new TimeSpan(0, 21, 0, 0, 0),
                             ContactNumber = "063-123-125",
                             CreatedByUserId = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2532),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3665),
                             DeliveryCharge = 3.0,
                             DeliveryTime = 45,
                             IsOpen = true,
@@ -3944,7 +3856,7 @@ namespace e_Delivery.Database.Migrations
                             ClosingTime = new TimeSpan(0, 21, 0, 0, 0),
                             ContactNumber = "063-123-126",
                             CreatedByUserId = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2534),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3668),
                             DeliveryCharge = 3.0,
                             DeliveryTime = 50,
                             IsOpen = true,
@@ -3961,7 +3873,7 @@ namespace e_Delivery.Database.Migrations
                             ClosingTime = new TimeSpan(0, 21, 0, 0, 0),
                             ContactNumber = "063-123-127",
                             CreatedByUserId = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2538),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3671),
                             DeliveryCharge = 1.5,
                             DeliveryTime = 30,
                             IsOpen = true,
@@ -3978,7 +3890,7 @@ namespace e_Delivery.Database.Migrations
                             ClosingTime = new TimeSpan(0, 21, 0, 0, 0),
                             ContactNumber = "063-123-128",
                             CreatedByUserId = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(2542),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(3675),
                             DeliveryCharge = 2.5,
                             DeliveryTime = 35,
                             IsOpen = true,
@@ -4034,7 +3946,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 1,
                             CreatedByUserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3443),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4594),
                             Description = "Great food!",
                             Grade = 5.0,
                             IsDeleted = false,
@@ -4045,7 +3957,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 2,
                             CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3451),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4601),
                             Description = "Very good food!",
                             Grade = 4.5,
                             IsDeleted = false,
@@ -4056,7 +3968,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 3,
                             CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3454),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4604),
                             Description = "Solid food!",
                             Grade = 4.0,
                             IsDeleted = false,
@@ -4067,7 +3979,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 4,
                             CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3457),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4606),
                             Description = "Very good food!",
                             Grade = 4.5,
                             IsDeleted = false,
@@ -4078,7 +3990,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 5,
                             CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3459),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4609),
                             Description = "Solid food!",
                             Grade = 4.0,
                             IsDeleted = false,
@@ -4089,7 +4001,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 6,
                             CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3463),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4613),
                             Description = "Very good food!",
                             Grade = 5.0,
                             IsDeleted = false,
@@ -4100,7 +4012,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 7,
                             CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3466),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4615),
                             Description = "Solid food!",
                             Grade = 4.5,
                             IsDeleted = false,
@@ -4111,7 +4023,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 8,
                             CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3468),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4618),
                             Description = "Very good food!",
                             Grade = 3.5,
                             IsDeleted = false,
@@ -4122,7 +4034,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 9,
                             CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3471),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4620),
                             Description = "Solid food!",
                             Grade = 4.0,
                             IsDeleted = false,
@@ -4133,7 +4045,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 10,
                             CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3474),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4623),
                             Description = "Very good food!",
                             Grade = 4.5,
                             IsDeleted = false,
@@ -4144,7 +4056,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 11,
                             CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3477),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4626),
                             Description = "Solid food!",
                             Grade = 2.0,
                             IsDeleted = false,
@@ -4155,7 +4067,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 12,
                             CreatedByUserId = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3480),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4629),
                             Description = "Very good food!",
                             Grade = 2.5,
                             IsDeleted = false,
@@ -4166,7 +4078,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 13,
                             CreatedByUserId = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
-                            CreatedDate = new DateTime(2024, 6, 25, 23, 43, 35, 382, DateTimeKind.Local).AddTicks(3482),
+                            CreatedDate = new DateTime(2024, 7, 6, 14, 21, 30, 320, DateTimeKind.Local).AddTicks(4631),
                             Description = "Solid food!",
                             Grade = 3.0,
                             IsDeleted = false,
@@ -4212,7 +4124,7 @@ namespace e_Delivery.Database.Migrations
                         new
                         {
                             Id = new Guid("353224f4-7950-428d-a141-08dc2a5ba67c"),
-                            ConcurrencyStamp = "78a5b1ba-adc0-480a-a587-6a633fdbd359",
+                            ConcurrencyStamp = "690628a6-69f4-4ace-8e79-ea24b9807c69",
                             IsDeleted = false,
                             Name = "Admin",
                             NormalizedName = "ADMIN"
@@ -4220,7 +4132,7 @@ namespace e_Delivery.Database.Migrations
                         new
                         {
                             Id = new Guid("f57f872c-eaa4-441e-a142-08dc2a5ba67c"),
-                            ConcurrencyStamp = "e6eecae8-29d2-4b59-818e-2d61c584e10b",
+                            ConcurrencyStamp = "e44b1c7e-932d-4046-81e9-020b9caecf91",
                             IsDeleted = false,
                             Name = "Desktop",
                             NormalizedName = "DESKTOP"
@@ -4228,7 +4140,7 @@ namespace e_Delivery.Database.Migrations
                         new
                         {
                             Id = new Guid("67c0d30a-d873-4f9b-a143-08dc2a5ba67c"),
-                            ConcurrencyStamp = "55f148fa-5c05-4ef0-8175-927f7b940da5",
+                            ConcurrencyStamp = "44ae5c97-9ec2-4783-9bdd-c0ce1ff4d946",
                             IsDeleted = false,
                             Name = "MobileCustomer",
                             NormalizedName = "MOBILECUSTOMER"
@@ -4236,7 +4148,7 @@ namespace e_Delivery.Database.Migrations
                         new
                         {
                             Id = new Guid("7d7168d4-ef7e-4503-a144-08dc2a5ba67c"),
-                            ConcurrencyStamp = "bad4f424-62f8-4715-a57e-102979a7b74d",
+                            ConcurrencyStamp = "3c5865ea-6602-490c-8bc2-7ab79cf144e1",
                             IsDeleted = false,
                             Name = "MobileDeliveryPerson",
                             NormalizedName = "MOBILEDELIVERYPERSON"
@@ -4252,6 +4164,9 @@ namespace e_Delivery.Database.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
@@ -4275,6 +4190,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 1,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Mayonnaise",
                             Price = 1.0,
                             RestaurantId = 1
@@ -4283,6 +4199,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 2,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Ketchup",
                             Price = 1.0,
                             RestaurantId = 1
@@ -4291,6 +4208,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 3,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Tartar sauce",
                             Price = 1.0,
                             RestaurantId = 1
@@ -4299,6 +4217,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 4,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "French fries",
                             Price = 2.5,
                             RestaurantId = 1
@@ -4307,6 +4226,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 5,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Extra cheese",
                             Price = 1.5,
                             RestaurantId = 1
@@ -4315,6 +4235,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 6,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Ice cream",
                             Price = 2.0,
                             RestaurantId = 1
@@ -4323,6 +4244,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 7,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Mayonnaise",
                             Price = 1.0,
                             RestaurantId = 2
@@ -4331,6 +4253,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 8,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Ketchup",
                             Price = 1.0,
                             RestaurantId = 2
@@ -4339,6 +4262,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 9,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Tartar sauce",
                             Price = 1.0,
                             RestaurantId = 2
@@ -4347,6 +4271,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 10,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Cream",
                             Price = 0.5,
                             RestaurantId = 2
@@ -4355,6 +4280,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 11,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "French fries",
                             Price = 2.5,
                             RestaurantId = 3
@@ -4363,6 +4289,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 12,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Mayonnaise",
                             Price = 1.5,
                             RestaurantId = 3
@@ -4371,6 +4298,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 13,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Ketchup",
                             Price = 1.5,
                             RestaurantId = 3
@@ -4379,6 +4307,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 14,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Ajvar",
                             Price = 1.5,
                             RestaurantId = 3
@@ -4387,6 +4316,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 15,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Barbecue sauce",
                             Price = 2.5,
                             RestaurantId = 3
@@ -4395,6 +4325,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 16,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Soy sauce",
                             Price = 2.0,
                             RestaurantId = 3
@@ -4403,6 +4334,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 17,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Vinegar",
                             Price = 2.0,
                             RestaurantId = 3
@@ -4411,6 +4343,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 18,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Hot sauce",
                             Price = 2.0,
                             RestaurantId = 3
@@ -4419,6 +4352,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 19,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Prosciutto",
                             Price = 2.5,
                             RestaurantId = 4
@@ -4427,6 +4361,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 20,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Kajmak",
                             Price = 1.5,
                             RestaurantId = 4
@@ -4435,6 +4370,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 21,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Sour cream",
                             Price = 1.5,
                             RestaurantId = 4
@@ -4443,6 +4379,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 22,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Mayonaisse",
                             Price = 1.5,
                             RestaurantId = 5
@@ -4451,6 +4388,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 23,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Ketchup",
                             Price = 1.5,
                             RestaurantId = 5
@@ -4459,6 +4397,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 24,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Tartar sauce",
                             Price = 1.5,
                             RestaurantId = 5
@@ -4467,6 +4406,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 25,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Ice cream",
                             Price = 1.5,
                             RestaurantId = 5
@@ -4475,6 +4415,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 26,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Whipped cream",
                             Price = 0.5,
                             RestaurantId = 5
@@ -4483,6 +4424,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 27,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Vinegar",
                             Price = 1.5,
                             RestaurantId = 5
@@ -4491,6 +4433,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 28,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Vinegar",
                             Price = 1.5,
                             RestaurantId = 6
@@ -4499,6 +4442,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 29,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Mayonnaise",
                             Price = 1.5,
                             RestaurantId = 6
@@ -4507,6 +4451,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 30,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Ketchup",
                             Price = 1.5,
                             RestaurantId = 6
@@ -4515,6 +4460,7 @@ namespace e_Delivery.Database.Migrations
                         {
                             Id = 31,
                             IsAvailable = true,
+                            IsDeleted = false,
                             Name = "Extra cheese",
                             Price = 1.5,
                             RestaurantId = 6
@@ -4631,7 +4577,7 @@ namespace e_Delivery.Database.Migrations
                             Id = new Guid("4325ff27-c4d1-4ee8-8073-518fafba8678"),
                             AccessFailedCount = 0,
                             CityId = 1,
-                            ConcurrencyStamp = "b056291b-bd70-4a42-95b7-8c28146f40b7",
+                            ConcurrencyStamp = "575ae419-9502-4584-a112-5fd57a0328b4",
                             CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
                             Email = "edeliveryadmin@gmail.com",
                             EmailConfirmed = false,
@@ -4646,7 +4592,7 @@ namespace e_Delivery.Database.Migrations
                             PhoneNumber = "061-502-342",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecurityStamp = "94227af4-3310-4431-a0de-d3f4354982cb",
+                            SecurityStamp = "d51a4c8a-317c-455c-9666-f40cfa82ad94",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         },
@@ -4655,7 +4601,7 @@ namespace e_Delivery.Database.Migrations
                             Id = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b"),
                             AccessFailedCount = 0,
                             CityId = 1,
-                            ConcurrencyStamp = "e2b2d15b-131d-4cc9-857a-2e64b0d07142",
+                            ConcurrencyStamp = "f77a127d-bd4e-4b7f-bf77-b63429a91668",
                             CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
                             Email = "belminedelivery@gmail.com",
                             EmailConfirmed = false,
@@ -4671,7 +4617,7 @@ namespace e_Delivery.Database.Migrations
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RestaurantId = 1,
-                            SecurityStamp = "598e8baf-2a31-46d3-ba28-115bc517064c",
+                            SecurityStamp = "b442ebae-250e-4fb4-a4f5-ab269456cb7a",
                             TwoFactorEnabled = false,
                             UserName = "desktop"
                         },
@@ -4680,7 +4626,7 @@ namespace e_Delivery.Database.Migrations
                             Id = new Guid("bcc3036b-fcde-4aae-8d5a-7d3b85a91310"),
                             AccessFailedCount = 0,
                             CityId = 1,
-                            ConcurrencyStamp = "2aedc418-7aa9-45ef-a552-31e4efa65266",
+                            ConcurrencyStamp = "3c273298-526d-4874-9338-d187ca8b4b2b",
                             CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
                             Email = "desktop1edelivery@gmail.com",
                             EmailConfirmed = false,
@@ -4696,7 +4642,7 @@ namespace e_Delivery.Database.Migrations
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RestaurantId = 2,
-                            SecurityStamp = "6fad7535-6f6a-4a43-af16-0b365438c0a4",
+                            SecurityStamp = "b913127b-bf2a-439f-9cd8-0de188cfa1da",
                             TwoFactorEnabled = false,
                             UserName = "desktop1"
                         },
@@ -4705,7 +4651,7 @@ namespace e_Delivery.Database.Migrations
                             Id = new Guid("a6262414-844d-4003-9184-1a39fcc8d621"),
                             AccessFailedCount = 0,
                             CityId = 1,
-                            ConcurrencyStamp = "be7f2d62-c1ab-48cf-834e-5b368fb774bc",
+                            ConcurrencyStamp = "e725714f-b87a-4b6b-90b5-02fe47c6c95f",
                             CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
                             Email = "desktop2edelivery@gmail.com",
                             EmailConfirmed = false,
@@ -4721,7 +4667,7 @@ namespace e_Delivery.Database.Migrations
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RestaurantId = 3,
-                            SecurityStamp = "4adb7343-acfe-4593-9924-154a6bbe5944",
+                            SecurityStamp = "33d1b7a0-037a-4af8-9cc0-a4c8362f88e8",
                             TwoFactorEnabled = false,
                             UserName = "desktop2"
                         },
@@ -4730,7 +4676,7 @@ namespace e_Delivery.Database.Migrations
                             Id = new Guid("6c932e9e-d350-4103-bd77-c2716d6f4a1f"),
                             AccessFailedCount = 0,
                             CityId = 1,
-                            ConcurrencyStamp = "3bc8019c-8986-42d4-a8d4-783c894419ee",
+                            ConcurrencyStamp = "9c99cd99-9e99-404d-a071-49fa5d43d40c",
                             CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
                             Email = "desktop3edelivery@gmail.com",
                             EmailConfirmed = false,
@@ -4746,7 +4692,7 @@ namespace e_Delivery.Database.Migrations
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RestaurantId = 4,
-                            SecurityStamp = "d78744be-08f6-4faf-b013-e01d272845ad",
+                            SecurityStamp = "d0877d28-cae8-4c41-984f-e213d484491f",
                             TwoFactorEnabled = false,
                             UserName = "desktop3"
                         },
@@ -4755,7 +4701,7 @@ namespace e_Delivery.Database.Migrations
                             Id = new Guid("6f43201b-919e-471f-9ca7-4f4d0c74ca39"),
                             AccessFailedCount = 0,
                             CityId = 1,
-                            ConcurrencyStamp = "d0ca1492-ccd6-4726-ae86-8c2c1a1cc1c4",
+                            ConcurrencyStamp = "fbcf2b0e-7d93-4756-809a-02b7bd5a6bba",
                             CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
                             Email = "desktop4edelivery@gmail.com",
                             EmailConfirmed = false,
@@ -4767,11 +4713,11 @@ namespace e_Delivery.Database.Migrations
                             NormalizedEmail = "DESKTOP4EDELIVERY@GMAIL.COM",
                             NormalizedUserName = "DESKTOP4",
                             PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
-                            PhoneNumber = "123456789",
+                            PhoneNumber = "061-111-115",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RestaurantId = 5,
-                            SecurityStamp = "5ee35095-9df4-4026-9f23-5066ba8b4e74",
+                            SecurityStamp = "6ea7b5c3-6626-4052-8259-8daef7b3a079",
                             TwoFactorEnabled = false,
                             UserName = "desktop4"
                         },
@@ -4780,7 +4726,7 @@ namespace e_Delivery.Database.Migrations
                             Id = new Guid("e7286ada-7ad6-4bb4-8b0a-436141928671"),
                             AccessFailedCount = 0,
                             CityId = 1,
-                            ConcurrencyStamp = "a009be63-5c2a-4a9d-beea-491fbb79b4c4",
+                            ConcurrencyStamp = "7fb464a9-b130-46a8-820e-a011dde005ee",
                             CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
                             Email = "desktop5edelivery@gmail.com",
                             EmailConfirmed = false,
@@ -4792,11 +4738,11 @@ namespace e_Delivery.Database.Migrations
                             NormalizedEmail = "DESKTOP5EDELIVERY@GMAIL.COM",
                             NormalizedUserName = "DESKTOP5",
                             PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
-                            PhoneNumber = "123456789",
+                            PhoneNumber = "061-111-116",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RestaurantId = 6,
-                            SecurityStamp = "63d94899-742c-4679-9705-3b933e8c54a5",
+                            SecurityStamp = "a19adcaa-86df-42f7-b1e5-e9bdd9d79184",
                             TwoFactorEnabled = false,
                             UserName = "desktop5"
                         },
@@ -4805,7 +4751,7 @@ namespace e_Delivery.Database.Migrations
                             Id = new Guid("d405edf6-6ebf-4c20-861d-077f70fbcfb7"),
                             AccessFailedCount = 0,
                             CityId = 1,
-                            ConcurrencyStamp = "b85909c8-2d5d-4366-88a3-b3a52db054ca",
+                            ConcurrencyStamp = "971fb52f-8cf6-4989-8151-708a650766f5",
                             CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
                             Email = "desktop6edelivery@gmail.com",
                             EmailConfirmed = false,
@@ -4817,10 +4763,10 @@ namespace e_Delivery.Database.Migrations
                             NormalizedEmail = "DESKTOP6EDELIVERY@GMAIL.COM",
                             NormalizedUserName = "DESKTOP6",
                             PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
-                            PhoneNumber = "123456789",
+                            PhoneNumber = "061-111-117",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecurityStamp = "1be845b3-e2c3-47be-8aa6-2d8eeef205b3",
+                            SecurityStamp = "f89e5ba9-2388-4ca8-8959-e6379e59f2bf",
                             TwoFactorEnabled = false,
                             UserName = "desktop6"
                         },
@@ -4829,7 +4775,7 @@ namespace e_Delivery.Database.Migrations
                             Id = new Guid("b8396f1d-a29a-4856-a4c1-1312dc97a4a1"),
                             AccessFailedCount = 0,
                             CityId = 1,
-                            ConcurrencyStamp = "74d2f849-5781-4bdf-a7f3-474cc9886e82",
+                            ConcurrencyStamp = "1eda62eb-1f54-4654-b19f-e4089a8fcfba",
                             CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
                             Email = "flutterhelpme2@gmail.com",
                             EmailConfirmed = false,
@@ -4841,13 +4787,13 @@ namespace e_Delivery.Database.Migrations
                             NormalizedEmail = "EMPLOYEE@EMPLOYEE.COM",
                             NormalizedUserName = "EMPLOYEE",
                             PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
-                            PhoneNumber = "123456789",
+                            PhoneNumber = "061-111-118",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RestaurantId = 1,
-                            SecurityStamp = "ac748a48-0772-465a-b016-d88cd18a0272",
+                            SecurityStamp = "f3566498-e3ef-47c0-a520-30acebe9b1b5",
                             TwoFactorEnabled = false,
-                            UserName = "MobileDeliveryPerson",
+                            UserName = "DeliveryPerson",
                             WorkFrom = new TimeSpan(0, 10, 0, 0, 0),
                             WorkUntil = new TimeSpan(0, 18, 0, 0, 0)
                         },
@@ -4856,7 +4802,7 @@ namespace e_Delivery.Database.Migrations
                             Id = new Guid("b8cd72fb-eac5-40d5-8b22-7e8d601e2760"),
                             AccessFailedCount = 0,
                             CityId = 1,
-                            ConcurrencyStamp = "b7da4b84-83d0-41d9-8969-1aaf756b4d09",
+                            ConcurrencyStamp = "8027f98d-5d32-4429-9787-1842d4b1da09",
                             CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
                             Email = "employee1@gmail.com",
                             EmailConfirmed = false,
@@ -4868,13 +4814,13 @@ namespace e_Delivery.Database.Migrations
                             NormalizedEmail = "EMPLOYEE1@GMAIL.COM",
                             NormalizedUserName = "EMPLOYEE1",
                             PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
-                            PhoneNumber = "123456789",
+                            PhoneNumber = "061-111-119",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RestaurantId = 1,
-                            SecurityStamp = "e5b40db7-ef0a-44da-a9bc-92503893ec30",
+                            SecurityStamp = "58467073-66d0-4eb9-a110-18ba21267dfc",
                             TwoFactorEnabled = false,
-                            UserName = "MobileDeliveryPerson1",
+                            UserName = "DeliveryPerson1",
                             WorkFrom = new TimeSpan(0, 10, 0, 0, 0),
                             WorkUntil = new TimeSpan(0, 18, 0, 0, 0)
                         },
@@ -4883,7 +4829,7 @@ namespace e_Delivery.Database.Migrations
                             Id = new Guid("1bb03af4-c9c6-42f4-8153-dfd0e427bb43"),
                             AccessFailedCount = 0,
                             CityId = 1,
-                            ConcurrencyStamp = "e28ab25c-9e22-48e8-af65-d8242976c7be",
+                            ConcurrencyStamp = "06d34516-03ea-4aee-8a8e-d2f291d6ffb0",
                             CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
                             Email = "employee2@gmail.com",
                             EmailConfirmed = false,
@@ -4895,13 +4841,13 @@ namespace e_Delivery.Database.Migrations
                             NormalizedEmail = "EMPLOYEE2@GMAIL.COM",
                             NormalizedUserName = "EMPLOYEE2",
                             PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
-                            PhoneNumber = "123456789",
+                            PhoneNumber = "061-111-120",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RestaurantId = 1,
-                            SecurityStamp = "5adc259c-01cd-4c74-80ff-e23d4b348a6e",
+                            SecurityStamp = "e34516ac-17ba-43a6-bee3-e1bec3d8ed0d",
                             TwoFactorEnabled = false,
-                            UserName = "MobileDeliveryPerson2",
+                            UserName = "DeliveryPerson2",
                             WorkFrom = new TimeSpan(0, 10, 0, 0, 0),
                             WorkUntil = new TimeSpan(0, 18, 0, 0, 0)
                         },
@@ -4910,7 +4856,7 @@ namespace e_Delivery.Database.Migrations
                             Id = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045"),
                             AccessFailedCount = 0,
                             CityId = 1,
-                            ConcurrencyStamp = "43202e1e-92d4-4810-b2ae-b6519553c254",
+                            ConcurrencyStamp = "c2e2ca04-f36d-48cc-8f90-febf387644c5",
                             CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
                             Email = "kupac11111@gmail.com",
                             EmailConfirmed = false,
@@ -4922,19 +4868,19 @@ namespace e_Delivery.Database.Migrations
                             NormalizedEmail = "KUPAC11111@GMAIL.COM",
                             NormalizedUserName = "MOBILECUSTOMER",
                             PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
-                            PhoneNumber = "123456789",
+                            PhoneNumber = "061-111-121",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecurityStamp = "9d798ce3-5cba-443c-9581-6483d93b5e56",
+                            SecurityStamp = "473c7505-ce39-4a0d-b4a2-cbab119a8d2f",
                             TwoFactorEnabled = false,
-                            UserName = "MobileCustomer"
+                            UserName = "Customer"
                         },
                         new
                         {
                             Id = new Guid("29f648d1-4b82-4bf9-be7c-dc690b6edbf9"),
                             AccessFailedCount = 0,
                             CityId = 1,
-                            ConcurrencyStamp = "2f608402-bc3b-42bf-84a0-64a1b8d7e10a",
+                            ConcurrencyStamp = "15c0e4cb-1431-4da9-b602-a92627d4cb35",
                             CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
                             Email = "mobilecustomer1@gmail.com",
                             EmailConfirmed = false,
@@ -4946,19 +4892,19 @@ namespace e_Delivery.Database.Migrations
                             NormalizedEmail = "MOBILECUSTOMER1@GMAIL.COM",
                             NormalizedUserName = "MOBILECUSTOMER1",
                             PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
-                            PhoneNumber = "123456789",
+                            PhoneNumber = "061-111-122",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecurityStamp = "5d7dfe99-8853-430b-9a3b-6f0355465aa1",
+                            SecurityStamp = "0a708d6e-be04-4935-9acc-f009baf9d2fd",
                             TwoFactorEnabled = false,
-                            UserName = "MobileCustomer1"
+                            UserName = "Customer1"
                         },
                         new
                         {
                             Id = new Guid("531cbf7f-0aa1-44b2-8186-83867ac6e257"),
                             AccessFailedCount = 0,
                             CityId = 1,
-                            ConcurrencyStamp = "a9f5730c-32d5-4563-a913-699f24da957c",
+                            ConcurrencyStamp = "1f3c9960-8637-46dd-bae6-81dd8c4c3bed",
                             CreatedDate = new DateTime(2024, 2, 7, 17, 26, 40, 899, DateTimeKind.Unspecified).AddTicks(9869),
                             Email = "mobilecustomer2@gmail.com",
                             EmailConfirmed = false,
@@ -4970,12 +4916,12 @@ namespace e_Delivery.Database.Migrations
                             NormalizedEmail = "MOBILECUSTOMER2@GMAIL.COM",
                             NormalizedUserName = "MOBILECUSTOMER2",
                             PasswordHash = "AQAAAAIAAYagAAAAEGQ74H878UZXZ2qrO3PGUCmbDkeR0pVC/YQ0BJQHFv50ks5DsM3WDpIZiB85F9hpRg==",
-                            PhoneNumber = "123456789",
+                            PhoneNumber = "061-111-123",
                             PhoneNumberConfirmed = false,
                             RefreshTokenExpireDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            SecurityStamp = "f59d8ced-0160-4ea7-bb4c-e1fa90f12212",
+                            SecurityStamp = "801186b0-c3d2-40c2-a63f-a03c25a1c67a",
                             TwoFactorEnabled = false,
-                            UserName = "MobileCustomer2"
+                            UserName = "Customer2"
                         });
                 });
 
@@ -5007,55 +4953,28 @@ namespace e_Delivery.Database.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("e2df18cf-0937-45e1-bd3c-1a265e477148"),
+                            Id = new Guid("b1617645-f966-4db8-b215-0cba4b45dd1f"),
                             Code = "8a2f9b",
-                            ExpireDate = new DateTime(2024, 6, 26, 0, 13, 35, 382, DateTimeKind.Local).AddTicks(3628),
+                            ExpireDate = new DateTime(2024, 7, 6, 14, 51, 30, 320, DateTimeKind.Local).AddTicks(4744),
                             IsConfirmed = false,
                             UserId = new Guid("fd8eeeae-94c0-4f7c-ae8d-04274d13031b")
                         },
                         new
                         {
-                            Id = new Guid("3f00dda0-95c7-4b80-a94c-3d9902eccb05"),
+                            Id = new Guid("ebbe80e2-2130-4116-a7e2-669a55c6266d"),
                             Code = "41d0e5",
-                            ExpireDate = new DateTime(2024, 6, 26, 0, 13, 35, 382, DateTimeKind.Local).AddTicks(3633),
+                            ExpireDate = new DateTime(2024, 7, 6, 14, 51, 30, 320, DateTimeKind.Local).AddTicks(4781),
                             IsConfirmed = false,
                             UserId = new Guid("b8396f1d-a29a-4856-a4c1-1312dc97a4a1")
                         },
                         new
                         {
-                            Id = new Guid("26d48e99-c21a-43d2-9cae-1350fed898f6"),
+                            Id = new Guid("31473fe8-20e0-4587-880a-9e29f48bc741"),
                             Code = "c7b3f0",
-                            ExpireDate = new DateTime(2024, 6, 26, 0, 13, 35, 382, DateTimeKind.Local).AddTicks(3636),
+                            ExpireDate = new DateTime(2024, 7, 6, 14, 51, 30, 320, DateTimeKind.Local).AddTicks(4784),
                             IsConfirmed = false,
                             UserId = new Guid("bb5f8b53-1b9c-404f-86c4-6c6036102045")
                         });
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
-                {
-                    b.HasOne("e_Delivery.Entities.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
-                {
-                    b.HasOne("e_Delivery.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
-                {
-                    b.HasOne("e_Delivery.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
@@ -5066,15 +4985,6 @@ namespace e_Delivery.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("e_Delivery.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
-                {
                     b.HasOne("e_Delivery.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")

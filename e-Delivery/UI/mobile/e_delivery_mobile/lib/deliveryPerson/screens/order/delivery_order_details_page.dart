@@ -370,7 +370,7 @@ class _DeliveryOrderDetailsPageState extends State<DeliveryOrderDetailsPage> {
   Future<void> _showConfirmationDialog() async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // User must tap button!
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Confirm Delivery'),
@@ -446,6 +446,7 @@ class _DeliveryOrderDetailsPageState extends State<DeliveryOrderDetailsPage> {
               children: [
                 Text(
                   orderItem.foodItem.name,
+                  overflow: TextOverflow.fade,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 8),
@@ -455,7 +456,7 @@ class _DeliveryOrderDetailsPageState extends State<DeliveryOrderDetailsPage> {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  'Cost: KM ${orderItem.cost.toStringAsFixed(2)}',
+                  'Cost:${orderItem.cost.toStringAsFixed(2)}',
                   style: TextStyle(fontSize: 16),
                 ),
               ],

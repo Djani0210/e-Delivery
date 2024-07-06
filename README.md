@@ -35,11 +35,11 @@ Run the following commands:
 ## Flutter Mobile
 
 ### MobileClient
-- **Username:** MobileClient
+- **Username:** Customer
 - **Password:** test
 
 ### MobileDeliveryPerson
-- **Username:** MobileDeliveryPerson
+- **Username:** DeliveryPerson
 - **Password:** test
 
 ### Setup Instructions
@@ -67,27 +67,29 @@ RabbitMQ is implemented for the restaurant application process. When a deliveryP
 ### Email Credentials
 - **desktop:** 
   - Gmail: belminedelivery@gmail.com
-- **MobileDeliveryPerson:** 
+- **DeliveryPerson:** 
   - Gmail: flutterhelpme2@gmail.com
-- **MobileCustomer:** 
+- **Customer:** 
   - Gmail: kupac11111@gmail.com
 
 Password for all 3 users: e-Deliverypassword123#
 
 ## Real-time Notifications and Chat
-Notification sending and chat between MobileCustomer and MobileDeliveryPerson have been implemented using a combination of REST API and SignalR. Messages and notifications are sent in real-time and stored in the database.
+Notification sending and chat between Customer and DeliveryPerson have been implemented using a combination of REST API and SignalR. Messages and notifications are sent in real-time and stored in the database.
 
 ### Notification Types
-1. MobileDeliveryPerson receives notifications when assigned to an order by a desktop user.
-2. MobileCustomer receives notifications when their order status is updated by a MobileDeliveryPerson.
+1. DeliveryPerson receives notifications when assigned to an order by a desktop user.
+2. Customer receives notifications when their order status is updated by a DeliveryPerson.
 
 **Important:** To receive notifications, please enable notifications for the e-Delivery app on your device.
 
 ## Google Maps Feature
-When placing an order, the "Get Current Location" feature works on devices with location enabled. On emulators, the default location will be set to San Jose, California, USA.
+When placing an order, the "Get Current Location" feature works on devices with location enabled (app permissions). On emulators, the default location will be set to San Jose, California, USA.
 
 ## Additional Notes
-- After applying to a restaurant as a MobileDeliveryPerson and receiving confirmation, the user must log in again for the changes to take effect.
+- After applying to a restaurant as a DeliveryPerson and receiving confirmation, the user must log in again for the changes to take effect.
+- Emails are sometimes received in the spam folder of the gmail account.
+- For testing purpose, every restaurant and user is located in the city Mostar.
 
 
 

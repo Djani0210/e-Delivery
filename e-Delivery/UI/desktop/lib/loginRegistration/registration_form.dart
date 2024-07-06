@@ -132,7 +132,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
     if (!pattern.hasMatch(value)) {
       return 'Phone number must be inR format "061-533-444"';
     }
-    // Additional phone number validation can be done here if needed
     return null;
   }
 

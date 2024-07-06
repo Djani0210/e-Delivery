@@ -37,16 +37,38 @@ class _RestaurantDetailsState extends State<RestaurantDetails> {
   double _reviewGrade = 1.0;
   String _reviewDescription = '';
 
+  final ScrollController _reviewScrollController = ScrollController();
+  int _reviewsLoadedCount = 2;
+  bool _hasMoreReviews = true;
+
   @override
   void initState() {
     super.initState();
     _loadUserData();
     _fetchDetails();
+    _reviewScrollController.addListener(_onReviewScroll);
   }
 
   @override
   void dispose() {
+    _reviewScrollController.dispose();
     super.dispose();
+  }
+
+  void _onReviewScroll() {
+    if (_reviewScrollController.position.pixels ==
+        _reviewScrollController.position.maxScrollExtent) {
+      _loadMoreReviews();
+    }
+  }
+
+  void _loadMoreReviews() {
+    setState(() {
+      _reviewsLoadedCount += 2;
+      if (_reviewsLoadedCount >= _getSortedReviews().length) {
+        _hasMoreReviews = false;
+      }
+    });
   }
 
   Future<void> _loadUserData() async {
@@ -280,58 +302,6 @@ class _RestaurantDetailsState extends State<RestaurantDetails> {
     );
   }
 
-  /* Widget _buildFoodItemRow(FoodItemViewModel foodItem) {
-    itemQuantities.putIfAbsent(foodItem.id, () => 0);
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Image.network(
-                foodItem.foodItemPictures.isNotEmpty
-                    ? foodItem.foodItemPictures.first.fileName
-                    : 'https://via.placeholder.com/150',
-                width: 80,
-                height: 80,
-                fit: BoxFit.cover,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(foodItem.name,
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold)),
-                      Text(foodItem.description),
-                    ],
-                  ),
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text('KM ${foodItem.price.toStringAsFixed(2)}',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: () {
-                      _navigateToFoodItemPage(foodItem);
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        Divider(),
-      ],
-    );
-  } */
   Widget _buildFoodItemRow(FoodItemViewModel foodItem) {
     itemQuantities.putIfAbsent(foodItem.id, () => 0);
     final imageUrl = foodItem.foodItemPictures.isNotEmpty
@@ -598,17 +568,31 @@ class _RestaurantDetailsState extends State<RestaurantDetails> {
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
-              children: _getSortedReviews().map((review) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: ReviewTile(
-                    review: review,
-                    currentUser: _userDataViewModel?.userName,
-                    showReviewFormDialog: _showReviewFormDialog,
-                    fetchDetails: _fetchDetails,
+              children: [
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount:
+                      _getSortedReviews().take(_reviewsLoadedCount).length,
+                  itemBuilder: (context, index) {
+                    final review = _getSortedReviews()[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: ReviewTile(
+                        review: review,
+                        currentUser: _userDataViewModel?.userName,
+                        showReviewFormDialog: _showReviewFormDialog,
+                        fetchDetails: _fetchDetails,
+                      ),
+                    );
+                  },
+                ),
+                if (_hasMoreReviews)
+                  ElevatedButton(
+                    onPressed: _loadMoreReviews,
+                    child: Text('Load More'),
                   ),
-                );
-              }).toList(),
+              ],
             ),
           ),
       ],
@@ -759,7 +743,7 @@ class _ReviewTileState extends State<ReviewTile> {
       children: [
         Row(
           children: [
-            Icon(Icons.person, size: 40), // User icon
+            Icon(Icons.person, size: 40),
             const SizedBox(width: 8),
             Expanded(
               child: Text(

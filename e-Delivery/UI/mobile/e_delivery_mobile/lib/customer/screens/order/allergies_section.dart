@@ -31,14 +31,14 @@ class AllergiesSection extends StatelessWidget {
             TextButton(
               child: const Text('Close'),
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
             ),
             TextButton(
               child: const Text('Save'),
               onPressed: () {
                 onSave(_allergiesController.text);
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
             ),
           ],

@@ -132,7 +132,7 @@ namespace e_Delivery.Services.Services
                                                        .Include(x => x.Category)
                                                        .Include(x => x.FoodItemSideDishMappings)
                                                            .ThenInclude(sdm => sdm.SideDish)
-                                                       .Where(fi => fi.RestaurantId == restaurant.Id);
+                                                       .Where(fi => fi.RestaurantId == restaurant.Id && fi.IsDeleted == false);
 
 
                 if (!string.IsNullOrEmpty(categoryName))
@@ -292,10 +292,10 @@ namespace e_Delivery.Services.Services
                     };
                 }
 
-                // Update properties
+                
                 Mapper.Map(updateFoodItemVM, existingFoodItem);
 
-                // Update side dishes
+                
                 existingFoodItem.FoodItemSideDishMappings.Clear(); // Remove existing side dish mappings
                 if (updateFoodItemVM.SideDishIds != null && updateFoodItemVM.SideDishIds.Any())
                 {
@@ -330,8 +330,8 @@ namespace e_Delivery.Services.Services
                 var loggedUser = await authContext.GetLoggedUser();
                 var restaurant = await _dbContext.Restaurants.Where(x => x.Id == loggedUser.RestaurantId).FirstOrDefaultAsync();
 
-                var existingFoodItem = await _dbContext.FoodItems.Include(fi => fi.FoodItemPictures)
-                    .SingleOrDefaultAsync(fi => fi.Id == foodItemId && fi.RestaurantId == restaurant.Id);
+                var existingFoodItem = await _dbContext.FoodItems
+                    .SingleOrDefaultAsync(fi => fi.Id == foodItemId && fi.RestaurantId == restaurant.Id && !fi.IsDeleted);
 
                 if (existingFoodItem == null)
                 {
@@ -342,13 +342,17 @@ namespace e_Delivery.Services.Services
                         Status = ExceptionCode.NotFound,
                     };
                 }
+
+                
+                existingFoodItem.IsDeleted = true;
+
+                
                 var sideDishMappings = _dbContext.FoodItemSideDishMappings
-                .Where(mapping => mapping.FoodItemId == existingFoodItem.Id);
+                    .Where(mapping => mapping.FoodItemId == existingFoodItem.Id);
 
                 _dbContext.FoodItemSideDishMappings.RemoveRange(sideDishMappings);
 
-                _dbContext.FoodItems.Remove(existingFoodItem);
-                await _dbContext.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync(cancellationToken);
 
                 return new Message
                 {

@@ -1,9 +1,10 @@
 import 'package:e_delivery_mobile/customer/core/constants/app_defaults.dart';
 import 'package:e_delivery_mobile/customer/screens/home/dto/user_data_dto.dart';
+import 'package:e_delivery_mobile/customer/screens/profile/dto/customer_get_dto.dart';
 import 'package:flutter/material.dart';
 
 class HomeGreetings extends StatelessWidget {
-  final UserDataViewModel? userDataViewModel;
+  final CustomerGetDto? userDataViewModel;
 
   const HomeGreetings({
     Key? key,

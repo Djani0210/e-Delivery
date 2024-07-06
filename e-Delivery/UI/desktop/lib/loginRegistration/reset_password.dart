@@ -29,7 +29,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   }
 
   Future<void> resetPassword(String newPassword) async {
-    // Retrieve the UserId securely using the StorageService
     final userId = await StorageService.storage.read(key: 'userId');
 
     if (userId != null) {
@@ -48,13 +47,11 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           MaterialPageRoute(builder: (context) => LogInPage()),
         );
       } else {
-        // Show an error message in a SnackBar
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to reset password')),
         );
       }
     } else {
-      // Show an error message in a SnackBar if the UserId is not found
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('UserId not found')),
       );
@@ -105,9 +102,9 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                             _errorMessage = 'Please enter a password';
                             return _errorMessage;
                           }
-                          if (value.length < 6) {
+                          if (value.length < 4) {
                             _errorMessage =
-                                "Password must contain at least 6 characters";
+                                "Password must contain at least 4 characters";
                             return _errorMessage;
                           }
                           return null;
@@ -171,16 +168,15 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     ),
                   ),
                   SizedBox(
-                    height: 20.0, // Reserve space for error message
+                    height: 20.0,
                     child: _showError
                         ? Text(
                             _errorMessage ?? '',
                             style: TextStyle(
-                              color: Colors
-                                  .red, // Optional: customize error message style
+                              color: Colors.red,
                             ),
                           )
-                        : null, // If no error, don't show anything
+                        : null,
                   ),
                 ],
               ),

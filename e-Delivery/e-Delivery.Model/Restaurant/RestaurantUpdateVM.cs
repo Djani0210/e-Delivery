@@ -16,8 +16,6 @@ namespace e_Delivery.Model.Restaurant
         public string ContactNumber { get; set; }
         public double DeliveryCharge { get; set; }
         public int DeliveryTime { get; set; }
-        //public string Longitude { get; set; }
-        //public string Latitude { get; set; }
-        //public int CityId { get; set; }
+        
     }
 }

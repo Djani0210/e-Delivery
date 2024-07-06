@@ -82,7 +82,7 @@ class CityApiService {
       final response = await http.put(
         Uri.parse('${baseUrl}City/update-city?id=$id'),
         headers: headers,
-        body: jsonEncode({'Title': title}), // Change this line
+        body: jsonEncode({'Title': title}),
       );
 
       return response;

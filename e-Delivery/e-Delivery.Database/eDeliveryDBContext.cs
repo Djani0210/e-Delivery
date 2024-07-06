@@ -132,6 +132,12 @@ namespace e_Delivery.Database
             modelBuilder.Entity<IdentityRoleClaim<Guid>>().ToTable("asp_net_role_claims", "identity");
             modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("asp_net_user_tokens", "identity");
 
+            modelBuilder.Ignore<IdentityUserClaim<Guid>>();
+            
+            modelBuilder.Ignore<IdentityUserLogin<Guid>>();
+            modelBuilder.Ignore<IdentityRoleClaim<Guid>>();
+            modelBuilder.Ignore<IdentityUserToken<Guid>>();
+
 
 
             #region SEED

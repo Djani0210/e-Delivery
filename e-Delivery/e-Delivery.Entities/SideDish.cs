@@ -15,7 +15,7 @@ namespace e_Delivery.Entities
         public string Name { get; set; }
         public double Price { get; set; }
         public bool IsAvailable { get; set; }
-
+        public bool? IsDeleted { get; set; } = false;
         public List<FoodItemSideDishMapping> FoodItemSideDishMappings { get; set; }
         public List<FoodItem> FoodItems { get; } = new();
 

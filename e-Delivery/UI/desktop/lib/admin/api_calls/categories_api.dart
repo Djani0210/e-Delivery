@@ -82,7 +82,7 @@ class CategoryService {
       final response = await http.put(
         Uri.parse('${baseUrl}Category/update-category?id=$id'),
         headers: headers,
-        body: jsonEncode({'Name': name}), // Change this line
+        body: jsonEncode({'Name': name}),
       );
 
       return response;

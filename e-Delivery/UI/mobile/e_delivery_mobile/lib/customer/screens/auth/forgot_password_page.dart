@@ -70,7 +70,6 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
         ),
       );
     } else {
-      // Show an error message in a SnackBar
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           duration: Duration(milliseconds: 2000),
@@ -95,11 +94,9 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
       final responseBody = jsonDecode(response.body);
       final userId = responseBody['data']['id'];
 
-      // Store the UserId securely using SharedPreferences
       await StorageService.storage
           .write(key: 'forgotPasswordUserId', value: userId);
     } else {
-      // Show an error message in a SnackBar
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           duration: Duration(milliseconds: 2000),
@@ -147,6 +144,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
               onSaved: (value) {
                 _email = value!;
               },
+              maxLength: 30,
             ),
             const SizedBox(height: 16),
             Text(
@@ -160,12 +158,10 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-                    // Call fetchUserIdFromEmail to retrieve the user's ID
+
                     fetchUserIdFromEmail(_email).then((_) {
-                      // After the user's ID is fetched and stored, proceed with sending the verification code
                       sendForgotPasswordRequest(_email);
                     }).catchError((error) {
-                      // Handle any errors that occur during fetching the user's ID
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(

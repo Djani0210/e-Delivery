@@ -4,7 +4,7 @@ import 'package:desktop/globals.dart';
 import 'package:desktop/loginRegistration/reset_password.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../components/hover_animation.dart'; // Assuming HoverAnimation is in a separate file
+import '../components/hover_animation.dart';
 
 class ConfirmCodePage extends StatefulWidget {
   final String email;
@@ -31,13 +31,11 @@ class _ConfirmCodePageState extends State<ConfirmCodePage> {
     );
 
     if (response.statusCode == 200) {
-      // Navigate to ResetPasswordPage
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => ResetPasswordPage()),
       );
     } else {
-      // Show an error message in a SnackBar
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             duration: Duration(milliseconds: 2000),
@@ -83,6 +81,7 @@ class _ConfirmCodePageState extends State<ConfirmCodePage> {
                           horizontal: 8, vertical: 2),
                       child: TextFormField(
                         controller: codeController,
+                        maxLength: 6,
                         decoration: const InputDecoration(
                           hintText: 'Code',
                           border: InputBorder.none,
@@ -123,16 +122,15 @@ class _ConfirmCodePageState extends State<ConfirmCodePage> {
                     ),
                   ),
                   SizedBox(
-                    height: 20.0, // Reserve space for error message
+                    height: 20.0,
                     child: _showError
                         ? Text(
                             'Code must be 6 characters',
                             style: TextStyle(
-                              color: Colors
-                                  .red, // Optional: customize error message style
+                              color: Colors.red,
                             ),
                           )
-                        : null, // If no error, don't show anything
+                        : null,
                   ),
                 ],
               ),

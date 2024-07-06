@@ -96,8 +96,7 @@ class _MapSelectionState extends State<MapSelection> {
               image: DecorationImage(
                 image: NetworkImage(
                     "https://cdn-icons-png.flaticon.com/512/9356/9356230.png"),
-                fit: BoxFit
-                    .cover, // Use BoxFit.cover to ensure the image covers the entire container
+                fit: BoxFit.cover,
               ),
               border: Border.all(
                 color: Colors.black,

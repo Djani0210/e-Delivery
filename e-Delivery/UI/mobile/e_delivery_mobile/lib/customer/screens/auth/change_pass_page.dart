@@ -134,6 +134,7 @@ class _ChangePasswordFieldsState extends State<ChangePasswordFields> {
         child: Column(
           children: [
             TextFormField(
+              maxLength: 15,
               controller: widget.passwordController,
               obscureText: _obscurePassword,
               decoration: InputDecoration(
@@ -154,14 +155,15 @@ class _ChangePasswordFieldsState extends State<ChangePasswordFields> {
                 if (value!.isEmpty) {
                   return 'Please enter a password';
                 }
-                if (value.length < 6) {
-                  return 'Password must contain at least 6 characters';
+                if (value.length < 4) {
+                  return 'Password must contain at least 4 characters';
                 }
                 return null;
               },
             ),
             const SizedBox(height: 16),
             TextFormField(
+              maxLength: 15,
               controller: widget.confirmPasswordController,
               obscureText: _obscureConfirmPassword,
               decoration: InputDecoration(

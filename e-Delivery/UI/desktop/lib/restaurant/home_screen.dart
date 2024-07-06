@@ -59,10 +59,8 @@ class _HomeScreenState extends State<HomeScreenNew> {
 
     if (confirmation == true) {
       try {
-        // Retrieve the JWT token from secure storage
         final jwtToken = await StorageService.storage.read(key: 'jwt');
 
-        // Call the logout endpoint with the JWT token in the Authorization header
         final response = await http.post(
           Uri.parse('${baseUrl}Auth/logout'),
           headers: {
@@ -72,20 +70,17 @@ class _HomeScreenState extends State<HomeScreenNew> {
         );
 
         if (response.statusCode == 200) {
-          // Delete the user data from secure storage
           await Future.wait([
             StorageService.storage.delete(key: 'jwt'),
             StorageService.storage.delete(key: 'currentUserId'),
             StorageService.storage.delete(key: 'userData'),
           ]);
 
-          // Navigate to the login page
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => LogInPage()),
           );
         } else {
-          // Handle logout failure
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               duration: Duration(milliseconds: 2000),
@@ -99,7 +94,6 @@ class _HomeScreenState extends State<HomeScreenNew> {
           );
         }
       } catch (e) {
-        // Handle any exceptions that occur during the request
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             duration: Duration(milliseconds: 2000),

@@ -96,10 +96,10 @@ namespace e_Delivery.Services.Services
             try
             {
                 var categoriesWithFoodItems = await _dbContext.Categories
-                    .Where(c => c.FoodItems.Any(fi => fi.RestaurantId == restaurantId && fi.IsAvailable))
-                    .Include(c => c.FoodItems.Where(fi => fi.RestaurantId == restaurantId && fi.IsAvailable))
-                    .ThenInclude(foodItem => foodItem.SideDishes)
-                    .Include(c => c.FoodItems.Where(fi => fi.RestaurantId == restaurantId && fi.IsAvailable))
+                    .Where(c => c.FoodItems.Any(fi => fi.RestaurantId == restaurantId && fi.IsAvailable && !fi.IsDeleted))
+                    .Include(c => c.FoodItems.Where(fi => fi.RestaurantId == restaurantId && fi.IsAvailable && !fi.IsDeleted))
+                    .ThenInclude(foodItem => foodItem.SideDishes.Where(sd => sd.IsAvailable && sd.IsDeleted == false))
+                    .Include(c => c.FoodItems.Where(fi => fi.RestaurantId == restaurantId && fi.IsAvailable && !fi.IsDeleted))
                     .ThenInclude(foodItem => foodItem.FoodItemPictures)
                     .AsQueryable()
                     .ToListAsync();

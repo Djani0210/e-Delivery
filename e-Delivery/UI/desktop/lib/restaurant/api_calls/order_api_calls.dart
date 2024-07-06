@@ -9,7 +9,6 @@ class OrderApiService {
   final String _baseUrl = baseUrl;
 
   Future<String> _fetchJwtToken() async {
-    // Adjust 'jwt' as necessary based on how you've stored the token
     String? jwt = await _storage.read(key: 'jwt');
     return jwt ?? '';
   }
@@ -41,7 +40,7 @@ class OrderApiService {
     int? orderState,
   }) async {
     String jwt = await _fetchJwtToken();
-    // Adjust date format here
+
     String? startDateStr =
         startDate != null ? DateFormat('yyyy-MM-dd').format(startDate) : null;
     String? endDateStr =
@@ -52,9 +51,7 @@ class OrderApiService {
       'pageNumber': '$pageNumber',
       if (startDateStr != null) 'startDate': startDateStr,
       if (endDateStr != null) 'endDate': endDateStr,
-      if (orderState != null)
-        'orderState':
-            orderState.toString(), // Include orderState in query if provided
+      if (orderState != null) 'orderState': orderState.toString(),
     };
 
     final url = Uri.parse('${_baseUrl}Order/get-Orders-For-Restaurant')
@@ -139,7 +136,6 @@ class OrderApiService {
   }
 
   Future<int> getMonthlyOrderCount() async {
-    // Fetch JWT token
     final jwt = await _fetchJwtToken();
     final response = await http.get(
       Uri.parse('${_baseUrl}Order/monthly-count'),
@@ -200,6 +196,22 @@ class OrderApiService {
       }
     } catch (e) {
       print('Error generating report: $e');
+      return null;
+    }
+  }
+
+  Future<http.Response?> deleteOrder(String orderId) async {
+    final jwt = await _fetchJwtToken();
+    final url = Uri.parse('${_baseUrl}Order/delete-Order?id=$orderId');
+
+    try {
+      final response = await http.delete(
+        url,
+        headers: {'Authorization': 'Bearer $jwt'},
+      );
+      return response;
+    } catch (e) {
+      print("Error deleting order: $e");
       return null;
     }
   }

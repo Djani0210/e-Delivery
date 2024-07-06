@@ -174,7 +174,10 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
   }
 
   Widget _buildTextField(TextEditingController controller, String label,
-      {int? maxLength, String? suffixText}) {
+      {int? maxLength,
+      String? suffixText,
+      bool readOnly = false,
+      String? Function(String?)? validator}) {
     return Container(
       width: 350,
       padding: EdgeInsets.only(bottom: 20),
@@ -186,6 +189,8 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
           border: OutlineInputBorder(),
         ),
         maxLength: maxLength,
+        readOnly: readOnly,
+        validator: validator,
       ),
     );
   }
@@ -202,9 +207,16 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
   }
 
   Widget _buildNumericField(TextEditingController controller, String label,
-      {int? maxLength, String? suffixText}) {
-    return _buildTextField(controller, label,
-        maxLength: maxLength, suffixText: suffixText);
+      {int? maxLength,
+      String? suffixText,
+      String? Function(String?)? validator}) {
+    return _buildTextField(
+      controller,
+      label,
+      maxLength: maxLength,
+      suffixText: suffixText,
+      validator: validator,
+    );
   }
 
   Future<void> _selectTime(BuildContext context,
@@ -249,136 +261,186 @@ class _RestaurantProfilePageState extends State<RestaurantProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final _formKey = GlobalKey<FormState>();
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
           child: Container(
             width: 1200,
             padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Text(
-                            'Important data about the restaurant',
-                            style: TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 26),
-                          _buildTextField(_nameController, 'Restaurant name',
-                              maxLength: 30),
-                          _buildSwitch('Restaurant open : ', _isOpen, (value) {
-                            setState(() {
-                              _isOpen = value;
-                            });
-                          }),
-                          SizedBox(height: 20),
-                          _buildNumericField(
-                              _deliveryChargeController, 'Delivery cost',
-                              suffixText: 'KM'),
-                          _buildNumericField(
-                              _deliveryTimeController, 'Delivery time',
-                              suffixText: "min"),
-                          _buildTextField(_contactController, 'Contact',
-                              maxLength: 12),
-                          _buildTextField(
-                              _addressController, 'Restaurant Address',
-                              maxLength: 20),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 20),
-                    Expanded(
-                      child: Column(
-                        children: [
-                          Text(
-                            'Edit picture and opening hours',
-                            style: TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(height: 26),
-                          _buildTimePickerField(
-                              _openingTimeController,
-                              'Opening hours',
-                              widget.restaurantViewModel?.openingTime),
-                          SizedBox(height: 20),
-                          _buildTimePickerField(
-                              _closingTimeController,
-                              'Closing hours',
-                              widget.restaurantViewModel?.closingTime),
-                          SizedBox(height: 20),
-                          _buildImageWidget(),
-                          SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              TextButton(
-                                onPressed: pickImage,
-                                child: Text('Choose a picture'),
-                              ),
-                              ElevatedButton(
-                                onPressed: uploadImage,
-                                child: Text('Upload picture'),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 30),
-                Center(
-                  child: SizedBox(
-                    width: 200,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        try {
-                          final updateData = {
-                            'Name': _nameController.text,
-                            'Address': _addressController.text,
-                            'IsOpen': _isOpen,
-                            'OpeningTime': _openingTimeController.text,
-                            'ClosingTime': _closingTimeController.text,
-                            'ContactNumber': _contactController.text,
-                            'DeliveryCharge':
-                                double.parse(_deliveryChargeController.text),
-                            'DeliveryTime':
-                                int.parse(_deliveryTimeController.text),
-                          };
-                          final response = await _apiService.updateRestaurant(
-                              widget.restaurantViewModel!.id, updateData);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Promjene sačuvane',
-                                  style: TextStyle(color: Colors.green)),
-                              backgroundColor: Colors.white,
-                              duration: Duration(seconds: 1),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Text(
+                              'Important data about the restaurant',
+                              style: TextStyle(
+                                  fontSize: 24, fontWeight: FontWeight.bold),
                             ),
-                          );
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  'Greška pri aktualiziranju restorana',
-                                  style: TextStyle(color: Colors.red)),
-                              backgroundColor: Colors.white,
-                              duration: Duration(seconds: 1),
+                            SizedBox(height: 26),
+                            _buildTextField(_nameController, 'Restaurant name',
+                                maxLength: 30, validator: (value) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  value.length < 3) {
+                                return 'Name must be at least 3 characters long';
+                              }
+                              return null;
+                            }),
+                            _buildSwitch('Restaurant open : ', _isOpen,
+                                (value) {
+                              setState(() {
+                                _isOpen = value;
+                              });
+                            }),
+                            SizedBox(height: 20),
+                            _buildNumericField(
+                                _deliveryChargeController, 'Delivery cost',
+                                suffixText: 'KM',
+                                maxLength: 5, validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a delivery cost';
+                              }
+                              if (double.tryParse(value) == null) {
+                                return 'Please enter a valid number';
+                              }
+                              return null;
+                            }),
+                            _buildNumericField(
+                                _deliveryTimeController, 'Delivery time',
+                                suffixText: "min",
+                                maxLength: 3, validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a delivery time';
+                              }
+                              if (int.tryParse(value) == null) {
+                                return 'Please enter a valid number';
+                              }
+                              return null;
+                            }),
+                            _buildTextField(_contactController, 'Contact',
+                                maxLength: 15, validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a contact number';
+                              }
+                              if (!RegExp(r'^\d{3}-\d{3}-\d{3,4}$')
+                                  .hasMatch(value)) {
+                                return 'Please enter a valid contact number (e.g., 061-333-2333)';
+                              }
+                              return null;
+                            }),
+                            _buildTextField(
+                                _addressController, 'Restaurant Address',
+                                maxLength: 20, validator: (value) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  value.length < 6) {
+                                return 'Address must be at least 6 characters long';
+                              }
+                              return null;
+                            }),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Text(
+                              'Edit picture and opening hours',
+                              style: TextStyle(
+                                  fontSize: 24, fontWeight: FontWeight.bold),
                             ),
-                          );
-                        }
-                      },
-                      child: Text('Save changes'),
+                            SizedBox(height: 26),
+                            _buildTimePickerField(
+                                _openingTimeController,
+                                'Opening hours',
+                                widget.restaurantViewModel?.openingTime),
+                            SizedBox(height: 20),
+                            _buildTimePickerField(
+                                _closingTimeController,
+                                'Closing hours',
+                                widget.restaurantViewModel?.closingTime),
+                            SizedBox(height: 20),
+                            _buildImageWidget(),
+                            SizedBox(height: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                TextButton(
+                                  onPressed: pickImage,
+                                  child: Text('Choose a picture'),
+                                ),
+                                ElevatedButton(
+                                  onPressed: uploadImage,
+                                  child: Text('Upload picture'),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 30),
+                  Center(
+                    child: SizedBox(
+                      width: 200,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            try {
+                              final updateData = {
+                                'Name': _nameController.text,
+                                'Address': _addressController.text,
+                                'IsOpen': _isOpen,
+                                'OpeningTime': _openingTimeController.text,
+                                'ClosingTime': _closingTimeController.text,
+                                'ContactNumber': _contactController.text,
+                                'DeliveryCharge': double.parse(
+                                    _deliveryChargeController.text),
+                                'DeliveryTime':
+                                    int.parse(_deliveryTimeController.text),
+                              };
+                              final response =
+                                  await _apiService.updateRestaurant(
+                                      widget.restaurantViewModel!.id,
+                                      updateData);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Promjene sačuvane',
+                                      style: TextStyle(color: Colors.green)),
+                                  backgroundColor: Colors.white,
+                                  duration: Duration(seconds: 1),
+                                ),
+                              );
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      'Greška pri aktualiziranju restorana',
+                                      style: TextStyle(color: Colors.red)),
+                                  backgroundColor: Colors.white,
+                                  duration: Duration(seconds: 1),
+                                ),
+                              );
+                            }
+                          }
+                        },
+                        child: Text('Save changes'),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

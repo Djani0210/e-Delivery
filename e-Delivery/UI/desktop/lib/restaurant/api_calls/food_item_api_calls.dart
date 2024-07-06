@@ -26,7 +26,7 @@ class FoodItemApiService {
       return decodedBody['name'];
     } else if (response.statusCode == 404) {
       final decodedBody = json.decode(response.body);
-      return decodedBody['message']; // Use the custom message from the backend
+      return decodedBody['message'];
     } else {
       throw Exception("Failed to fetch most frequent food item");
     }
@@ -134,12 +134,10 @@ class FoodItemApiService {
       if (response.statusCode == 200 || response.statusCode == 204) {
         print('Food item deleted successfully');
       } else {
-        // Handle the error
         print(
             'Error deleting menu item: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
-      // Handle the exception
       print('Error deleting menu item: $e');
     }
   }
@@ -245,9 +243,7 @@ class FoodItemApiService {
     }
   }
 
-  // postImageUrl function
   Future<bool> postImageUrl(int id, String imagePath) async {
-    final jwt = await _fetchJwtToken();
     var uri = Uri.parse('${_baseUrl}FoodItemPictures/$id');
     var request = http.MultipartRequest('POST', uri);
 

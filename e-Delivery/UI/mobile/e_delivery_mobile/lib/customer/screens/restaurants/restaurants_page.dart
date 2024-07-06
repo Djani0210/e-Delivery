@@ -1,15 +1,15 @@
-import 'dart:convert';
-
 import 'package:e_delivery_mobile/customer/screens/home/dto/restaurant_get_dto.dart';
+import 'package:e_delivery_mobile/customer/screens/profile/api/profile_api.dart';
 import 'package:e_delivery_mobile/customer/screens/restaurants/api/restaurants_api.dart';
 import 'package:e_delivery_mobile/customer/screens/restaurants/components/category_tile.dart';
 import 'package:e_delivery_mobile/customer/screens/restaurants/dto/category_get_dto.dart';
-import 'package:e_delivery_mobile/storage_service.dart';
+
 import 'package:flutter/material.dart';
 import 'package:e_delivery_mobile/customer/core/components/search_box.dart';
 import 'package:e_delivery_mobile/customer/core/components/item_tiles_vertical.dart';
-import 'package:e_delivery_mobile/customer/screens/home/dto/user_data_dto.dart';
+
 import 'package:e_delivery_mobile/customer/screens/restaurants/restaurant_details_page.dart';
+import 'package:e_delivery_mobile/customer/screens/profile/dto/customer_get_dto.dart';
 
 class RestaurantsPage extends StatefulWidget {
   const RestaurantsPage({Key? key}) : super(key: key);
@@ -20,45 +20,36 @@ class RestaurantsPage extends StatefulWidget {
 
 class _RestaurantsPageState extends State<RestaurantsPage> {
   List<CategoryViewModel> categories = [];
-  List<RestaurantViewModel> _restaurants = [];
+  List<RestaurantViewModel> _allrestaurants = [];
   List<RestaurantViewModel> _filteredRestaurants = [];
-  String _searchQuery = '';
-  UserDataViewModel? _userDataViewModel;
+
   CategoryViewModel? _selectedCategory;
+  CustomerGetDto? userData;
 
   @override
   void initState() {
     super.initState();
-    _loadUserData();
     _loadCategories();
-    _fetchRestaurants();
+    _loadUserData().then((_) {
+      _fetchRestaurants();
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  void _refreshRestaurants() {
+    _loadUserData();
   }
 
   Future<void> _loadUserData() async {
     try {
-      final jwtToken = await StorageService.storage.read(key: 'jwt');
-
-      if (jwtToken != null) {
-        print("jwt exists");
-      } else {
-        print('No JWT token found in secure storage.');
-      }
-      final userId = await StorageService.storage.read(key: 'currentUserId');
-      if (userId != null) {
-        print('User ID from secure storage: $userId');
-      } else {
-        print('No user ID found in secure storage.');
-      }
-
-      final userDataJson = await StorageService.storage.read(key: 'userData');
-      if (userDataJson != null) {
-        final userData = jsonDecode(userDataJson);
-
-        setState(() {
-          _userDataViewModel = UserDataViewModel.fromJson(userData);
-        });
+      userData = await ProfileService().fetchLoggedInUser();
+      setState(() {
         _fetchRestaurants();
-      }
+      });
     } catch (e) {
       print('Error loading user data: $e');
     }
@@ -70,12 +61,11 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
     categories.insert(0, CategoryViewModel(id: -1, name: 'All'));
 
     _selectedCategory = categories[0];
-    setState(() {});
   }
 
   Future<void> _fetchRestaurants() async {
     try {
-      final cityId = _userDataViewModel?.cityId;
+      final cityId = userData?.cityId;
       final categoryId =
           _selectedCategory?.id == -1 ? null : _selectedCategory?.id;
       if (cityId != null) {
@@ -90,8 +80,8 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
         }
 
         setState(() {
-          _restaurants = restaurants;
-          _filterRestaurants();
+          _allrestaurants = restaurants;
+          _filteredRestaurants = restaurants;
         });
       }
     } catch (e) {
@@ -99,21 +89,17 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
     }
   }
 
-  void _filterRestaurants() {
+  void _filterRestaurants(String query) {
     setState(() {
-      _filteredRestaurants = _restaurants
-          .where((restaurant) => restaurant.name
-              .toLowerCase()
-              .contains(_searchQuery.toLowerCase()))
+      _filteredRestaurants = _allrestaurants
+          .where((restaurant) =>
+              restaurant.name.toLowerCase().contains(query.toLowerCase()))
           .toList();
     });
   }
 
   void _onSearchQueryChanged(String query) {
-    setState(() {
-      _searchQuery = query;
-      _fetchRestaurants();
-    });
+    _filterRestaurants(query);
   }
 
   void _onRestaurantSelected(RestaurantViewModel restaurant) {
@@ -172,9 +158,9 @@ class _RestaurantsPageState extends State<RestaurantsPage> {
             ListView.separated(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
-              itemCount: _restaurants.length,
+              itemCount: _allrestaurants.length,
               itemBuilder: (context, index) {
-                final restaurant = _restaurants[index];
+                final restaurant = _allrestaurants[index];
                 return InkWell(
                   onTap: () {
                     if (restaurant.isOpen) {

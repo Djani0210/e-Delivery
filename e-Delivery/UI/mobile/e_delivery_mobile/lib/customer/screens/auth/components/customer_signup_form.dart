@@ -44,7 +44,6 @@ class _CustomerSignupFormState extends State<CustomerSignupForm> {
             citiesData.map((cityData) => City.fromJson(cityData)).toList();
       });
     } catch (error) {
-      // Handle error
       print('Failed to fetch cities: $error');
     }
   }
@@ -113,6 +112,7 @@ class _CustomerSignupFormState extends State<CustomerSignupForm> {
                     suffixIcon: SvgPicture.asset(AppIcons.data),
                     suffixIconConstraints: const BoxConstraints(maxHeight: 24),
                   ),
+                  maxLength: 15,
                   onChanged: (value) {
                     _userName = value;
                   },
@@ -124,6 +124,7 @@ class _CustomerSignupFormState extends State<CustomerSignupForm> {
                     suffixIcon: SvgPicture.asset(AppIcons.email),
                     suffixIconConstraints: const BoxConstraints(maxHeight: 24),
                   ),
+                  maxLength: 30,
                   keyboardType: TextInputType.emailAddress,
                   onChanged: (value) {
                     _email = value;
@@ -137,6 +138,7 @@ class _CustomerSignupFormState extends State<CustomerSignupForm> {
                     suffixIconConstraints: const BoxConstraints(maxHeight: 24),
                     hintText: 'Enter Phone number',
                   ),
+                  maxLength: 15,
                   keyboardType: TextInputType.number,
                   onChanged: (value) {
                     _phoneNumber = value;
@@ -151,6 +153,7 @@ class _CustomerSignupFormState extends State<CustomerSignupForm> {
                     suffixIconConstraints: const BoxConstraints(maxHeight: 24),
                     hintText: 'Enter Password',
                   ),
+                  maxLength: 15,
                   keyboardType: TextInputType.visiblePassword,
                   onChanged: (value) {
                     _password = value;

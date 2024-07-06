@@ -62,16 +62,11 @@ class _CustomerEntryPointState extends State<DeliveryPersonEntryPoint> {
             icon: Padding(
               padding: const EdgeInsets.all(8.0),
               child: SvgPicture.asset(
-                  _currentPage == 0 ? AppIcons.homeBold : AppIcons.home),
-            ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SvgPicture.asset(_currentPage == 1
-                  ? AppIcons.foodStyleBold
-                  : AppIcons.foodStyle),
+                _currentPage == 0
+                    ? AppIcons.homeHouseBold
+                    : AppIcons.homeHouseBold,
+                color: _currentPage == 0 ? Colors.orange : null,
+              ),
             ),
             label: '',
           ),
@@ -79,7 +74,15 @@ class _CustomerEntryPointState extends State<DeliveryPersonEntryPoint> {
             icon: Padding(
               padding: const EdgeInsets.all(8.0),
               child: SvgPicture.asset(
-                  _currentPage == 2 ? AppIcons.chat : AppIcons.chat),
+                  _currentPage == 1 ? AppIcons.orderBold : AppIcons.order),
+            ),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SvgPicture.asset(
+                  _currentPage == 2 ? AppIcons.chatOrange : AppIcons.chat),
             ),
             label: '',
           ),

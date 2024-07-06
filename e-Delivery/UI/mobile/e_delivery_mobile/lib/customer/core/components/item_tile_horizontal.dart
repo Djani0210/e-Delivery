@@ -105,7 +105,7 @@ class ItemTileHorizontal extends StatelessWidget {
                     ),
                     const Spacer(),
                     SvgPicture.asset(AppIcons.delivery),
-                    Text('${deliveryCharge.toStringAsFixed(2)} Delivery')
+                    Text('${deliveryCharge.toStringAsFixed(2)} KM')
                   ],
                 )
               ],

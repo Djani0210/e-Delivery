@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SearchBox extends StatefulWidget {
-  final ValueChanged<String>? onChanged;
+  final ValueChanged<String> onChanged;
   final Function(RestaurantViewModel) onRestaurantSelected;
   final List<RestaurantViewModel> restaurants;
 
   const SearchBox({
     Key? key,
-    this.onChanged,
+    required this.onChanged,
     required this.onRestaurantSelected,
     required this.restaurants,
   }) : super(key: key);
@@ -66,7 +66,7 @@ class _SearchBoxState extends State<SearchBox> {
         top: offset.dy + size.height + 8,
         width: size.width,
         child: RestaurantList(
-          restaurants: filteredRestaurants,
+          restaurants: widget.restaurants,
           onRestaurantSelected: widget.onRestaurantSelected,
         ),
       ),
@@ -84,12 +84,16 @@ class _SearchBoxState extends State<SearchBox> {
     setState(() {
       _searchQuery = query;
     });
-    widget.onChanged?.call(query);
-    _filterRestaurants();
+    widget.onChanged(query);
+
     if (query.isEmpty) {
       _hideOverlay();
     } else {
-      _updateOverlay(filteredRestaurants);
+      if (_overlayEntry == null) {
+        _showOverlay(filteredRestaurants);
+      } else {
+        _overlayEntry!.markNeedsBuild();
+      }
     }
   }
 

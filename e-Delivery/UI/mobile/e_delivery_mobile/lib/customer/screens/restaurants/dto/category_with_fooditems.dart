@@ -72,7 +72,6 @@ class FoodItemViewModel {
         .map((item) => FoodItemPictureViewModel.fromJson(item))
         .toList();
 
-    // Replace 'localhost' with '10.0.2.2' in image URLs
     pictures = pictures.map((picture) {
       var fixedUrl = picture.fileName.replaceAll('localhost', '10.0.2.2');
       return FoodItemPictureViewModel(

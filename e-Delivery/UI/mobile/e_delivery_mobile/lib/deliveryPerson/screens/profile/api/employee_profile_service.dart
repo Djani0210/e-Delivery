@@ -50,7 +50,7 @@ class EmployeeProfileService {
     final apiUrl = '${_baseUrl}File/upload-profile-image';
     var request = http.MultipartRequest('POST', Uri.parse(apiUrl))
       ..headers['Authorization'] = 'Bearer $jwt'
-      ..fields['isChangingLogo'] = 'true' // Set isChangingLogo to true
+      ..fields['isChangingLogo'] = 'true'
       ..files.add(await http.MultipartFile.fromPath('ImageFile', image.path));
 
     var response = await request.send();
@@ -153,7 +153,7 @@ class EmployeeProfileService {
       if (response.statusCode == 200) {
         print("Successfully updated user");
       }
-      print("Raw response body: ${response.body}");
+
       return response;
     } catch (e) {
       throw Exception(e.toString());

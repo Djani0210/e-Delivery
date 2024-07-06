@@ -44,14 +44,11 @@ class _CitiesPageState extends State<CitiesPage> {
   void _addCity() {
     final String title = _titleController.text.trim();
     if (title.isNotEmpty) {
-      // Add the city using the CityApiService
       CityApiService().addCity(CityCreateVM(title: title)).then((response) {
         if (response.statusCode == 200) {
           _titleController.clear();
           _fetchCities();
-        } else {
-          // Handle error case
-        }
+        } else {}
       });
     }
   }
@@ -126,7 +123,7 @@ class _CitiesPageState extends State<CitiesPage> {
                 borderRadius: BorderRadius.circular(8.0),
               ),
               child: SizedBox(
-                width: 400 + 16.0 + 150, // Adjust the width as needed
+                width: 400 + 16.0 + 150,
                 child: Row(
                   children: [
                     SizedBox(

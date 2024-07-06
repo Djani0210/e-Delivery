@@ -17,7 +17,7 @@ namespace e_Delivery.Services.Interfaces
         Task<Message> GetRestaurantByIdAsMessage(int RestaurantId, CancellationToken cancellationToken);
         Task<Message> RemoveEmployeeFromRestaurantAsMessageAsync(Guid id, CancellationToken cancellationToken);
         Task<Message> GetRestaurantEmployeesAsMessageAsync(CancellationToken cancellationToken, int items_per_page = 3, int pageNumber = 1, bool? isAvailable = null, string? username = null);
-        Task<Message> GetRecommendedRestaurantsAsMessageAsync(CancellationToken cancellationToken);
+        
 
         Task<Message> GetRecommendedRestaurants();
 

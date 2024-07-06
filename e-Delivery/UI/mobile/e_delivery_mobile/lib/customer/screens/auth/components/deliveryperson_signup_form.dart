@@ -46,7 +46,6 @@ class _DeliveryPersonSignupFormState extends State<DeliveryPersonSignupForm> {
             citiesData.map((cityData) => City.fromJson(cityData)).toList();
       });
     } catch (error) {
-      // Handle error
       print('Failed to fetch cities: $error');
     }
   }
@@ -154,6 +153,7 @@ class _DeliveryPersonSignupFormState extends State<DeliveryPersonSignupForm> {
               onChanged: (value) {
                 _userName = value;
               },
+              maxLength: 15,
               validator: _validateUsername,
             ),
             const SizedBox(height: 16),
@@ -167,6 +167,7 @@ class _DeliveryPersonSignupFormState extends State<DeliveryPersonSignupForm> {
               onChanged: (value) {
                 _email = value;
               },
+              maxLength: 30,
               validator: _validateEmail,
             ),
             const SizedBox(height: 16),
@@ -182,6 +183,7 @@ class _DeliveryPersonSignupFormState extends State<DeliveryPersonSignupForm> {
                 _phoneNumber = value;
               },
               validator: _validatePhoneNumber,
+              maxLength: 15,
             ),
             const SizedBox(height: 16),
             TextFormField(
@@ -196,6 +198,7 @@ class _DeliveryPersonSignupFormState extends State<DeliveryPersonSignupForm> {
               onChanged: (value) {
                 _password = value;
               },
+              maxLength: 15,
               validator: _validatePassword,
             ),
             const SizedBox(height: 16),

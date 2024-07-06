@@ -51,10 +51,8 @@ class SideDishApiService {
     );
 
     if (response.statusCode == 200) {
-      // Handle success
       print("Side dish deleted successfully");
     } else {
-      // Handle error
       throw Exception(
           'Failed to delete side dish ${response.statusCode} ${response.body}');
     }
@@ -75,10 +73,8 @@ class SideDishApiService {
     );
 
     if (response.statusCode == 200) {
-      // Handle success
       print("Side dish updated successfully");
     } else {
-      // Handle error
       throw Exception(
           'Failed to update side dish ${response.statusCode} ${response.body}');
     }
@@ -99,10 +95,8 @@ class SideDishApiService {
     );
 
     if (response.statusCode == 200) {
-      // Handle success
       print("Side dish created successfully");
     } else {
-      // Handle error
       throw Exception(
           'Failed to create side dish ${response.statusCode} ${response.body}');
     }

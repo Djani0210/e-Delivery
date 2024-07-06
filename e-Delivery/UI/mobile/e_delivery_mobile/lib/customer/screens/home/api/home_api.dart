@@ -43,7 +43,6 @@ class RestaurantService {
         .get(Uri.parse(url), headers: {'Authorization': 'Bearer $jwt'});
 
     if (response.statusCode == 200) {
-      print("yes");
       final data = jsonDecode(response.body);
       if (data['isValid']) {
         final restaurantsData = data['data'] as List<dynamic>;

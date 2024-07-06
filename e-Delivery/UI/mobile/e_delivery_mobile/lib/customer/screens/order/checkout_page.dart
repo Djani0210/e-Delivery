@@ -109,7 +109,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   _orderItems.remove(orderItem);
                   if (_orderItems.isEmpty) {
                     Navigator.of(context).pop();
-                    Navigator.pop(context);
+                    Navigator.pop(context, _orderItems);
                   } else {
                     Navigator.of(context).pop();
                   }
@@ -159,7 +159,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     if (_address == null || _address!.isEmpty) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          CustomSnackBar(message: 'Address cannot be empty'),
+          CustomSnackBar(message: 'Location cannot be empty'),
         );
       }
       return;

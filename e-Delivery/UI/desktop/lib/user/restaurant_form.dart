@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:desktop/components/hover_animation.dart';
 import 'package:desktop/components/storage_service.dart';
 import 'package:desktop/restaurant/restaurant_dashboard.dart';
-//import 'package:desktop/user/map_selection.dart';
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
@@ -192,7 +191,7 @@ class _RestaurantFormState extends State<RestaurantForm> {
                   child: TextFormField(
                     decoration: InputDecoration(
                       hintText: 'Opening Time (HH:mm)',
-                      contentPadding: EdgeInsets.all(12.0), // Add padding
+                      contentPadding: EdgeInsets.all(12.0),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -322,8 +321,7 @@ class _RestaurantFormState extends State<RestaurantForm> {
                     decoration: InputDecoration(
                         hintText: 'Delivery Time (minutes)',
                         contentPadding: EdgeInsets.all(12.0),
-                        suffixText: 'min' // Add padding
-                        ),
+                        suffixText: 'min'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter the delivery time';
@@ -369,7 +367,7 @@ class _RestaurantFormState extends State<RestaurantForm> {
                     dropdownDecoratorProps: DropDownDecoratorProps(
                       dropdownSearchDecoration: InputDecoration(
                         hintText: 'Search cities...',
-                        contentPadding: EdgeInsets.all(12.0), // Add padding
+                        contentPadding: EdgeInsets.all(12.0),
                         border: OutlineInputBorder(),
                       ),
                     ),

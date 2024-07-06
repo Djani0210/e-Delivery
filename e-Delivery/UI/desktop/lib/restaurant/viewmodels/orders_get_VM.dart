@@ -8,9 +8,9 @@ class OrderViewModel {
   final LocationViewModel location;
   final List<OrderItemViewModel> orderItems;
   final int orderState;
-  final String? userName; // Added
-  final String address; // Added
-  final String? deliveryPersonId; // Modified to be nullable
+  final String? userName;
+  final String address;
+  final String? deliveryPersonId;
   final String? deliveryPersonName;
   final double deliveryCost;
 
@@ -48,8 +48,8 @@ class OrderViewModel {
           .map((i) => OrderItemViewModel.fromJson(i))
           .toList(),
       orderState: json['orderState'],
-      userName: json['userName'], // Added
-      address: json['address'], // Added
+      userName: json['userName'],
+      address: json['address'],
       deliveryPersonId: json['deliveryPersonId'],
       deliveryPersonName: json['deliveryPersonAssigned'],
       deliveryCost: json['deliveryCost'].toDouble(),

@@ -56,7 +56,6 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
     );
 
     if (response.statusCode == 200) {
-      // Code resent successfully
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           duration: Duration(milliseconds: 2000),
@@ -70,7 +69,6 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
       });
       startResendTimer();
     } else {
-      // Show an error message in a SnackBar
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           duration: Duration(milliseconds: 2000),
@@ -96,13 +94,11 @@ class _CodeVerificationPageState extends State<CodeVerificationPage> {
     );
 
     if (response.statusCode == 200) {
-      // Navigate to ChangePassPage
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const ChangePassPage()),
       );
     } else {
-      // Show an error message in a SnackBar
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           duration: Duration(milliseconds: 2000),
@@ -194,7 +190,7 @@ class OtpInput extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: isButtonEnabled ? onVerificationPressed : null,
-              child: const Text('Verification'),
+              child: const Text('Verify'),
             ),
           ),
           const SizedBox(height: AppDefaults.padding),

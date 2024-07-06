@@ -378,7 +378,7 @@ namespace e_Delivery.Services.Services
                 return new Message { Info = "Greška", IsValid = false, Status = ExceptionCode.BadRequest };
             }
         }
-       
+
         public async Task<Message> UpdateUserAsMessageAsync(Guid userId, UserUpdateVM userUpdateVM, CancellationToken cancellationToken)
         {
             try
@@ -389,43 +389,42 @@ namespace e_Delivery.Services.Services
                     return new Message { Info = "Error: User does not exist", IsValid = false, Status = ExceptionCode.BadRequest };
                 }
 
-               
                 if (!string.IsNullOrEmpty(userUpdateVM.Email) && userUpdateVM.Email != user.Email)
                 {
                     var emailUser = await UserManager.FindByEmailAsync(userUpdateVM.Email);
                     if (emailUser != null && emailUser.Id != user.Id)
                     {
-                        return new Message { Info = "Error: Email is already taken", IsValid = false, Status = ExceptionCode.BadRequest };
+                        return new Message { Info = "Email is already taken", IsValid = false, Status = ExceptionCode.BadRequest };
                     }
+                    user.Email = userUpdateVM.Email;
                 }
 
-               
-                if (!string.IsNullOrEmpty(userUpdateVM.UserName) && userUpdateVM.UserName != user.UserName)
-                {
-                    var usernameUser = await UserManager.FindByNameAsync(userUpdateVM.UserName);
-                    if (usernameUser != null && usernameUser.Id != user.Id)
-                    {
-                        return new Message { Info = "Error: Username is already taken", IsValid = false, Status = ExceptionCode.BadRequest };
-                    }
-                }
-
-               
                 if (!string.IsNullOrEmpty(userUpdateVM.PhoneNumber) && userUpdateVM.PhoneNumber != user.PhoneNumber)
                 {
                     var phoneNumberUser = await UserManager.Users
                         .FirstOrDefaultAsync(u => u.PhoneNumber == userUpdateVM.PhoneNumber && u.Id != user.Id, cancellationToken);
                     if (phoneNumberUser != null)
                     {
-                        return new Message { Info = "Error: Phone number is already taken", IsValid = false, Status = ExceptionCode.BadRequest };
+                        return new Message { Info = "Phone number is already taken", IsValid = false, Status = ExceptionCode.BadRequest };
                     }
+                    user.PhoneNumber = userUpdateVM.PhoneNumber;
                 }
 
-               
+                if (!string.IsNullOrEmpty(userUpdateVM.UserName) && userUpdateVM.UserName.ToLower() != user.UserName.ToLower())
+                {
+                    var usernameUser = await UserManager.Users
+                        .FirstOrDefaultAsync(u => u.UserName.ToLower() == userUpdateVM.UserName.ToLower() && u.Id != user.Id, cancellationToken);
+                    if (usernameUser != null)
+                    {
+                        return new Message { Info = "Username is already taken", IsValid = false, Status = ExceptionCode.BadRequest };
+                    }
+                    user.UserName = userUpdateVM.UserName;
+                }
+
+                
+
                 user.FirstName = userUpdateVM.FirstName ?? user.FirstName;
                 user.LastName = userUpdateVM.LastName ?? user.LastName;
-                user.Email = userUpdateVM.Email ?? user.Email;
-                user.UserName = userUpdateVM.UserName ?? user.UserName;
-                user.PhoneNumber = userUpdateVM.PhoneNumber ?? user.PhoneNumber;
                 user.CityId = userUpdateVM.CityId ?? user.CityId;
 
                 var updateResult = await UserManager.UpdateAsync(user);

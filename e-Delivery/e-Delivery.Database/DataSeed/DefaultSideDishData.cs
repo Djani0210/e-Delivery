@@ -19,7 +19,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Mayonnaise",
                 Price = 1.00,
                 IsAvailable = true,
-                RestaurantId = 1
+                RestaurantId = 1,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -27,7 +28,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Ketchup",
                 Price = 1.00,
                 IsAvailable = true,
-                RestaurantId = 1
+                RestaurantId = 1,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -35,7 +37,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Tartar sauce",
                 Price = 1.00,
                 IsAvailable = true,
-                RestaurantId = 1
+                RestaurantId = 1,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -43,7 +46,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "French fries",
                 Price = 2.50,
                 IsAvailable = true,
-                RestaurantId = 1
+                RestaurantId = 1,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -51,7 +55,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Extra cheese",
                 Price = 1.50,
                 IsAvailable = true,
-                RestaurantId = 1
+                RestaurantId = 1,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -59,7 +64,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Ice cream",
                 Price = 2.00,
                 IsAvailable = true,
-                RestaurantId = 1
+                RestaurantId = 1,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -67,7 +73,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Mayonnaise",
                 Price = 1.00,
                 IsAvailable = true,
-                RestaurantId = 2
+                RestaurantId = 2,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -75,7 +82,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Ketchup",
                 Price = 1.00,
                 IsAvailable = true,
-                RestaurantId = 2
+                RestaurantId = 2,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -83,7 +91,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Tartar sauce",
                 Price = 1.00,
                 IsAvailable = true,
-                RestaurantId = 2
+                RestaurantId = 2,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -91,7 +100,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Cream",
                 Price = 0.50,
                 IsAvailable = true,
-                RestaurantId = 2
+                RestaurantId = 2,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -99,7 +109,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "French fries",
                 Price = 2.50,
                 IsAvailable = true,
-                RestaurantId = 3
+                RestaurantId = 3,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -107,7 +118,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Mayonnaise",
                 Price = 1.50,
                 IsAvailable = true,
-                RestaurantId = 3
+                RestaurantId = 3,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -115,7 +127,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Ketchup",
                 Price = 1.50,
                 IsAvailable = true,
-                RestaurantId = 3
+                RestaurantId = 3,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -123,7 +136,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Ajvar",
                 Price = 1.50,
                 IsAvailable = true,
-                RestaurantId = 3
+                RestaurantId = 3,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -131,7 +145,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Barbecue sauce",
                 Price = 2.50,
                 IsAvailable = true,
-                RestaurantId = 3
+                RestaurantId = 3,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -139,7 +154,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Soy sauce",
                 Price = 2.00,
                 IsAvailable = true,
-                RestaurantId = 3
+                RestaurantId = 3,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -147,7 +163,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Vinegar",
                 Price = 2.00,
                 IsAvailable = true,
-                RestaurantId = 3
+                RestaurantId = 3,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -155,7 +172,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Hot sauce",
                 Price = 2.00,
                 IsAvailable = true,
-                RestaurantId = 3
+                RestaurantId = 3,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -163,7 +181,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Prosciutto",
                 Price = 2.50,
                 IsAvailable = true,
-                RestaurantId = 4
+                RestaurantId = 4,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -171,7 +190,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Kajmak",
                 Price = 1.50,
                 IsAvailable = true,
-                RestaurantId = 4
+                RestaurantId = 4,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -179,7 +199,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Sour cream",
                 Price = 1.50,
                 IsAvailable = true,
-                RestaurantId = 4
+                RestaurantId = 4,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -187,7 +208,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Mayonaisse",
                 Price = 1.50,
                 IsAvailable = true,
-                RestaurantId = 5
+                RestaurantId = 5,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -195,7 +217,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Ketchup",
                 Price = 1.50,
                 IsAvailable = true,
-                RestaurantId = 5
+                RestaurantId = 5,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -203,7 +226,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Tartar sauce",
                 Price = 1.50,
                 IsAvailable = true,
-                RestaurantId = 5
+                RestaurantId = 5,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -211,7 +235,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Ice cream",
                 Price = 1.50,
                 IsAvailable = true,
-                RestaurantId = 5
+                RestaurantId = 5,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -219,7 +244,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Whipped cream",
                 Price = 0.50,
                 IsAvailable = true,
-                RestaurantId = 5
+                RestaurantId = 5,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -227,7 +253,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Vinegar",
                 Price = 1.50,
                 IsAvailable = true,
-                RestaurantId = 5
+                RestaurantId = 5,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -235,7 +262,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Vinegar",
                 Price = 1.50,
                 IsAvailable = true,
-                RestaurantId = 6
+                RestaurantId = 6,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -243,7 +271,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Mayonnaise",
                 Price = 1.50,
                 IsAvailable = true,
-                RestaurantId = 6
+                RestaurantId = 6,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -251,7 +280,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Ketchup",
                 Price = 1.50,
                 IsAvailable = true,
-                RestaurantId = 6
+                RestaurantId = 6,
+                IsDeleted = false
             },
             new SideDish
             {
@@ -259,7 +289,8 @@ namespace e_Delivery.Database.DataSeed
                 Name = "Extra cheese",
                 Price = 1.50,
                 IsAvailable = true,
-                RestaurantId = 6
+                RestaurantId = 6,
+                IsDeleted = false
             },
 
         };

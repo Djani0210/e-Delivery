@@ -45,7 +45,7 @@ class _ChatsPageState extends State<ChatsPage> {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (snapshot.hasData) {
+                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                   final deliveryPersons = snapshot.data!;
                   return ListView.builder(
                     itemCount: deliveryPersons.length,
@@ -85,7 +85,7 @@ class _ChatsPageState extends State<ChatsPage> {
                     },
                   );
                 } else {
-                  return const Center(child: Text('No delivery persons found'));
+                  return const Center(child: Text('No chats found'));
                 }
               },
             ),

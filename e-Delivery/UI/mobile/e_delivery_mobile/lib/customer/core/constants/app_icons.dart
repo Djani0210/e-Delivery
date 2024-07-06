@@ -47,6 +47,7 @@ class AppIcons {
   static const back = 'assets/icon/32x32/back.svg';
   static const call = 'assets/icon/32x32/call.svg';
   static const chat = 'assets/icon/32x32/chat.svg';
+  static const chatOrange = 'assets/icon/32x32/chatorange.svg';
   static const cash = 'assets/icon/32x32/cash.svg';
   static const hamburger = 'assets/icon/32x32/humbergermenu.svg';
   static const love = 'assets/icon/32x32/love.svg';
@@ -67,6 +68,12 @@ class AppIcons {
 
   static const profileBold = 'assets/bars/profile_bold.svg';
   static const profile = 'assets/bars/profile.svg';
+
+  static const homeHouse = 'assets/bars/home_house.svg';
+  static const homeHouseBold = 'assets/bars/home_house_bold.svg';
+
+  static const chatnew = 'assets/bars/icons8-chat-50.svg';
+  static const chatline = 'assets/bars/chat-line.svg';
 
   static const profilePerson = 'assets/icon/profile/profile_person.svg';
   static const profileNotification =

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:e_delivery_mobile/customer/core/components/search_box.dart';
 import 'package:e_delivery_mobile/customer/screens/home/api/home_api.dart';
 import 'package:e_delivery_mobile/customer/screens/home/components/browse_restaurants_button.dart';
@@ -6,10 +5,9 @@ import 'package:e_delivery_mobile/customer/screens/home/components/home_greeting
 import 'package:e_delivery_mobile/customer/screens/home/components/home_suggestions.dart';
 import 'package:e_delivery_mobile/customer/screens/home/dto/recommended_restaurant_get_dto.dart';
 import 'package:e_delivery_mobile/customer/screens/home/dto/restaurant_get_dto.dart';
-import 'package:e_delivery_mobile/customer/screens/home/dto/user_data_dto.dart';
+import 'package:e_delivery_mobile/customer/screens/profile/api/profile_api.dart';
+import 'package:e_delivery_mobile/customer/screens/profile/dto/customer_get_dto.dart';
 import 'package:e_delivery_mobile/customer/screens/restaurants/restaurant_details_page.dart';
-
-import 'package:e_delivery_mobile/storage_service.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,18 +19,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  UserDataViewModel? _userDataViewModel;
-  List<RestaurantViewModel> _restaurants = [];
+  CustomerGetDto? _userDataViewModel;
+
   List<RestaurantViewModel> _filteredRestaurants = [];
   List<RecommendedRestaurantViewModel> _recommendedRestaurants = [];
+  List<RestaurantViewModel> _allRestaurants = [];
 
-  String _searchQuery = '';
-  @override
   @override
   void initState() {
     super.initState();
     _loadUserData().then((_) {
       _fetchRecommendedRestaurants();
+      _fetchRestaurants();
     });
   }
 
@@ -53,29 +51,10 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _loadUserData() async {
     try {
-      final jwtToken = await StorageService.storage.read(key: 'jwt');
-
-      if (jwtToken != null) {
-        print("jwt exists");
-      } else {
-        print('No JWT token found in secure storage.');
-      }
-      final userId = await StorageService.storage.read(key: 'currentUserId');
-      if (userId != null) {
-        print('User ID from secure storage: $userId');
-      } else {
-        print('No user ID found in secure storage.');
-      }
-
-      final userDataJson = await StorageService.storage.read(key: 'userData');
-      if (userDataJson != null) {
-        final userData = jsonDecode(userDataJson);
-
-        setState(() {
-          _userDataViewModel = UserDataViewModel.fromJson(userData);
-        });
+      _userDataViewModel = await ProfileService().fetchLoggedInUser();
+      setState(() {
         _fetchRestaurants();
-      }
+      });
     } catch (e) {
       print('Error loading user data: $e');
     }
@@ -88,8 +67,8 @@ class _HomePageState extends State<HomePage> {
         final restaurants =
             await RestaurantService().fetchRestaurants(cityId, '');
         setState(() {
-          _restaurants = restaurants;
-          _filterRestaurants();
+          _allRestaurants = restaurants;
+          _filteredRestaurants = restaurants;
         });
       }
     } catch (e) {
@@ -97,21 +76,17 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _filterRestaurants() {
+  void _filterRestaurants(String query) {
     setState(() {
-      _filteredRestaurants = _restaurants
-          .where((restaurant) => restaurant.name
-              .toLowerCase()
-              .contains(_searchQuery.toLowerCase()))
+      _filteredRestaurants = _allRestaurants
+          .where((restaurant) =>
+              restaurant.name.toLowerCase().contains(query.toLowerCase()))
           .toList();
     });
   }
 
   void _onSearchQueryChanged(String query) {
-    setState(() {
-      _searchQuery = query;
-      _fetchRestaurants();
-    });
+    _filterRestaurants(query);
   }
 
   void _onRestaurantSelected(RestaurantViewModel restaurant) {

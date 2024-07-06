@@ -89,16 +89,22 @@ class _UpdateProfilePageState extends State<EmployeeUpdateProfilePage> {
         final responseBody = json.decode(response.body);
         print(responseBody);
 
-        await _loadUserData();
-        widget.onProfileUpdated();
+        if (response.statusCode == 200 && responseBody['isValid'] == true) {
+          await _loadUserData();
+          widget.onProfileUpdated();
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Center(child: Text("Good job"))),
-        );
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Center(child: Text(responseBody['info']))),
+          );
 
-        Future.delayed(Duration(seconds: 1), () {
-          Navigator.of(context).pop();
-        });
+          Future.delayed(Duration(seconds: 1), () {
+            Navigator.of(context).pop();
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Center(child: Text(responseBody['info']))),
+          );
+        }
       } catch (e) {
         print('Error updating profile: $e');
 
@@ -197,7 +203,7 @@ class _UpdateProfilePageState extends State<EmployeeUpdateProfilePage> {
                   labelText: 'Last Name',
                   border: OutlineInputBorder(),
                 ),
-                maxLength: 20,
+                maxLength: 15,
                 onSaved: (value) => _lastNameController.text = value ?? '',
               ),
               SizedBox(height: 10),

@@ -54,7 +54,7 @@ class ReviewViewModel {
       id: json['id'],
       grade: json['grade'],
       description: json['description'],
-      userName: json['userName'], // Parse username from JSON
+      userName: json['userName'],
       createdDate: formatDate(json['createdDate']),
     );
   }
@@ -67,10 +67,9 @@ class ReviewViewModel {
 class LogoViewModel {
   final int id;
   final String path;
-  // other fields if needed
 
   LogoViewModel({required this.id, required this.path});
-  String get fullImageUrl => 'http://10.0.2.2:44395$path';
+  String get fullImageUrl => 'https://10.0.2.2:44395$path';
 
   factory LogoViewModel.fromJson(Map<String, dynamic> json) {
     return LogoViewModel(

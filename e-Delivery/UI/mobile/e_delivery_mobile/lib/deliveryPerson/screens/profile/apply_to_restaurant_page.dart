@@ -1,4 +1,7 @@
+import 'package:e_delivery_mobile/deliveryPerson/screens/Home/dto/delivery_person_get_dto.dart';
+import 'package:e_delivery_mobile/deliveryPerson/screens/profile/api/employee_profile_service.dart';
 import 'package:e_delivery_mobile/globals.dart';
+
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -30,11 +33,23 @@ class _ApplyToRestaurantPageState extends State<ApplyToRestaurantPage> {
   RestaurantViewModel? _selectedRestaurant;
   bool _isLoading = true;
   int? _currentRestaurantId;
+  DeliveryPersonGetDTO? userData;
 
   @override
   void initState() {
     super.initState();
     _fetchRestaurants();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    try {
+      userData = await EmployeeProfileService().fetchLoggedInUser();
+
+      setState(() {});
+    } catch (e) {
+      print('Error loading user data: $e');
+    }
   }
 
   Future<void> _fetchRestaurants() async {
@@ -72,12 +87,39 @@ class _ApplyToRestaurantPageState extends State<ApplyToRestaurantPage> {
     }
   }
 
+  Future<bool> removeEmployee(String id) async {
+    final jwt = await _fetchJwtToken();
+
+    final apiUrl = Uri.parse('${baseUrl}Restaurant/remove-Employee')
+        .replace(queryParameters: {'id': id});
+
+    try {
+      final response = await http.put(
+        apiUrl,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $jwt',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print("Employee successfully removed");
+        return true;
+      } else {
+        print(
+            "Failed to remove employee with status code: ${response.statusCode}");
+        return false;
+      }
+    } catch (e) {
+      print("Error removing employee: $e");
+      return false;
+    }
+  }
+
   Future<void> _fetchCurrentRestaurantId() async {
-    String? userDataJson = await _storage.read(key: 'userData');
-    if (userDataJson != null) {
-      final userData = jsonDecode(userDataJson);
+    if (userData != null) {
       setState(() {
-        _currentRestaurantId = userData['restaurantId'];
+        _currentRestaurantId = userData!.restaurantId;
       });
     }
   }
@@ -161,10 +203,18 @@ class _ApplyToRestaurantPageState extends State<ApplyToRestaurantPage> {
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: _selectedRestaurant == null
+                    onPressed: (_selectedRestaurant == null ||
+                            _selectedRestaurant!.id == _currentRestaurantId)
                         ? null
                         : () => _applyToRestaurant(_selectedRestaurant!.id),
                     child: Text('Apply'),
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _currentRestaurantId == null
+                        ? null
+                        : () => _removeFromRestaurant(),
+                    child: Text('Remove from Current Restaurant'),
                   ),
                   SizedBox(height: 20),
                   Center(
@@ -176,10 +226,68 @@ class _ApplyToRestaurantPageState extends State<ApplyToRestaurantPage> {
                       textAlign: TextAlign.center,
                     ),
                   ),
+                  SizedBox(height: 30),
                   Text("After successful confirmation, please login again."),
                 ],
               ),
             ),
     );
+  }
+
+  Future<void> _reloadPage() async {
+    await _fetchRestaurants();
+    await _fetchCurrentRestaurantId();
+
+    setState(() {});
+  }
+
+  Future<void> _removeFromRestaurant() async {
+    if (userData != null) {
+      bool confirmed = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Confirmation'),
+            content: Text(
+                'Are you sure you want to remove yourself from the restaurant?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: Text('Confirm'),
+              ),
+            ],
+          );
+        },
+      );
+
+      if (confirmed) {
+        bool success = await removeEmployee(userData!.id.toString());
+        if (success) {
+          setState(() {
+            _currentRestaurantId = null;
+          });
+          print(userData!.id.toString());
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text('Successfully removed from the restaurant.')),
+          );
+
+          await _loadUserData();
+          await _reloadPage();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to remove from the restaurant.')),
+          );
+        }
+      }
+    }
   }
 }

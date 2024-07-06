@@ -1,6 +1,6 @@
 import 'package:desktop/globals.dart';
 import 'package:flutter/material.dart';
-import '../components/hover_animation.dart'; // Assuming HoverAnimation is in a separate file
+import '../components/hover_animation.dart';
 import 'confirm_code_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -27,7 +27,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       }),
     );
     if (response.statusCode == 200) {
-      // Navigate to ConfirmCodePage
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -36,7 +35,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 )),
       );
     } else {
-      // Show an error message in a SnackBar
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             duration: Duration(milliseconds: 2000),
@@ -57,14 +55,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
     if (response.statusCode == 200) {
       final responseBody = jsonDecode(response.body);
-      final userId =
-          responseBody['data']['id']; // Extract the UserId from the response
+      final userId = responseBody['data']['id'];
 
-      // Store the UserId securely using the StorageService
       await StorageService.storage
           .write(key: 'forgotPasswordUserId', value: userId);
     } else {
-      // Show an error message in a SnackBar
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             duration: Duration(milliseconds: 2000),
@@ -110,6 +105,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                           horizontal: 8, vertical: 2),
                       child: TextFormField(
                         controller: emailController,
+                        maxLength: 30,
                         decoration: const InputDecoration(
                           hintText: 'Email',
                           border: InputBorder.none,
@@ -141,13 +137,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       child: ElevatedButton(
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            // Call fetchUserIdFromEmail to retrieve the user's ID
                             fetchUserIdFromEmail(emailController.text)
                                 .then((_) {
-                              // After the user's ID is fetched and stored, proceed with sending the verification code
                               sendForgotPasswordRequest(emailController.text);
                             }).catchError((error) {
-                              // Handle any errors that occur during fetching the user's ID
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                     content: Text(
@@ -162,16 +155,15 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     ),
                   ),
                   SizedBox(
-                    height: 20.0, // Reserve space for error message
+                    height: 20.0,
                     child: _showError
                         ? Text(
                             'Please enter a valid email address.',
                             style: TextStyle(
-                              color: Colors
-                                  .red, // Optional: customize error message style
+                              color: Colors.red,
                             ),
                           )
-                        : null, // If no error, don't show anything
+                        : null,
                   ),
                 ],
               ),

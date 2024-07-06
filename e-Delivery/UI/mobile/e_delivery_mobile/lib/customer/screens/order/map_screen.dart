@@ -24,7 +24,7 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   final Completer<GoogleMapController> _controller = Completer();
   bool isInTheDeliveryArea = true;
-  LatLng initialLocation = LatLng(43.8563, 18.4131); // Default to Sarajevo
+  LatLng initialLocation = LatLng(43.8563, 18.4131);
   String address = "";
   Map<String, String> addressDetails = {
     'locality': '',

@@ -27,9 +27,6 @@ class ItemTilesVertical extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       child: InkWell(
-        /*onTap: () {
-          
-        },*/
         borderRadius: AppDefaults.borderRadius,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),

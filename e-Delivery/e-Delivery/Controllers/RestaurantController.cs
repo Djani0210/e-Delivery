@@ -29,16 +29,7 @@ namespace e_Delivery.Controllers
             }
             return Ok(message);
         }
-        //[HttpPatch("{foodItemId}/removesidedishes"), Authorize(Roles = "Desktop")]
-        //public async Task<IActionResult> RemoveSideDishesFromFoodItem(int foodItemId,[FromBody] List<int> sideDishIds)
-        //{
-        //    var message = await _foodItemService.RemoveSideDishesFromFoodItemAsync(foodItemId, sideDishIds);
-        //    if (!message.IsValid)
-        //    {
-        //        return BadRequest(message);
-        //    }
-        //    return Ok(message);
-        //}
+        
 
         [HttpPut("update-Restaurant"), Authorize(Roles = "Desktop")]
         public async Task<IActionResult> UpdateRestaurant(int id ,RestaurantUpdateVM restaurantUpdateVM, CancellationToken cancellationToken)
@@ -50,7 +41,7 @@ namespace e_Delivery.Controllers
             }
             return Ok(message);
         }
-        [HttpPut("remove-Employee"), Authorize(Roles = "Desktop")]
+        [HttpPut("remove-Employee"), Authorize()]
         public async Task<IActionResult> RemoveEmployee(Guid id, CancellationToken cancellationToken)
         {
             var message = await _restaurantService.RemoveEmployeeFromRestaurantAsMessageAsync(id, cancellationToken);

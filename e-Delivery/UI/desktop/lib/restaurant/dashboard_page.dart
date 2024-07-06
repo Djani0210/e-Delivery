@@ -19,7 +19,7 @@ class _DashboardPageState extends State<DashboardPage> {
   void initState() {
     super.initState();
     final orderApiService = OrderApiService();
-    final foodItemApiService = FoodItemApiService(); // Corrected variable name
+    final foodItemApiService = FoodItemApiService();
     _ordersFuture = fetchOrders();
     _monthlyOrderCountFuture = orderApiService.getMonthlyOrderCount();
     _mostFrequentFoodItemFuture = foodItemApiService.GetMostFrequentFoodItem();

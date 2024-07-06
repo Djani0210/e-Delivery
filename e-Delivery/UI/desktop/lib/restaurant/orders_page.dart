@@ -1,12 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
-
 import 'package:intl/intl.dart';
-
 import 'package:desktop/restaurant/api_calls/order_api_calls.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
-
 import 'package:desktop/restaurant/viewmodels/orders_get_VM.dart';
 import 'package:flutter/material.dart';
 
@@ -29,10 +27,19 @@ class _OrdersPageState extends State<OrdersPage> {
   DateTime? _selectedToDate;
   int? _currentOrderState;
   int _totalOrdersCount = 0;
+  Timer? _refreshTimer;
   @override
   void initState() {
     super.initState();
     _fetchOrders();
+    _refreshTimer =
+        Timer.periodic(Duration(seconds: 5), (Timer t) => _fetchOrders());
+  }
+
+  @override
+  void dispose() {
+    _refreshTimer?.cancel();
+    super.dispose();
   }
 
   void _fetchOrders({
@@ -67,6 +74,25 @@ class _OrdersPageState extends State<OrdersPage> {
       });
     } else {
       print("Failed to fetch orders. Status code: ${response?.statusCode}");
+    }
+  }
+
+  Future<void> _deleteOrder(String orderId) async {
+    final response = await _orderApiService.deleteOrder(orderId);
+    if (response != null && response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Order deleted successfully')),
+      );
+      _fetchOrders(
+        pageNumber: _currentPage + 1,
+        startDate: _selectedFromDate,
+        endDate: _selectedToDate,
+        orderState: _currentOrderState,
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete order')),
+      );
     }
   }
 
@@ -265,6 +291,7 @@ class _OrdersPageState extends State<OrdersPage> {
             DataColumn(label: Text('Cost')),
             DataColumn(label: Text('Status')),
             DataColumn(label: Text('Action')),
+            DataColumn(label: Text('Delete')),
           ],
           rows: _orders.map((order) {
             return DataRow(cells: [
@@ -275,10 +302,39 @@ class _OrdersPageState extends State<OrdersPage> {
               DataCell(TextButton(
                   onPressed: () => widget.onNavigateToDetails(order.id),
                   child: Text('Details'))),
+              DataCell(IconButton(
+                icon: Icon(Icons.delete),
+                onPressed: () => _showDeleteConfirmationDialog(order.id),
+              )),
             ]);
           }).toList(),
         ),
       ),
+    );
+  }
+
+  void _showDeleteConfirmationDialog(String orderId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Confirm Delete"),
+          content: Text("Are you sure you want to delete this order?"),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            TextButton(
+              child: Text("Delete"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _deleteOrder(orderId);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 

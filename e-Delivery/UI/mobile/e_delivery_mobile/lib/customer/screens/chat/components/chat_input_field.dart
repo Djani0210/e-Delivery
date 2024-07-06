@@ -1,5 +1,6 @@
 import 'package:e_delivery_mobile/customer/core/constants/app_defaults.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ChatInputField extends StatefulWidget {
   final Function(String) onSendMessage;
@@ -47,6 +48,11 @@ class _ChatInputFieldState extends State<ChatInputField> {
             Expanded(
               child: TextField(
                 controller: _textController,
+                keyboardType: TextInputType.text,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(
+                      RegExp(r'[a-zA-Z0-9\s!@#$%^&*(),.?":{}|<>]')),
+                ],
                 decoration: const InputDecoration(
                   hintText: "Type message",
                   border: InputBorder.none,

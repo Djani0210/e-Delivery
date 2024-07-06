@@ -15,7 +15,7 @@ class SideDishViewModel {
     return SideDishViewModel(
       id: json['id'],
       name: json['name'],
-      price: json['price'].toDouble(), // Ensuring double type
+      price: json['price'].toDouble(),
       isAvailable: json['isAvailable'],
     );
   }

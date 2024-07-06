@@ -72,15 +72,14 @@ class EmployeeApiService {
   }
 
   Future<String> fetchImageUrl(String id) async {
-    final jwt = await _fetchJwtToken(); // Fetch the JWT token
+    final jwt = await _fetchJwtToken();
     final apiUrl = '${_baseUrl}File/get-Profile-Pic-By-Id/$id';
 
     try {
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
-          'Authorization':
-              'Bearer $jwt', // Include the JWT in the request header
+          'Authorization': 'Bearer $jwt',
         },
       );
 
@@ -88,7 +87,7 @@ class EmployeeApiService {
         final data = json.decode(response.body);
         if (data['data'] != null) {
           final String imagePath = data['data']['path'];
-          // Remove the '/api/' part from the base URL when constructing the image URL
+
           final String baseFileUrl = _baseUrl.replaceAll('/api/', '');
           final String fullImageUrl = baseFileUrl + imagePath;
 

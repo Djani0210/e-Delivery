@@ -532,13 +532,16 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
                 ],
               ),
               SizedBox(height: 16.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Wrap(
+                alignment: WrapAlignment.spaceBetween,
                 children: [
                   Text('Allergies:',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  Text('${order.allergies}', style: TextStyle(fontSize: 16)),
+                  Text(
+                    '${order.allergies}',
+                    style: TextStyle(fontSize: 16),
+                  ),
                 ],
               ),
               SizedBox(height: 16.0),
@@ -566,7 +569,7 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
                 ],
               ),
               SizedBox(height: 16.0),
-              Row(
+              /* Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
@@ -624,7 +627,7 @@ class _OrderSummarySectionState extends State<OrderSummarySection> {
                       ),
                     ),
                 ],
-              ),
+              ), */
               SizedBox(height: 16.0),
               Divider(color: Colors.grey[400]),
               Padding(

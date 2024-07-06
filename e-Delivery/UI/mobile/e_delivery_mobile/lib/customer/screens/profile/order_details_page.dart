@@ -394,6 +394,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
               children: [
                 Text(
                   orderItem.foodItem.name,
+                  overflow: TextOverflow.fade,
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 8),
@@ -403,7 +404,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  'Cost: KM ${orderItem.cost.toStringAsFixed(2)}',
+                  'Cost: ${orderItem.cost.toStringAsFixed(2)}',
                   style: TextStyle(fontSize: 16),
                 ),
               ],

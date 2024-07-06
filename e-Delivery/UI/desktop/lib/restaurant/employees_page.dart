@@ -55,19 +55,15 @@ class _EmployeesPageState extends State<EmployeesPage> {
   }
 
   Widget _buildSearchAndFilter() {
-    // No need to reinitialize the controller every build
     final TextEditingController _searchController =
         TextEditingController(text: _searchTerm);
 
-    // You may want to move this outside of build to prevent recreating it on every build
     final List<Map<String, dynamic>> _availabilityOptions = [
       {'label': 'All', 'value': null},
       {'label': 'Available', 'value': true},
       {'label': 'Unavailable', 'value': false},
     ];
 
-    // This is to prevent the cursor from jumping to the end of the input text
-    // after each character is typed
     _searchController.selection = TextSelection.fromPosition(
         TextPosition(offset: _searchController.text.length));
 
@@ -99,12 +95,12 @@ class _EmployeesPageState extends State<EmployeesPage> {
                 border: OutlineInputBorder(),
               ),
               onChanged: (value) {
-                _searchTerm = value; // Update the searchTerm with each change
-                _handleSearchAndFilter(); // Filter with every change
+                _searchTerm = value;
+                _handleSearchAndFilter();
               },
             ),
           ),
-          SizedBox(width: 20), // Spacing between search field and dropdown
+          SizedBox(width: 20),
           DropdownButton<String>(
             value: _selectedAvailability,
             underline: Container(
@@ -269,36 +265,32 @@ class _EmployeesPageState extends State<EmployeesPage> {
         Widget imageWidget;
         if (snapshot.connectionState == ConnectionState.waiting) {
           imageWidget = Container(
-            width: 60, // Define your preferred width
-            height: 60, // Define your preferred height
+            width: 60,
+            height: 60,
             decoration: BoxDecoration(
               color: Colors.grey[200],
-              borderRadius:
-                  BorderRadius.circular(30), // Adjust for rounded corners
+              borderRadius: BorderRadius.circular(30),
             ),
           );
         } else if (snapshot.hasError || !snapshot.hasData) {
           imageWidget = Container(
-            width: 80, // Define your preferred width
-            height: 80, // Define your preferred height
+            width: 80,
+            height: 80,
             decoration: BoxDecoration(
               color: Colors.grey[200],
-              borderRadius:
-                  BorderRadius.circular(30), // Adjust for rounded corners
+              borderRadius: BorderRadius.circular(30),
             ),
             child: Icon(Icons.error, color: Colors.red),
           );
         } else {
           imageWidget = Container(
-            width: 100, // Define your preferred width
-            height: 100, // Define your preferred height
+            width: 100,
+            height: 100,
             decoration: BoxDecoration(
-              borderRadius:
-                  BorderRadius.circular(30), // Adjust for rounded corners
+              borderRadius: BorderRadius.circular(30),
               image: DecorationImage(
                 image: NetworkImage(snapshot.data!),
-                fit: BoxFit
-                    .contain, // This will cover the space, cropping as needed
+                fit: BoxFit.contain,
               ),
             ),
           );
@@ -327,25 +319,23 @@ class _EmployeesPageState extends State<EmployeesPage> {
             TextButton(
               child: Text('Cancel'),
               style: TextButton.styleFrom(
-                primary: Colors.grey, // Color for the text
+                primary: Colors.grey,
               ),
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
             ),
             ElevatedButton(
               child: Text('Confirm'),
               style: ElevatedButton.styleFrom(
-                primary: Colors.red, // Background color
+                primary: Colors.red,
               ),
               onPressed: () async {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
                 final success = await _employeeApiService.removeEmployee(id);
                 if (success) {
-                  _fetchEmployees(); // Refresh the employee list
-                } else {
-                  // Optionally show a failure message
-                }
+                  _fetchEmployees();
+                } else {}
               },
             ),
           ],

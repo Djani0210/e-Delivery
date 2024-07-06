@@ -25,7 +25,7 @@ class ProfileListTile extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
-              Icon(icon, color: Colors.black), // Use Icon widget here
+              Icon(icon, color: Colors.black),
               const SizedBox(width: 16),
               Text(
                 title,
@@ -35,8 +35,7 @@ class ProfileListTile extends StatelessWidget {
                     ?.copyWith(color: Colors.black),
               ),
               const Spacer(),
-              Icon(Icons.arrow_forward,
-                  color: Colors.black), // Use Icon widget for arrow
+              Icon(Icons.arrow_forward, color: Colors.black),
             ],
           ),
         ),

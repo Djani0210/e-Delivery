@@ -38,16 +38,7 @@ namespace e_Delivery.Controllers
             }
             return Ok(message);
         }
-        //[HttpPatch("{foodItemId}/removesidedishes"), Authorize(Roles = "Desktop")]
-        //public async Task<IActionResult> RemoveSideDishesFromFoodItem(int foodItemId,[FromBody] List<int> sideDishIds)
-        //{
-        //    var message = await _foodItemService.RemoveSideDishesFromFoodItemAsync(foodItemId, sideDishIds);
-        //    if (!message.IsValid)
-        //    {
-        //        return BadRequest(message);
-        //    }
-        //    return Ok(message);
-        //}
+        
 
         
 

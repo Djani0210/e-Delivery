@@ -130,6 +130,7 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   void _showEditDialog(BuildContext context, int foodItemId) async {
+    final _formKey = GlobalKey<FormState>();
     final response = await _menuApiService.getFoodItemById(foodItemId);
     if (response != null && response.statusCode == 200) {
       final responseBody = json.decode(response.body);
@@ -140,8 +141,8 @@ class _MenuPageState extends State<MenuPage> {
         context: context,
         builder: (BuildContext context) {
           final _nameController = TextEditingController(text: foodItem.name);
-          final _priceController = TextEditingController(
-              text: foodItem.price.toStringAsFixed(2) + ' KM');
+          final _priceController =
+              TextEditingController(text: foodItem.price.toStringAsFixed(2));
           final _descriptionController =
               TextEditingController(text: foodItem.description);
 
@@ -154,122 +155,153 @@ class _MenuPageState extends State<MenuPage> {
               return AlertDialog(
                 title: Text('Edit menu item'),
                 content: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextField(
-                        controller: _nameController,
-                        decoration: InputDecoration(labelText: 'Name'),
-                      ),
-                      TextField(
-                        controller: _priceController,
-                        decoration: InputDecoration(labelText: 'Price'),
-                      ),
-                      TextField(
-                        controller: _descriptionController,
-                        decoration: InputDecoration(labelText: 'Description'),
-                      ),
-                      SizedBox(height: 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Available:'),
-                          Switch(
-                            value: _isAvailable,
-                            onChanged: (value) {
-                              setState(() {
-                                _isAvailable = value;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                      Text('Side dishes:'),
-                      SizedBox(height: 8),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Wrap(
-                          spacing: 8,
-                          children: _selectedSideDishes.map((sideDish) {
-                            return Chip(
-                              label: Text(sideDish.name),
-                              padding: EdgeInsets.symmetric(vertical: 3),
-                              deleteIcon: Icon(Icons.close),
-                              onDeleted: () {
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextFormField(
+                          controller: _nameController,
+                          decoration: InputDecoration(
+                              labelText: 'Name', border: OutlineInputBorder()),
+                          readOnly: true,
+                        ),
+                        SizedBox(height: 16),
+                        TextFormField(
+                          controller: _priceController,
+                          decoration: InputDecoration(
+                              labelText: 'Price',
+                              suffixText: "KM",
+                              border: OutlineInputBorder()),
+                          keyboardType:
+                              TextInputType.numberWithOptions(decimal: true),
+                          maxLength: 5,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a price';
+                            }
+                            if (double.tryParse(value) == null) {
+                              return 'Please enter a valid price';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 8),
+                        TextFormField(
+                          controller: _descriptionController,
+                          decoration: InputDecoration(
+                              labelText: 'Description',
+                              border: OutlineInputBorder()),
+                          maxLength: 65,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Please enter a description";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Available:'),
+                            Switch(
+                              value: _isAvailable,
+                              onChanged: (value) {
                                 setState(() {
-                                  _selectedSideDishes.remove(sideDish);
+                                  _isAvailable = value;
                                 });
                               },
-                            );
-                          }).toList(),
+                            ),
+                          ],
                         ),
-                      ),
-                      SizedBox(height: 8),
-                      ElevatedButton(
-                        onPressed: () async {
-                          final List<SideDishViewModel>? selectedSideDishes =
-                              await showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              List<SideDishViewModel> tempSelectedSideDishes =
-                                  List.from(_selectedSideDishes);
-                              return StatefulBuilder(
-                                builder: (BuildContext context,
-                                    StateSetter setState) {
-                                  return AlertDialog(
-                                    title: Text('Add side dishes'),
-                                    content: SingleChildScrollView(
-                                      child: ListBody(
-                                        children: _sideDishes.map((sideDish) {
-                                          return CheckboxListTile(
-                                            title: Text(sideDish.name),
-                                            value: tempSelectedSideDishes
-                                                .contains(sideDish),
-                                            onChanged: (selected) {
-                                              setState(() {
-                                                if (selected!) {
-                                                  tempSelectedSideDishes
-                                                      .add(sideDish);
-                                                } else {
-                                                  tempSelectedSideDishes
-                                                      .remove(sideDish);
-                                                }
-                                              });
-                                            },
-                                          );
-                                        }).toList(),
-                                      ),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text('Cancel'),
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.of(context)
-                                              .pop(tempSelectedSideDishes);
-                                        },
-                                        child: Text('Add'),
-                                      ),
-                                    ],
-                                  );
+                        const Text('Side dishes:'),
+                        const SizedBox(height: 8),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Wrap(
+                            spacing: 8,
+                            children: _selectedSideDishes.map((sideDish) {
+                              return Chip(
+                                label: Text(sideDish.name),
+                                padding: EdgeInsets.symmetric(vertical: 3),
+                                deleteIcon: Icon(Icons.close),
+                                onDeleted: () {
+                                  setState(() {
+                                    _selectedSideDishes.remove(sideDish);
+                                  });
                                 },
                               );
-                            },
-                          );
+                            }).toList(),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        ElevatedButton(
+                          onPressed: () async {
+                            final List<SideDishViewModel>? selectedSideDishes =
+                                await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                List<SideDishViewModel> tempSelectedSideDishes =
+                                    List.from(_selectedSideDishes);
+                                return StatefulBuilder(
+                                  builder: (BuildContext context,
+                                      StateSetter setState) {
+                                    return AlertDialog(
+                                      title: Text('Add side dishes'),
+                                      content: SingleChildScrollView(
+                                        child: ListBody(
+                                          children: _sideDishes.map((sideDish) {
+                                            return CheckboxListTile(
+                                              title: Text(sideDish.name),
+                                              value: tempSelectedSideDishes
+                                                  .contains(sideDish),
+                                              onChanged: (selected) {
+                                                setState(() {
+                                                  if (selected!) {
+                                                    tempSelectedSideDishes
+                                                        .add(sideDish);
+                                                  } else {
+                                                    tempSelectedSideDishes
+                                                        .remove(sideDish);
+                                                  }
+                                                });
+                                              },
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('Cancel'),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(tempSelectedSideDishes);
+                                          },
+                                          child: Text('Add'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                            );
 
-                          if (selectedSideDishes != null) {
-                            setState(() {
-                              _selectedSideDishes = selectedSideDishes;
-                            });
-                          }
-                        },
-                        child: Text('Add side dishes'),
-                      ),
-                    ],
+                            if (selectedSideDishes != null) {
+                              setState(() {
+                                _selectedSideDishes = selectedSideDishes;
+                              });
+                            }
+                          },
+                          child: Text('Add side dishes'),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 actions: [
@@ -281,30 +313,30 @@ class _MenuPageState extends State<MenuPage> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      final String priceText =
-                          _priceController.text.replaceAll(' KM', '');
-                      final double price = double.parse(priceText);
-                      final List<int> sideDishIds = _selectedSideDishes
-                          .map((sideDish) => sideDish.id)
-                          .toList();
+                      if (_formKey.currentState!.validate()) {
+                        final String priceText =
+                            _priceController.text.replaceAll(' KM', '');
+                        final double price = double.parse(priceText);
+                        final List<int> sideDishIds = _selectedSideDishes
+                            .map((sideDish) => sideDish.id)
+                            .toList();
 
-                      final bool updateSuccess =
-                          await _menuApiService.updateFoodItem(
-                        id: foodItem.id,
-                        name: _nameController.text,
-                        description: _descriptionController.text,
-                        price: price,
-                        isAvailable: _isAvailable,
-                        sideDishIds: sideDishIds,
-                      );
+                        final bool updateSuccess =
+                            await _menuApiService.updateFoodItem(
+                          id: foodItem.id,
+                          name: _nameController.text,
+                          description: _descriptionController.text,
+                          price: price,
+                          isAvailable: _isAvailable,
+                          sideDishIds: sideDishIds,
+                        );
 
-                      if (updateSuccess) {
-                        // Refresh the food items list after successful update
-                        _fetchMenuItems();
-                        Navigator.of(context).pop();
-                      } else {
-                        // Show an error message or handle the failure scenario
-                        print('Failed to update food item');
+                        if (updateSuccess) {
+                          _fetchMenuItems();
+                          Navigator.of(context).pop();
+                        } else {
+                          print('Failed to update food item');
+                        }
                       }
                     },
                     child: Text('Save'),
@@ -532,8 +564,11 @@ class _MenuPageState extends State<MenuPage> {
                         ),
                         SizedBox(height: 8),
                         TextFormField(
+                          maxLength: 5,
                           decoration: InputDecoration(
-                              labelText: 'Price', border: OutlineInputBorder()),
+                              labelText: 'Price',
+                              suffixText: "KM",
+                              border: OutlineInputBorder()),
                           keyboardType:
                               TextInputType.numberWithOptions(decimal: true),
                           validator: (value) {
@@ -548,20 +583,6 @@ class _MenuPageState extends State<MenuPage> {
                           onSaved: (value) => _price = double.parse(value!),
                         ),
                         SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Text('Available'),
-                            Switch(
-                              value: _isAvailable,
-                              onChanged: (value) {
-                                setState(() {
-                                  _isAvailable = value;
-                                });
-                              },
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 16),
                         DropdownSearch<Map<String, dynamic>>(
                           selectedItem: _allCategories.firstWhere(
                             (category) => category['id'] == _selectedCategoryId,
@@ -575,7 +596,7 @@ class _MenuPageState extends State<MenuPage> {
                           items: _allCategories,
                           itemAsString: (Map<String, dynamic> category) =>
                               category['name'],
-                          dropdownDecoratorProps: DropDownDecoratorProps(
+                          dropdownDecoratorProps: const DropDownDecoratorProps(
                             dropdownSearchDecoration: InputDecoration(
                               labelText: 'Category',
                               hintText: 'Search categories...',
@@ -584,7 +605,7 @@ class _MenuPageState extends State<MenuPage> {
                           ),
                           popupProps: PopupProps.menu(
                             showSearchBox: true,
-                            searchFieldProps: TextFieldProps(
+                            searchFieldProps: const TextFieldProps(
                               decoration: InputDecoration(
                                 hintText: 'Search categories...',
                                 border: OutlineInputBorder(),
@@ -597,11 +618,25 @@ class _MenuPageState extends State<MenuPage> {
                               title: Text(category['name']),
                               selected: isSelected,
                             ),
-                            constraints:
-                                BoxConstraints(maxHeight: 300), // Limit height
+                            constraints: BoxConstraints(maxHeight: 300),
                           ),
                         ),
                         SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Available'),
+                            Switch(
+                              value: _isAvailable,
+                              onChanged: (value) {
+                                setState(() {
+                                  _isAvailable = value;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 8),
                         Row(
                           children: [
                             Text('Side dishes'),
@@ -677,10 +712,8 @@ class _MenuPageState extends State<MenuPage> {
                           _selectedSideDishIds.clear();
                         });
                         _fetchMenuItems();
-                        _fetchCategories(); // Refresh the menu items list
-                      } else {
-                        // Show an error message or handle the failure case
-                      }
+                        _fetchCategories();
+                      } else {}
                     }
                   },
                   child: Text('Add'),
@@ -833,84 +866,99 @@ class _MenuPageState extends State<MenuPage> {
     SideDishViewModel sideDish,
     VoidCallback onSaveCallback,
     List<SideDishViewModel> sideDishes,
-    _SideDishesTableState sideDishesTableState, // Add this parameter
+    _SideDishesTableState sideDishesTableState,
   ) {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     final TextEditingController _nameController =
         TextEditingController(text: sideDish.name);
     final TextEditingController _priceController =
         TextEditingController(text: sideDish.price.toStringAsFixed(2));
-    bool _isAvailable = sideDish.isAvailable;
 
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Text("Update side dish"),
-          content: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextFormField(
-                    controller: _nameController,
-                    decoration: InputDecoration(labelText: 'Name'),
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text("Update side dish"),
+              content: Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextFormField(
+                        readOnly: true,
+                        controller: _nameController,
+                        decoration: InputDecoration(labelText: 'Name'),
+                      ),
+                      TextFormField(
+                        controller: _priceController,
+                        maxLength: 5,
+                        decoration: const InputDecoration(
+                            labelText: 'Price', suffixText: "KM"),
+                        keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a price';
+                          }
+                          if (double.tryParse(value) == null) {
+                            return 'Please enter a valid price';
+                          }
+                          return null;
+                        },
+                      ),
+                      SwitchListTile(
+                        title: Text("Available"),
+                        value: sideDish.isAvailable,
+                        onChanged: (bool value) {
+                          setState(() {
+                            sideDish.isAvailable = value;
+                          });
+                        },
+                      ),
+                    ],
                   ),
-                  TextFormField(
-                    controller: _priceController,
-                    decoration: InputDecoration(labelText: 'Price'),
-                    keyboardType:
-                        TextInputType.numberWithOptions(decimal: true),
-                  ),
-                  SwitchListTile(
-                    title: Text("Available"),
-                    value: _isAvailable,
-                    onChanged: (bool value) {
-                      _isAvailable = value;
-                    },
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Save'),
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  _formKey.currentState!.save();
-
-                  try {
-                    await SideDishApiService().updateSideDish(
-                      sideDish.id!,
-                      _nameController.text,
-                      double.parse(_priceController.text),
-                      _isAvailable,
-                    );
-
-                    sideDish.name = _nameController.text;
-                    sideDish.price = double.parse(_priceController.text);
-                    sideDish.isAvailable = _isAvailable;
-
-                    // Call the setState method in the _SideDishesTableState
-                    sideDishesTableState.setState(() {});
-
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancel'),
+                  onPressed: () {
                     Navigator.of(context).pop();
-                    onSaveCallback();
-                  } catch (e) {
-                    print('Error updating side dish: $e');
-                  }
-                }
-              },
-            ),
-          ],
+                  },
+                ),
+                TextButton(
+                  child: Text('Save'),
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+
+                      try {
+                        await SideDishApiService().updateSideDish(
+                          sideDish.id,
+                          _nameController.text,
+                          double.parse(_priceController.text),
+                          sideDish.isAvailable,
+                        );
+
+                        sideDish.name = _nameController.text;
+                        sideDish.price = double.parse(_priceController.text);
+
+                        sideDishesTableState.setState(() {});
+
+                        Navigator.of(context).pop();
+                        onSaveCallback();
+                      } catch (e) {
+                        print('Error updating side dish: $e');
+                      }
+                    }
+                  },
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -926,7 +974,7 @@ class _MenuPageState extends State<MenuPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Add new side dish"),
+          title: const Text("Add new side dish"),
           content: Form(
             key: _formKey,
             child: SingleChildScrollView(
@@ -934,7 +982,8 @@ class _MenuPageState extends State<MenuPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextFormField(
-                    decoration: InputDecoration(labelText: 'Name'),
+                    maxLength: 15,
+                    decoration: const InputDecoration(labelText: 'Name'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a name';
@@ -946,9 +995,11 @@ class _MenuPageState extends State<MenuPage> {
                     },
                   ),
                   TextFormField(
-                    decoration: InputDecoration(labelText: 'Price'),
+                    maxLength: 5,
+                    decoration: const InputDecoration(
+                        labelText: 'Price', suffixText: "KM"),
                     keyboardType:
-                        TextInputType.numberWithOptions(decimal: true),
+                        const TextInputType.numberWithOptions(decimal: true),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a price';
@@ -963,10 +1014,9 @@ class _MenuPageState extends State<MenuPage> {
                     },
                   ),
                   SwitchListTile(
-                    title: Text("Availability"),
+                    title: const Text("Available"),
                     value: _isAvailable,
                     onChanged: (bool value) {
-                      // Update the state of the _isAvailable variable
                       _isAvailable = value;
                     },
                   ),
@@ -976,13 +1026,13 @@ class _MenuPageState extends State<MenuPage> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Save'),
+              child: const Text('Save'),
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
@@ -990,9 +1040,9 @@ class _MenuPageState extends State<MenuPage> {
                     await SideDishApiService()
                         .createSideDish(_name, _price, _isAvailable);
                     _fetchSideDishes();
-                    Navigator.of(context).pop(); // Close the form dialog
+                    Navigator.of(context).pop();
                   } catch (e) {
-                    print(e); // Handle or show error
+                    print(e);
                   }
                 }
               },
@@ -1012,7 +1062,7 @@ class _MenuPageState extends State<MenuPage> {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey.shade400),
       ),
-      child: Row(
+      child: const Row(
         children: <Widget>[
           Expanded(
               flex: 2, child: Text('Picture', textAlign: TextAlign.center)),
@@ -1092,8 +1142,8 @@ class _MenuPageState extends State<MenuPage> {
                                 _showEditDialog(context, menuItem.id),
                             child: Text('Edit'),
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.yellow, // Background color
-                              onPrimary: Colors.white, // Text color
+                              primary: Colors.yellow,
+                              onPrimary: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
                               ),
@@ -1107,8 +1157,8 @@ class _MenuPageState extends State<MenuPage> {
                                 _showRemoveDialog(context, menuItem.id),
                             child: Text('Remove'),
                             style: ElevatedButton.styleFrom(
-                              primary: Colors.red, // Background color
-                              onPrimary: Colors.white, // Text color
+                              primary: Colors.red,
+                              onPrimary: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30),
                               ),
@@ -1237,9 +1287,9 @@ class _MenuPageState extends State<MenuPage> {
         fit: BoxFit.cover,
       );
     } else {
-      return Image.network(
-        "https://uxwing.com/wp-content/themes/uxwing/download/food-and-drinks/meal-food-icon.png",
-        fit: BoxFit.cover,
+      return Image.asset(
+        'assets/images/meal_icon.png',
+        fit: BoxFit.contain,
       );
     }
   }
@@ -1248,20 +1298,17 @@ class _MenuPageState extends State<MenuPage> {
     return FutureBuilder<String>(
       future: _menuApiService.fetchImageUrl(id),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-        // Define the default image widget here, to be used in case of loading or errors.
         Widget imageWidget = Container(
             width: 60,
             height: 60,
             decoration: BoxDecoration(
               color: Colors.grey[200],
-
-              // Default image or a loading indicator could be placed here.
             ),
-            child: Image.network(
-                "https://uxwing.com/wp-content/themes/uxwing/download/food-and-drinks/meal-food-icon.png") // Default icon
-            );
+            child: Image.asset(
+              'assets/images/meal_icon.png',
+              fit: BoxFit.contain,
+            ));
 
-        // When the Future is still processing, show a loading state.
         if (snapshot.connectionState == ConnectionState.waiting) {
           imageWidget = Container(
             width: 100,
@@ -1270,10 +1317,9 @@ class _MenuPageState extends State<MenuPage> {
               color: Colors.grey[200],
               borderRadius: BorderRadius.circular(30),
             ),
-            child: CircularProgressIndicator(), // Show a loading spinner.
+            child: CircularProgressIndicator(),
           );
         } else if (snapshot.hasData) {
-          // When data is available (which should always be the case now), display the image.
           imageWidget = Container(
             width: 100,
             height: 100,
@@ -1284,7 +1330,7 @@ class _MenuPageState extends State<MenuPage> {
               ),
             ),
           );
-        } // No need for an else block for errors, as fetchImageUrl guarantees a URL
+        }
 
         return Padding(
           padding: EdgeInsets.all(8.0),
@@ -1400,6 +1446,12 @@ class _SideDishesTableState extends State<SideDishesTable> {
                     child: Text(sideDish.price.toStringAsFixed(2) + ' KM'),
                   ),
                 ),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(sideDish.isAvailable ? 'Yes' : 'No'),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Row(
@@ -1436,7 +1488,7 @@ class _SideDishesTableState extends State<SideDishesTable> {
                           if (confirmed != null && confirmed) {
                             try {
                               await SideDishApiService()
-                                  .deleteSideDish(sideDish.id!);
+                                  .deleteSideDish(sideDish.id);
                               setState(() {
                                 widget.sideDishes.removeWhere(
                                     (dish) => dish.id == sideDish.id);
@@ -1460,9 +1512,10 @@ class _SideDishesTableState extends State<SideDishesTable> {
     return Table(
       border: TableBorder.all(color: Colors.grey),
       columnWidths: const {
-        0: FlexColumnWidth(2),
+        0: FlexColumnWidth(3),
         1: FlexColumnWidth(2),
-        2: FlexColumnWidth(3),
+        2: FlexColumnWidth(2.2),
+        3: FlexColumnWidth(3),
       },
       children: [
         TableRow(children: [
@@ -1478,6 +1531,13 @@ class _SideDishesTableState extends State<SideDishesTable> {
               padding: const EdgeInsets.all(8.0),
               child:
                   Text('Price', style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text('Available',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
             ),
           ),
           Center(
