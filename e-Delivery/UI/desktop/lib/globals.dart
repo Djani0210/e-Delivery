@@ -1,1 +1,1 @@
-var baseUrl = "https://localhost:44395/api/";
+var baseUrl = "http://localhost:44395/api/";

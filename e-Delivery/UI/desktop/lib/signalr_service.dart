@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:signalr_netcore/signalr_client.dart';
 
 class SignalRService {
-  final String _baseUrl = 'https://localhost:44395/toastr';
+  final String _baseUrl = 'http://localhost:44395/toastr';
   late HubConnection _connection;
   final _storage = const FlutterSecureStorage();
   bool connectionIsOpen = false;
