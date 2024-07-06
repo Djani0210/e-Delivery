@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using e_Delivery.Database;
 
@@ -11,9 +12,11 @@ using e_Delivery.Database;
 namespace e_Delivery.Database.Migrations
 {
     [DbContext(typeof(eDeliveryDBContext))]
-    partial class eDeliveryDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240706212702_idontknow")]
+    partial class idontknow
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
