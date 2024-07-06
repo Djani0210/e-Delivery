@@ -202,13 +202,13 @@ class _ApplyToRestaurantPageState extends State<ApplyToRestaurantPage> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: (_selectedRestaurant == null ||
-                            _selectedRestaurant!.id == _currentRestaurantId)
-                        ? null
-                        : () => _applyToRestaurant(_selectedRestaurant!.id),
-                    child: Text('Apply'),
-                  ),
+                  if (_currentRestaurantId == null)
+                    ElevatedButton(
+                      onPressed: _selectedRestaurant == null
+                          ? null
+                          : () => _applyToRestaurant(_selectedRestaurant!.id),
+                      child: Text('Apply'),
+                    ),
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _currentRestaurantId == null
